@@ -18,14 +18,14 @@ Object.assign(RPG_TEXT, {
   sign_town: ["BRINDLE FORD — Covenant branch hall. North: the Millrace Road."],
   sign_route1: ["MILLRACE ROAD. Beyond: the old Weir Vault. Covenant notice: CLOSED, wild activity. Steel rank and above only."],
   hiker: [
-    "Hunter: Hold up, Tin. You're on my contract road. Holdfast doesn't send me all this way to babysit.",
-    "Hunter: Tell you what. Show me that deck can take a hit, and I'll let you pass."
+    "Brann: Hold up, Tin. You're on my contract road. Came all the way down from Holdfast for this contract, I did.",
+    "Brann: Tell you what. Show me that deck can take a hit, and I'll let you pass."
   ],
   hiker_after: [
-    "Hunter: Not bad for a Tin. Steady hands.",
-    "Hunter: That chained box up north? Old Covenant seal on it, older than me. Whoever bound what's inside didn't want it found easy."
+    "Brann: Not bad for a Tin. Steady hands.",
+    "Brann: That chained box up north? Old Covenant seal on it, older than me. Whoever bound what's inside didn't want it found easy."
   ],
-  hiker_win: ["Hunter: Ward's down. Fair duel, Tin. Don't let it go to your head."],
+  hiker_win: ["Brann: Ward's down. Fair duel, Tin. Don't let it go to your head."],
   lost: ["Your ward shatters. You come to in Brindle Ford, aching but whole."],
   chest_empty: ["The chains hang loose. Whatever was sealed here is yours now."]
 });

@@ -12,6 +12,8 @@ Status: **first draft**. The designer chose the direction on 2026-10-23 (see *Fi
 - **Cards are bound monsters.**
 - **The protagonist is a fixed character** with their own voice and past.
 - **Tone:** earnest at heart, with real danger. Contracts go wrong, towns get hit, and some people die.
+- **Scale (added 2026-10-23):** a long JRPG-style epic, **30–50 hours**, with lots of character build-up and world-building.
+- **Monster ranks:** monsters are ranked the same way as guild members. Normal encounters are usually the player's own rank; bosses are one or two ranks higher.
 
 ## Tone in one paragraph
 
@@ -27,6 +29,7 @@ Touchstones: *Frieren* and *Monster Hunter* for the working-adventurer feel, *Fi
 
 - A wild is element given a body and a hunger. It isn't evil; it's weather with teeth. Most wilds go for what feeds their element: Fire wilds go for forges and granaries, Water wilds for wells and harbors, and so on.
 - **Rifts** are tears in a leyline. A rift keeps spawning wilds until someone closes it. Closing a rift is high-rank work.
+- **Every wild has a rank.** The Covenant grades wilds on the same scale as its hunters (Tin to Exalted; see *Ranks*), and every contract on a notice board names the rank of the wild. The rule of thumb every rookie learns is *hunt your own rank, and never take a boss alone*. A Copper hunter takes Copper contracts; a Copper wild that has grown into a Steel one is how hunters die.
 - **Crowned wilds** are monsters that have swallowed a rift's heart. They are much stronger, they regenerate, and they *break the normal rules of a binding duel*. **This is the story reason for every boss mechanic:** a boss is a crowned wild (or a person carrying a crowned binding), and its crown lets it ignore one rule. Every boss names the rule it breaks.
 
 ### Cards (bindings)
@@ -73,20 +76,22 @@ The **Covenant** is a guild of adventurers that crosses all borders. It has bran
 
 ### Ranks
 
-Rank is the hero's progress. It maps onto the card power ladder, so story progress and deck power climb together.
+Rank is the hero's progress. One scale grades both **hunters and wilds**, and it maps onto the card power ladder, so story progress, enemy strength and deck power climb together.
 
-| Rank | Ladder | What it means in the world | Decks the hero meets |
-|---|---|---|---|
-| **Tin** | 1 | Probationary. Errands and pest wilds. | Starter |
-| **Copper** | 2 | Village contracts, alone or in a pair. | Mono common |
-| **Iron** | 3 | Regional work: escorts, nests, small rifts with a team. | Mono uncommon |
-| **Steel** | 4 | Trusted across a nation. First dungeon delves. | Mono rare |
-| **Silver** | 5–6 | Forge licence (dual braids). Border and rift work. | Dual common / uncommon |
-| **Gold** | 7 | Leads teams. Names known in capitals. | Dual rare / archetype |
-| **Adamant** | 8–9 | Triple braids. Crowned-wild hunters. A few dozen alive. | Triple common / uncommon |
-| **Exalted** | 10 | The **Seven**: the Covenant's highest binders, its council and its legends. | Triple rare / archetype |
+| Rank | Ladder | Hunters of this rank | Wilds of this rank | Decks they field |
+|---|---|---|---|---|
+| **Tin** | 1 | Probationary. Errands and pest control. | Pests: grass sprites, ember mice. | Starter |
+| **Copper** | 2 | Village contracts, alone or in a pair. | A threat to a farm or a road. | Mono common |
+| **Iron** | 3 | Regional work: escorts, nests, small rifts with a team. | A threat to a village. | Mono uncommon |
+| **Steel** | 4 | Trusted across a nation. First vault delves. | A threat to a town. | Mono rare |
+| **Silver** | 5–6 | Forge licence (dual braids). Border and rift work. | Confluent wilds; a threat to a city. | Dual common / uncommon |
+| **Gold** | 7 | Leads teams. Names known in capitals. | Old, clever confluent wilds. | Dual rare / archetype |
+| **Adamant** | 8–9 | Triple braids. Crowned-wild hunters. A few dozen alive. | Crowned wilds; a threat to a nation. | Triple common / uncommon |
+| **Exalted** | 10 | The **Seven**: the Covenant's highest binders, its council and its legends. | Primordials; a threat to the world. | Triple rare / archetype |
 
-Enemy AI levels 1–5 read as the enemy's skill within their rank: a green Copper hunter or a veteran one.
+**Encounter rule (designer, 2026-10-23):** normal encounters are usually the hero's own rank. Bosses are one or two ranks higher, with a crown mechanic on top. In the story, a boss is *always* a wild above your grade: the contract that went wrong, the nest whose mother was bigger than the notice said, the vault guardian no one has survived. Beating one is how a hunter earns promotion. Each rank ends on a boss above it, and the promotion follows. (How "a rank or two" turns into ladder steps and boss numbers is for TCG Design and Balance.)
+
+Enemy AI levels 1–5 read as the enemy's skill within their rank: a green Copper hunter, or a veteran one.
 
 ### The Seven Exalted (proposed)
 
@@ -100,12 +105,23 @@ For most of the game these are figures far above the hero: names on posters, a c
 6. **Corvane Ashe** — Ash binder. Quiet and haunted, he fought in the last border war. Retires mid-game, opening the seat the hero later fills.
 7. **Halden Mirr** — Quicksilver binder, the Covenant's spymaster. Knows more than he says; he is the one who tells the hero the truth.
 
-### Cast around the hero
+### The party (proposed)
 
-- **Mads Orrin** — a retired Iron hunter with a bad leg who runs the branch hall in Brindle Ford. Gruff, fair, the first person to believe in the hero. He dies in Act II defending the Ford during a surge, and his death is the hero's first real lesson in duty.
-- **Pell Varrane** — a rival rookie, second son of a Pyrrhen war-house. Arrogant, gifted, and impatient to rise. A rival through Act I and a friend by Act III. His family pulls him toward the Dominion in the war, and he has to choose.
-- **Isa Corran** — a Covenant archivist who studies the Founding Circle and old bindings. She works out what the Unbinding is long before the hero can do anything about it, and keeps sending them toward vaults.
-- **Brann and Dove** — two Copper hunters, a married couple, who share the hero's early contracts. They're comic relief and the human face of "ordinary adventurers". One of them doesn't survive Act III.
+A 30–50 hour JRPG needs a travelling party, people whose lives the player learns over dozens of hours. Wren's hunting crew is five companions, **one from each nation**. Every nation's turn in the war is personal for someone at the campfire, and each companion's home is a region the party visits with them. Each one has a personal arc with its own chapter, a loyalty quest and a rank-up beside Wren. (Whether companions fight in battle is a gameplay question; see *Open questions*.)
+
+| Companion | From | Element | Who they are | Arc |
+|---|---|---|---|---|
+| **Pell Varrane** | Pyrrhen Dominion | Fire | Second son of a war-house, a gifted and arrogant rival rookie, impatient to rise. | Rival in Act I, joins in Act II. When Vexis marches, his family calls him home and he has to choose between blood and oath. He chooses the Covenant, and his brother doesn't. |
+| **Isa Corran** | Tidewater League (Saltmere) | Water | Covenant archivist, sharp and bookish, out of her depth in the field. | Works out what the Unbinding is long before anyone listens. Her League family profits from the war, and she exposes it. Late in the game she rebuilds the Founding Circle's method of sealing, which is the hero's answer to Seraphine. |
+| **Brann Holloway** | Kingdom of Holdfast | Earth | A big, gentle Copper hunter far from his mountains, married to Dove (a Copper Wind hunter who travels with them). The party's heart and its comic relief. | Dove dies in Act III, holding a rift so a town can flee. Brann's arc is grief and choosing to keep protecting strangers. He is the human face of "ordinary adventurers". |
+| **Kes Arden** | Skyreach Principalities | Wind | A courier-hunter who knows every sky-road, quick-tongued and charming. Secretly a disinherited Skyreach prince. | His family is one of the courts buying Exalted champions. He has to reclaim his name to stop Skyreach from selling out to Seraphine. |
+| **Tamsin of Vol** | Stormcourt of Vol | Lightning | A runaway storm-priest acolyte who joins in Act II. Intense and devout, and the only one who can read the Stormcourt's sealed scripture. | Learns that her god Vol is a Primordial sealed under Thunderhold, and that her church means to unbind it. Faith against duty. |
+
+Recurring cast who don't travel with the party:
+
+- **Mads Orrin** — a retired Iron hunter with a bad leg who runs the branch hall in Brindle Ford. Gruff, fair, the first person to believe in the hero. He dies at the end of Act II defending the Ford during a surge, and his death is the hero's first real lesson in duty.
+- **Tilly** — a village kid in the Ford who wants to be Wren the way Wren wanted to be Seraphine. She grows up across the game (the long timeline lets that show) and mirrors the hero's arc from below.
+- **Branch masters, rivals and contract-givers** in each region, who recur as Wren rises, so the world remembers you.
 
 ### Antagonists and powers
 
@@ -148,13 +164,35 @@ Confluence regions sit where two nations' leylines cross (Steam springs on the L
 3. **Among the great** — fights beside the Exalted in the war and the rift-surges. Earns their respect. Starts to see the cracks.
 4. **One of them** — takes a seat among the Seven. Sees that Seraphine's plan would save the world by ruling it. Overcomes their hero.
 
+## Shape of the game: 30–50 hours
+
+A prologue and five acts. The **main story runs about 30 hours**, and contracts, companion quests and optional vaults bring it to **about 50**. Each act covers a rank band and ends on a boss one or two ranks above the party, followed by the promotion. Hours are targets for pacing, not promises.
+
+| Act | Ranks | Where | What happens above Wren's head | What happens to Wren | Main / with side content |
+|---|---|---|---|---|---|
+| **Prologue: The Ford** | Tin | Brindle Ford, the Millrace Road | Wild sightings in the Hearthvale double. Nobody important notices. | Licence, a borrowed deck, Mads, the first binding, the chained chest. Ends on a Copper-rank wild at the mill. | 1–2 h / 2 h |
+| **I: Notice Boards** | Copper → Iron | The Hearthvale and its border towns | Pyrrhen "relief columns" start crossing the border. An Exalted (Aeris) passes through a town, there and gone. | Meets Brann and Dove, then rival Pell. Village contracts, the first small rift. Ends at the Weir Vault (first loot card) and a Steel-rank guardian. | 4–5 h / 7 h |
+| **II: The Wider World** | Iron → Steel | Tidewater League, Holdfast, Skyreach | The League sells protection, Holdfast seals its gates, the Skyreach princes bid for champions. The Hollow breaks its first vault. | The crew becomes a party: Isa, Kes, Tamsin, and Pell joins. A vault in each nation. Ends with the surge at Brindle Ford: Mads dies, and Wren chooses to stay and hold the line. | 7–8 h / 12 h |
+| **III: Fire on the Border** | Silver → Gold | Confluence borderlands; the Pyrrhen Dominion | Vexis marches. War between the Dominion and the League. Corvane Ashe retires. The Seven split over whether to intervene. | Forge licence and the first braid. Fights in the war as a Covenant neutral, protecting civilians on both sides. Pell's choice. Dove dies holding a rift. Ends on a crowned wild that both armies woke. | 8–9 h / 13 h |
+| **IV: Crowns** | Adamant | Stormcourt of Vol; the Primordial vaults | Rift-surges everywhere. The Stormcourt tries to unbind Vol. The nations hand their vaults to Seraphine "for safety". | Fights beside the Exalted as a peer. Triple braids. Tamsin's god, Kes's crown. Halden Mirr tells Wren the truth about Seraphine. | 6–7 h / 10 h |
+| **V: The Seventh Seat** | Exalted | Highcourt, the Covenant's council hall, the last vault | Seraphine gathers the Primordials. Neris sides with her. The council breaks. | Wren takes Corvane's empty seat. The party gathers every hunter Seraphine overlooked. The Founding Circle's way of sealing, through Isa. The Primordial bosses, then Seraphine. | 4–5 h / 6 h |
+
+**JRPG pacing rules for the outline:**
+
+- **Every region is a place, not a level.** It has a town with a branch hall and its own notice board, people who remember you, local politics, a vault with a sealed great wild and its history, and a reason to come back later.
+- **Return to Brindle Ford in every act.** Show it changing with the war and the Unbinding, and show Tilly growing up. Home is how the player measures how far they've come.
+- **The world moves without you.** Each act opens with news of what happened while you were busy (a broadsheet, a branch-hall rumour, a refugee column). Exalted are seen doing things far beyond you, and you arrive after the fact.
+- **Companion chapters.** Each companion gets a chapter in their home region and an optional loyalty quest that ends on a boss and a personal loot card.
+- **Camp scenes.** Short party conversations at rest points after big beats. This is where most of the character build-up lives.
+- **Side contracts** on every notice board, ranked like the wilds they name. They're the main source of the extra 20 hours, and many of them pay off in later acts.
+
 ## Central conflict
 
 **On the surface:** the Unbinding is getting worse, and the nations are circling.
 
 **Underneath:** Seraphine Vael has known for years that the Founding seals can't hold. Her answer is to gather the Primordial bindings before the Hollow or any crown can, rebind them all into herself, and become the new seal: one keeper, with the power of the Sundering, deciding which lands are worth protecting. She has quietly let border towns fall so that the nations, terrified, will hand her the vaults. She believes the cost is worth it. Neris backs her for her city's sake. Others on the council half-know and look away.
 
-**The hero's answer:** the seals should be renewed the way the Founding Circle made them, by many binders and not one, and nobody gets to choose which villages burn. The final act is Wren gathering the binders Seraphine overlooked (Covenant hunters of every rank, Pell, Ysil, Gorran) and stopping her at the last vault.
+**The hero's answer:** the seals should be renewed the way the Founding Circle made them, by many binders and not one, and nobody gets to choose which villages burn. The final act is Wren gathering the binders Seraphine overlooked (the party, Covenant hunters of every rank, Ysil and Gorran) and stopping her at the last vault.
 
 **What makes it land:** Seraphine is right about the danger and kind in person. She is the one who saved Wren. The final duel is against the person Wren became an adventurer to be.
 
@@ -162,8 +200,9 @@ Confluence regions sit where two nations' leylines cross (Steam springs on the L
 
 These are the world facts other roles build on. Each will be logged as a board decision.
 
-- **Bosses are crowned wilds or crowned binders. Each crown breaks one named rule** (examples: extra life bars as phases, a second Manifest call, unblockable attacks, the boss calls from your charge). Balance designs the mechanic; Story gives the reason.
-- **Rank maps to the power ladder** (table above). The deck an enemy fields matches the region's rank band.
+- **Bosses are crowned wilds or crowned binders. Each crown breaks one named rule** (examples: extra life bars as phases, a second Manifest call, unblockable attacks, the boss calls from your charge). TCG Design designs the mechanic, Balance sets the numbers, and Story gives the reason.
+- **One rank scale for hunters and wilds, mapped to the power ladder** (table above). Normal encounters are the hero's rank; bosses are one or two ranks higher. Each act ends on such a boss, followed by a promotion.
+- **Each companion has a home region, an element and a personal loot card** (see *The party*).
 - **Confluences unlock by Forge licence at Silver rank, and triples at Adamant.** Story supplies the licence moments.
 - **Every dungeon has a loot card with an origin** (who sealed it, why, what guards it).
 - **Enemy life is lower than the player's because wilds wear thinner wards than binders.**
@@ -175,9 +214,14 @@ These are the world facts other roles build on. Each will be logged as a board d
 - Wilds and bindings: descriptive card names as they are now. Named great wilds keep a name and a history.
 - **Open question:** a few cards use real-world gods' names (Raijin, Raiden, Gaia, Atlas, the Thunder God). The proposal is to rename them into Aster's own legends (Vol, the storm god of the Stormcourt; Earthbinder Gorr; and so on) in a later card-names PR, which Balance reviews.
 
+## Open questions for the designer
+
+- **Do companions fight?** JRPG parties usually do. Options: companions are story-only; you can duel *as* a companion in their chapter (using their deck); or companions add a small effect to your battles (an assist). Changing how battles work is a card-game question for TCG Design and Game Dev, and the final call is yours.
+- **Romance or not?** Many long JRPGs have optional bonds. The default here is close friendships and no romance.
+
 ## What's next
 
-1. `story/outline.md` — acts by rank and region, with each region's dungeon, loot card and boss.
-2. `story/characters/` — Wren, Seraphine, Mads, Pell, and the Seven.
-3. Agree the dialogue data format with Game Dev before writing scenes in `story/data/`.
-4. Send region and character moods to Music.
+1. `story/outline.md` — the acts above broken into regions and chapters, each with its town, vault, loot card and boss.
+2. `story/characters/` — Wren, the party, Seraphine, Mads, and the Seven.
+3. More `story/data/` dialogue as Game Dev builds maps (the format is agreed: `Object.assign(RPG_TEXT, {...})`).
+4. Region and character moods for Music (first set sent on the board).
