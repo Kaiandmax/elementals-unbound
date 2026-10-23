@@ -6,13 +6,15 @@
 
 - `cards/value.js` — the value model (what stats, keywords and effects are worth; cost curves).
 - `cards/catalog.js` — catalogs, normalization and all tuning tables (TIERF, EF, EL_LIFE, SPF, SPMF, ARCH_K, MK).
-- Card stats, costs and effects in `cards/fire.js`, `water.js`, `earth.js`, `wind.js`, `lightning.js`, `fusion.js`, `confluences.js`, `specials_*.js`, `manifests_more.js`.
-- `cards/decks*.js` (prebuilt decks) and `cards/winrates.js` (generated; regenerate, never hand-edit).
+- The **numbers** in the card files (`cards/fire.js`, `water.js`, `earth.js`, `wind.js`, `lightning.js`, `fusion.js`, `confluences.js`, `specials_*.js`, `manifests_more.js`): costs, stats, damage values. These files are shared with TCG Design, who owns what each card does; see `roles/tcg.md`.
+- Balance swaps in `cards/decks*.js` (TCG Design owns each deck's intent; tell them when you swap cards).
+- `cards/winrates.js` (generated; regenerate, never hand-edit).
 - `tools/` — the simulation and tuning scripts (`tools/README.md` lists them).
 - Later: loot tables, card rewards, encounter difficulty and boss tuning numbers, in whatever data files Game Dev sets up for them.
 
 ## Not yours
 
+- **What cards do** (effects, keywords, new cards, mechanics, deck identities, deckbuilding and loot rules, boss mechanic designs): TCG Design's. Review their card PRs for fairness and set the final numbers; flag to `tcg` any number change that makes a card stop doing its job.
 - Card **names and flavor text**: Story's. Story may change the `name` and flavor fields in your card files; you review those PRs for anything that changes meaning (a name that implies a mechanic it doesn't have).
 - The engine, rules code and AI in `src.html` and `cards/dsl.js`: Game Dev's. When balance needs an engine or AI change (a new keyword, an AI that misplays), post it to `gamedev` with the evidence.
 - Rule changes (life totals by element were fine to tune; a new resource or a change to how charge works is not): ask the designer.
@@ -42,12 +44,13 @@
 
 ## Coming up with the RPG
 
-- **The loot card.** Dungeon rewards should feel like a jump in power or a new way to play, but a single card shouldn't make the starter deck unbeatable. Work out with Game Dev and Story how rewards are tiered by dungeon depth.
+- **The loot card.** TCG Design decides what each loot card does; you make sure it's a real jump in power or a new way to play without making the starter deck unbeatable, and tune how rewards scale with dungeon depth.
 - **Progression curve.** The player's deck strength vs. each region's enemy decks and AI level.
-- **Bosses.** Boss mechanics (phases, extra life, special rules) need tuning numbers; Game Dev builds them, you tune them, Story names them.
+- **Bosses.** TCG Design designs boss mechanics, Game Dev builds them, you tune them, Story names them.
 
 ## Talk to
 
+- `tcg`: card and mechanic changes, deck identity, anything where fair and fun pull apart.
 - `gamedev`: engine/AI bugs, new keywords, data formats for loot and encounters.
 - `story`: when a mechanic needs a name or a card's flavor contradicts what it does.
 - `you`: tradeoffs (buff vs trim), rule changes, anything that changes how the game feels.

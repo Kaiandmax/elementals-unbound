@@ -1,10 +1,10 @@
 # Elementals Unbound
 
-A story-driven RPG with a trading-card battle system. Today the repo holds the playable card battler (a single web page) and its balance tools; the RPG layer, story and music are being built by a four-agent studio.
+A story-driven RPG with a trading-card battle system. Today the repo holds the playable card battler (a single web page) and its balance tools; the RPG layer, story and music are being built by a five-agent studio.
 
 ## If this chat has a studio role
 
-If the designer has given this chat a role (Balance, Story, Music or Game Dev), read `studio/STUDIO.md` and `studio/roles/<role>.md` before doing anything else, then check the Studio Board as STUDIO.md describes. Stay in your lane; post on the board for anything that isn't yours.
+If the designer has given this chat a role (TCG Design, Balance, Story, Music or Game Dev), read `studio/STUDIO.md` and `studio/roles/<role>.md` before doing anything else, then check the Studio Board as STUDIO.md describes. Stay in your lane; post on the board for anything that isn't yours.
 
 ## Build and test
 
@@ -23,11 +23,14 @@ Never edit `index.html`, `tools/engine.js` or `cards/winrates.js` by hand (gener
 | `src.html` | Engine, rules, AI, battle UI | Game Dev |
 | `art.js` | Procedural card art | Game Dev |
 | `build.py`, `.github/` | Build, CI, Pages deploy | Game Dev |
-| `cards/dsl.js` | Card effect language | Game Dev (Balance reviews) |
-| `cards/*.js` (others) | Cards, decks, value model, tuning tables | Balance (Story: names and flavor only) |
+| `cards/dsl.js` | Card effect language | Game Dev (TCG Design and Balance review) |
+| `cards/*.js` card and deck files | Cards and decks | TCG Design (what cards do, deck intent) and Balance (numbers); Story: names and flavor |
+| `cards/value.js`, `catalog.js`, `winrates.js` | Value model, tuning tables, win-rate grids | Balance |
+| `design/` | Card game design docs | TCG Design |
 | `tools/` | Simulation and tuning scripts | Balance |
 | `story/` | Story Bible, outline, dialogue data | Story |
 | `music/` | Scores, player, sound effects | Music |
+| `rpg/` | Overworld, maps, encounters | Game Dev |
 | `studio/` | Studio protocol, role charters, the board page source | Designer |
 
 ## Links
