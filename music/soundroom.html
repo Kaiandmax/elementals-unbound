@@ -49,10 +49,13 @@ canvas { width: 100%; height: 84px; display: block; background: var(--roll); bor
 .wide canvas { height: 120px; }
 .notes { font-family: var(--mono); font-size: 12.5px; color: var(--ink); overflow-x: auto; white-space: nowrap; }
 .mood { color: var(--muted); font-size: 14px; margin: 0; }
+.chans { display: flex; flex-wrap: wrap; gap: 6px; }
+.chan { font-family: var(--mono); font-size: 11.5px; color: var(--muted); border: 1px solid var(--line); border-radius: 3px; padding: 1px 6px; }
+.chan b { color: var(--c); font-weight: 500; }
 section h2 { font-family: var(--display); font-weight: 500; font-size: 20px; margin: 0 0 10px; }
 .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 28px; }
 .cols p, .cols li { max-width: 62ch; }
-ol { padding-left: 20px; margin: 0; display: grid; gap: 8px; }
+ul { padding-left: 20px; margin: 0; display: grid; gap: 8px; }
 table { border-collapse: collapse; font-size: 14px; width: 100%; }
 td, th { text-align: left; padding: 6px 10px 6px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
 th { font-weight: 600; color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
@@ -66,9 +69,9 @@ footer a { color: var(--accent); }
 <div class="wrap">
   <header>
     <div>
-      <span class="draft">Draft palette · v0.1</span>
+      <span class="draft">Palette v0.2 · Retro chip</span>
       <h1>Sound Room</h1>
-      <p class="sub">Elementals Unbound's music, as it's written. Each strip plays the main motif in that element's sound. Press play; sound starts after your first tap.</p>
+      <p class="sub">Elementals Unbound's music, as it's written. Each strip plays the main motif in that element's sound, on a four-channel handheld chip: two pulse waves, a wavetable bass and a noise drum. Press play; sound starts after your first tap.</p>
     </div>
     <div class="controls">
       <label for="loop"><input type="checkbox" id="loop"> Loop</label>
@@ -88,13 +91,13 @@ footer a { color: var(--accent); }
       </table></div>
     </section>
     <section>
-      <h2>Questions for the designer</h2>
-      <ol>
-        <li><b>Genre.</b> Fantasy-orchestral feel, chiptune, synthwave, folk or something else? A game or two whose soundtrack you love would help most.</li>
-        <li><b>Retro or modern.</b> Strict 8/16-bit sound chip limits, or modern synths with reverb and wide stereo?</li>
-        <li><b>Instruments.</b> Any you want front and centre (strings, piano, guitar, drums)? Anything you don't want?</li>
-        <li><b>The motif.</b> Does "Unbound" feel like the game's theme? Keep, tweak, or try another?</li>
-      </ol>
+      <h2>Direction</h2>
+      <p>Retro, in the style of the classic handheld monster-collecting RPGs (set by the designer, 23 Oct 2026). The style and the chip limits are borrowed, the tunes are all original. Still open, to explore later:</p>
+      <ul>
+        <li><b>The motif.</b> Keep "Unbound", tweak it, or try another?</li>
+        <li><b>Grit.</b> Clean pulse waves as now, or rougher and closer to real hardware?</li>
+        <li><b>Each element.</b> Does any element sound wrong for its cards? Say which and why.</li>
+      </ul>
     </section>
   </div>
 
@@ -109,15 +112,20 @@ footer a { color: var(--accent); }
   const NAMES = "C C# D Eb E F F# G Ab A Bb B".split(" ");
   const MODE_LABEL = { dorian: "Dorian", aeolian: "Aeolian", phrygdom: "Phrygian dominant", lydian: "Lydian", mixolydian: "Mixolydian" };
   const MOODS = {
-    main: "Brass lead over a soft pad. The version every region theme quotes.",
-    fire: "Resonant saw lead, driving 3+3+2 kick, 8th-note power chords, a tom fill. Haste and burn.",
-    water: "FM bell over glassy triplet arpeggios and a long echo. Draw, freeze, patience.",
-    earth: "Low square lead on a root-and-fifth drone, half-time kick and toms. Walls and giants.",
-    wind: "Breathy flute with vibrato, triplet shaker, gusts of noise. The raised 4th keeps it airborne.",
-    lightning: "Detuned pulse lead, 16th arpeggios, a tritone stab every bar. Chain spells, fast.",
+    main: "Round lead with vibrato, thirds underneath, bouncing octave bass. The version every region theme quotes.",
+    fire: "Bright lead, off-beat stabs, saw bass in octaves, a snare roll into the loop. Haste and burn.",
+    water: "Soft lead with wide vibrato over triplet arpeggios and a slow pedal bass. Draw, freeze, patience.",
+    earth: "Low, loud lead with thirds beneath, one hollow bass note per bar, sparse heavy beat. Walls and giants.",
+    wind: "Thin, airy lead echoed an 8th later, walking bass, triplet shuffle. The raised 4th keeps it airborne.",
+    lightning: "Snappy lead over 16th arpeggios that end each bar on a tritone zap. Chain spells, fast.",
   };
   const PLAY = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 1.5v13l11-6.5z"/></svg>';
   const STOP = '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.5" y="2.5" width="11" height="11" rx="1"/></svg>';
+
+  const P2 = { third: "thirds", echo: "echo", arp: "arpeggio", stabs: "stabs" };
+  const pct = (d) => (d * 100).toFixed(d === .125 ? 1 : 0) + "%";
+  const chans = (e) => [["P1", "lead " + pct(e.p1.duty)], ["P2", P2[e.p2.style] + " " + pct(e.p2.duty)], ["Wave", e.bass.wave + " bass"], ["Noise", "drums"]]
+    .map(([c, v]) => `<span class="chan"><b>${c}</b> ${v}</span>`).join("");
 
   function motifNotes(key) {
     const e = PALETTE[key], s = MODES[e.mode], t = EUSynth.midiOf(e.tonic) + 12;
@@ -135,6 +143,7 @@ footer a { color: var(--accent); }
       <div><h3 class="name">${e.name}</h3><div class="meta">${tonic} ${MODE_LABEL[e.mode]} · ${e.bpm} BPM</div></div></div>
       <canvas aria-hidden="true"></canvas>
       <div class="notes">${notes.map((n) => n.label).join("  ")}</div>
+      <div class="chans">${chans(e)}</div>
       <p class="mood">${MOODS[key]}</p>`;
     strips.appendChild(el);
     cards[key] = { el, notes, canvas: el.querySelector("canvas"), btn: el.querySelector("button") };
