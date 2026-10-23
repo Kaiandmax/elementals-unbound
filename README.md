@@ -19,11 +19,12 @@ node tools/smoke.js       # quick AI-vs-AI check (CI runs this on every PR)
 
 ## The studio
 
-Four Claude agents build the game, each in its own chat, coordinating through pull requests here and the [Studio Board](https://claude.ai/artifact/6Wpb6xUgEr9j13HJ3QoR8s):
+Five Claude agents build the game, each in its own chat, coordinating through pull requests here and the [Studio Board](https://claude.ai/artifact/6Wpb6xUgEr9j13HJ3QoR8s):
 
 | Role | Works on |
 |---|---|
-| Balance | Card numbers, decks, win rates, simulations (`cards/`, `tools/`) |
+| TCG Design | Card game design: mechanics, card concepts, deckbuilding and loot, bosses, fun (`design/`, `cards/`) |
+| Balance | Card numbers, win rates, simulations (`cards/`, `tools/`) |
 | Story | World, plot, dialogue, card names and flavor (`story/`) |
 | Music | Soundtrack and sound effects (`music/`) |
 | Game Dev | Engine, RPG systems, UI, build and CI (`src.html`, `art.js`, `.github/`) |

@@ -50,6 +50,11 @@ canvas { width: 100%; height: 84px; display: block; background: var(--roll); bor
 .notes { font-family: var(--mono); font-size: 12.5px; color: var(--ink); overflow-x: auto; white-space: nowrap; }
 .mood { color: var(--muted); font-size: 14px; margin: 0; }
 .chans { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 4px; overflow: hidden; }
+.seg input { position: absolute; opacity: 0; pointer-events: none; }
+.seg label { padding: 5px 12px; font-size: 13px; color: var(--muted); cursor: pointer; }
+.seg input:checked + label { background: var(--accent); color: var(--panel); }
+.seg input:focus-visible + label { outline: 2px solid var(--accent); outline-offset: -2px; }
 .chan { font-family: var(--mono); font-size: 11.5px; color: var(--muted); border: 1px solid var(--line); border-radius: 3px; padding: 1px 6px; }
 .chan b { color: var(--c); font-weight: 500; }
 section h2 { font-family: var(--display); font-weight: 500; font-size: 20px; margin: 0 0 10px; }
@@ -69,11 +74,15 @@ footer a { color: var(--accent); }
 <div class="wrap">
   <header>
     <div>
-      <span class="draft">Palette v0.2 · Retro chip</span>
+      <span class="draft">Palette v0.3 · Enhanced retro</span>
       <h1>Sound Room</h1>
-      <p class="sub">Elementals Unbound's music, as it's written. Each strip plays the main motif in that element's sound, on a four-channel handheld chip: two pulse waves, a wavetable bass and a noise drum. Press play; sound starts after your first tap.</p>
+      <p class="sub">Elementals Unbound's music, as it's written. Each strip plays the main motif in that element's sound, in an enhanced retro style: handheld-RPG writing with a fuller, smoother sound. Switch to Classic chip to hear the strict 8-bit version. Press play; sound starts after your first tap.</p>
     </div>
     <div class="controls">
+      <div class="seg" role="radiogroup" aria-label="Sound">
+        <input type="radio" name="finish" id="fin-enhanced" value="enhanced" checked><label for="fin-enhanced">Enhanced</label>
+        <input type="radio" name="finish" id="fin-chip" value="chip"><label for="fin-chip">Classic chip</label>
+      </div>
       <label for="loop"><input type="checkbox" id="loop"> Loop</label>
       <label for="vol">Volume <input type="range" id="vol" min="0" max="1" step="0.01" value="0.7"></label>
     </div>
@@ -92,10 +101,10 @@ footer a { color: var(--accent); }
     </section>
     <section>
       <h2>Direction</h2>
-      <p>Retro, in the style of the classic handheld monster-collecting RPGs (set by the designer, 23 Oct 2026). The style and the chip limits are borrowed, the tunes are all original. Still open, to explore later:</p>
+      <p>Retro in the style of the classic handheld monster-collecting RPGs, but less retro than a real handheld: same vibe, fuller sound (set by the designer, 23 Oct 2026). The tunes are all original. Still open, to explore later:</p>
       <ul>
         <li><b>The motif.</b> Keep "Unbound", tweak it, or try another?</li>
-        <li><b>Grit.</b> Clean pulse waves as now, or rougher and closer to real hardware?</li>
+        <li><b>How retro.</b> Is Enhanced the right distance from the handheld, or should it move further either way?</li>
         <li><b>Each element.</b> Does any element sound wrong for its cards? Say which and why.</li>
       </ul>
     </section>
@@ -124,7 +133,7 @@ footer a { color: var(--accent); }
 
   const P2 = { third: "thirds", echo: "echo", arp: "arpeggio", stabs: "stabs" };
   const pct = (d) => (d * 100).toFixed(d === .125 ? 1 : 0) + "%";
-  const chans = (e) => [["P1", "lead " + pct(e.p1.duty)], ["P2", P2[e.p2.style] + " " + pct(e.p2.duty)], ["Wave", e.bass.wave + " bass"], ["Noise", "drums"]]
+  const chans = (e) => [["Lead", "pulse " + pct(e.p1.duty)], ["Harmony", P2[e.p2.style]], ["Bass", e.bass.wave + " wave"], ["Drums", e.drums.length === 12 ? "triplet" : "straight"], ...(e.pad ? [["Pad", "chords"]] : [])]
     .map(([c, v]) => `<span class="chan"><b>${c}</b> ${v}</span>`).join("");
 
   function motifNotes(key) {
@@ -173,6 +182,11 @@ footer a { color: var(--accent); }
 
   let ac = null, vol = null, now = null;
   const volEl = document.getElementById("vol"), loopEl = document.getElementById("loop");
+  const finish = () => (document.querySelector('input[name=finish]:checked') || {}).value || "enhanced";
+  try { const f = localStorage.getItem("sr-finish"); if (f && document.getElementById("fin-" + f)) document.getElementById("fin-" + f).checked = true; } catch (e) {}
+  document.querySelectorAll("input[name=finish]").forEach((r) => r.addEventListener("change", () => {
+    try { localStorage.setItem("sr-finish", finish()); } catch (e) {}
+    if (now) play(now.key); }));
   try { const v = localStorage.getItem("sr-vol"); if (v) volEl.value = v; loopEl.checked = localStorage.getItem("sr-loop") === "1"; } catch (e) {}
   volEl.addEventListener("input", () => { if (vol) vol.gain.value = +volEl.value; try { localStorage.setItem("sr-vol", volEl.value); } catch (e) {} });
   loopEl.addEventListener("change", () => { try { localStorage.setItem("sr-loop", loopEl.checked ? "1" : "0"); } catch (e) {} });
@@ -182,7 +196,7 @@ footer a { color: var(--accent); }
     if (!ac) { ac = new (window.AudioContext || window.webkitAudioContext)(); vol = ac.createGain(); vol.connect(ac.destination); }
     ac.resume(); vol.gain.value = +volEl.value;
     const bus = ac.createGain(); bus.connect(vol);
-    const t0 = ac.currentTime + .08, len = EUSynth.sketch(ac, bus, key, t0);
+    const t0 = ac.currentTime + .08, len = EUSynth.sketch(ac, bus, key, t0, { finish: finish() });
     now = { key, bus, t0, len, beat: 60 / PALETTE[key].bpm, beatPos: 0, next: null };
     cards[key].el.classList.add("playing"); cards[key].btn.innerHTML = STOP; cards[key].btn.setAttribute("aria-label", "Stop " + PALETTE[key].name);
     queueNext(); requestAnimationFrame(tick);
@@ -190,7 +204,7 @@ footer a { color: var(--accent); }
   function queueNext() { // schedule the next statement slightly ahead when looping
     const n = now; n.next = setTimeout(() => {
       if (now !== n) return;
-      if (loopEl.checked) { const t = n.t0 + n.len; EUSynth.sketch(ac, n.bus, n.key, t); n.t0 = t; queueNext(); }
+      if (loopEl.checked) { const t = n.t0 + n.len; EUSynth.sketch(ac, n.bus, n.key, t, { finish: finish() }); n.t0 = t; queueNext(); }
       else n.next = setTimeout(() => { if (now === n) stop(); }, (n.t0 + n.len - ac.currentTime + 2.5) * 1000);
     }, Math.max(0, (n.t0 + n.len - ac.currentTime - .4) * 1000));
   }
