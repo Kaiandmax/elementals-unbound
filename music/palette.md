@@ -1,10 +1,21 @@
-# Sound palette (v0.2)
+# Sound palette (v0.3)
 
-Status: **direction set, details still open.** The designer chose *retro, in the style of the classic handheld monster-collecting RPGs (Pokemon)* on 2026-10-23, with specifics to be explored later. We take the style and the sound-chip limits, never melodies from those games: every tune here is original.
+Status: **direction set, details still open.** On 2026-10-23 the designer chose *retro, in the style of the classic handheld monster-collecting RPGs (Pokemon)*, then asked for it *"a little less retro… similar vibe but less sounds like it's coming out of a gameboy."* Every tune here is original; only the style is borrowed.
 
-## The sound: a four-channel handheld chip
+## Two finishes, one arrangement
 
-Everything is written for the same four channels the 8-bit handheld sound chip had, and each channel plays one note at a time:
+The music is still **written** like a handheld RPG score: four parts (lead, harmony, bass, drums), bouncy octave bass, arpeggios, delayed vibrato. It is **played** in one of two finishes (`EUSynth.sketch(..., {finish})`):
+
+| Finish | What it sounds like | Status |
+|---|---|---|
+| **Enhanced** (default) | Same writing, fuller sound: smooth envelopes instead of stepped volume, two slightly detuned pulse waves per part, filtered so they're not buzzy, the thinnest pulse widened a little, a soft chord pad under four of the elements, synthesized kick, snare and hats, stereo width and a short reverb | What the game uses |
+| **Classic chip** | The strict four-channel 8-bit handheld chip described below | Kept for comparison and for a possible "retro" option |
+
+Measured on the renders, Enhanced has about a tenth of the chip's energy above 5 kHz (where the buzz lives) and real stereo width (side/mid about 0.2, the chip is mono).
+
+## The arrangement: four parts, written like the handheld chip
+
+Each part maps to one channel of the 8-bit handheld sound chip, and in the Classic chip finish each plays one note at a time:
 
 | Channel | Sound | Job in every track |
 |---|---|---|
@@ -13,7 +24,7 @@ Everything is written for the same four channels the 8-bit handheld sound chip h
 | **Wave** | 32-step, 4-bit wavetable | Bass, often bouncing in octaves |
 | **Noise** | LFSR noise (long and short "metallic" modes) | All percussion: kick, snare, hats, rolls, the Lightning "zap" |
 
-Volume envelopes step through 16 levels at 1/64 s, like the hardware. Thin duty (12.5 %) sounds reedy and airy; 50 % is round and hollow; 25 % is the bright middle. Those duty choices, plus the wavetable and drum pattern, are most of what tells the elements apart.
+In Classic chip, volume envelopes step through 16 levels at 1/64 s, like the hardware. Thin duty (12.5 %) sounds reedy and airy; 50 % is round and hollow; 25 % is the bright middle. Those duty choices, plus the wavetable and drum pattern, are most of what tells the elements apart.
 
 The palette is also data: `music/palette.js` holds the same numbers and `music/synth.js` plays them. The [Sound Room](https://claude.ai/artifact/Nz4Vs5tjXdGoexGgbza3o8) plays each element's sketch.
 
@@ -59,6 +70,8 @@ Each element gets a mode, a home key, a tempo range, a rhythm, and signature sou
 
 The main theme is D Dorian at 120: a 50 % lead with vibrato, 25 % thirds underneath, triangle-wave octave bass and a simple kick-snare beat.
 
+In Enhanced, Main, Water, Earth and Wind add a soft chord pad; Fire and Lightning stay without one so they keep their punch, with lighter drums.
+
 Card-game ties (from the card files): Fire is haste and burn, so it is the fastest steady beat; Water is draw, freeze and big blockers, so it is the slowest and most sustained; Earth is walls and ramp into giants, so it sits lowest and heaviest; Wind is fliers and bounce, so it floats in triplets with the bright raised 4th; Lightning is chain spells and thresholds, so it is the busiest rhythm with a stab that "discharges" every bar.
 
 ### Confluences (dual and triple decks)
@@ -74,21 +87,21 @@ Battles last about 3 turns, so each element gets a short loop (8-16 bars) built 
 
 ## Limits
 
-This is synthesized in the browser (Web Audio), emulating the four-channel chip rather than sampling it. Pulse waves are band-limited, so they are cleaner than real hardware (no aliasing hiss); a grittier mode is possible if the designer wants it. MIDI export is planned so a track can move into a DAW or to a human composer later.
+Everything is synthesized in the browser (Web Audio); nothing is sampled. Enhanced can move further from the handheld (real-instrument-like voices, more parts) or back toward it, a knob at a time. MIDI export is planned so a track can move into a DAW or to a human composer later.
 
 ## Checks
 
-`node music/tools/render-check.js` renders every sketch offline in headless Chromium and fails on clipping (peak above -1 dBFS), a tail that doesn't decay, or bad samples. Run with `NODE_PATH=$(npm root -g)` if Playwright is installed globally. Add `--wav <dir>` to save WAVs.
+`node music/tools/render-check.js` renders every sketch in both finishes offline in headless Chromium and fails on clipping (peak above -1 dBFS), a tail that doesn't decay, or bad samples. Run with `NODE_PATH=$(npm root -g)` if Playwright is installed globally. Add `--wav <dir>` to save WAVs.
 
-Last run (v0.2 chip sketches, 4 bars each). Loudness is matched to -14.5 dBFS RMS with per-element trims in `palette.js`:
+Last run (v0.3, 4-bar sketches). Loudness target -14.5 dBFS RMS, set with per-element trims in `palette.js` (`trimHD` for Enhanced, `trim` for Classic chip). Fire and Lightning sit about 1 dB lower in Enhanced because the bus compressor holds their drum peaks down.
 
-| Sketch | Length | Peak | RMS |
+| Sketch | Length | Enhanced peak / RMS | Classic chip peak / RMS |
 |---|---|---|---|
-| Main theme | 8.0 s | -2.2 dBFS | -14.4 dBFS |
-| Fire | 6.3 s | -1.6 dBFS | -14.5 dBFS |
-| Water | 10.0 s | -6.2 dBFS | -14.5 dBFS |
-| Earth | 9.6 s | -3.4 dBFS | -14.5 dBFS |
-| Wind | 7.3 s | -2.5 dBFS | -14.5 dBFS |
-| Lightning | 5.7 s | -1.3 dBFS | -14.5 dBFS |
+| Main theme | 8.0 s | -3.0 / -14.2 dBFS | -2.2 / -14.4 dBFS |
+| Fire | 6.3 s | -1.4 / -15.9 dBFS | -1.6 / -14.5 dBFS |
+| Water | 10.0 s | -4.7 / -14.0 dBFS | -6.2 / -14.5 dBFS |
+| Earth | 9.6 s | -3.3 / -14.2 dBFS | -3.4 / -14.5 dBFS |
+| Wind | 7.3 s | -2.7 / -14.4 dBFS | -2.5 / -14.5 dBFS |
+| Lightning | 5.7 s | -1.9 / -15.5 dBFS | -1.3 / -14.5 dBFS |
 
 A spectrum check on the renders confirms the opening lead pitches (main D4 at 294 Hz, Earth A3 at 220 Hz, Fire E4 over its E3 bass).

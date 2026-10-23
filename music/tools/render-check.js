@@ -13,12 +13,12 @@ const root = path.join(__dirname, "..");
   for (const f of ["palette.js", "synth.js"]) await page.addScriptTag({ content: fs.readFileSync(path.join(root, f), "utf8") });
   const res = await page.evaluate(async (wantWav) => {
     const out = [];
-    for (const key of Object.keys(EU_PALETTE.PALETTE)) {
+    for (const finish of EUSynth.FINISHES) for (const key of Object.keys(EU_PALETTE.PALETTE)) {
       const sr = 44100, tail = 4;
       const probe = new OfflineAudioContext(2, sr, sr);
-      const len = EUSynth.sketch(probe, probe.destination, key, 0); // schedule once to learn the length
+      const len = EUSynth.sketch(probe, probe.destination, key, 0, { finish }); // schedule once to learn the length
       const ctx = new OfflineAudioContext(2, Math.ceil((len + tail) * sr), sr);
-      EUSynth.sketch(ctx, ctx.destination, key, 0);
+      EUSynth.sketch(ctx, ctx.destination, key, 0, { finish });
       const buf = await ctx.startRendering();
       let peak = 0, sum = 0, nan = 0, n = 0, bodySum = 0, bodyN = 0;
       for (let c = 0; c < buf.numberOfChannels; c++) { const d = buf.getChannelData(c);
@@ -28,7 +28,7 @@ const root = path.join(__dirname, "..");
       const d0 = buf.getChannelData(0), last = d0.subarray(d0.length - 2205);
       let tailPeak = 0; for (const x of last) tailPeak = Math.max(tailPeak, Math.abs(x));
       const db = (v) => (20 * Math.log10(v || 1e-9)).toFixed(1);
-      const row = { key, seconds: +len.toFixed(2), peakDb: db(peak), rmsDb: db(Math.sqrt(bodySum / bodyN)), tailPeakDb: db(tailPeak), nan };
+      const row = { key, finish, seconds: +len.toFixed(2), peakDb: db(peak), rmsDb: db(Math.sqrt(bodySum / bodyN)), tailPeakDb: db(tailPeak), nan };
       if (wantWav) { // 16-bit stereo WAV as base64
         const L = buf.getChannelData(0), R = buf.getChannelData(1), N = L.length, ab = new ArrayBuffer(44 + N * 4), v = new DataView(ab);
         const ws = (o, s) => [...s].forEach((ch, i) => v.setUint8(o + i, ch.charCodeAt(0)));
@@ -46,13 +46,13 @@ const root = path.join(__dirname, "..");
   await browser.close();
   let bad = 0;
   for (const r of res) {
-    if (wavDir) { fs.mkdirSync(wavDir, { recursive: true }); fs.writeFileSync(path.join(wavDir, r.key + ".wav"), Buffer.from(r.wav, "base64")); delete r.wav; }
+    if (wavDir) { fs.mkdirSync(wavDir, { recursive: true }); fs.writeFileSync(path.join(wavDir, r.finish + "-" + r.key + ".wav"), Buffer.from(r.wav, "base64")); delete r.wav; }
     const flags = [];
     if (+r.peakDb > -1) flags.push("CLIPPING RISK");
     if (+r.tailPeakDb > -60) flags.push("TAIL NOT SILENT");
     if (r.nan) flags.push("NaN SAMPLES");
     if (flags.length) bad++;
-    console.log(`${r.key.padEnd(10)} ${String(r.seconds).padStart(6)}s  peak ${r.peakDb.padStart(6)} dBFS  rms ${r.rmsDb.padStart(6)} dBFS  tail ${r.tailPeakDb.padStart(6)} dBFS  ${flags.join(", ") || "ok"}`);
+    console.log(`${r.finish.padEnd(9)} ${r.key.padEnd(10)} ${String(r.seconds).padStart(6)}s  peak ${r.peakDb.padStart(6)} dBFS  rms ${r.rmsDb.padStart(6)} dBFS  tail ${r.tailPeakDb.padStart(6)} dBFS  ${flags.join(", ") || "ok"}`);
   }
   process.exit(bad ? 1 : 0);
 })();
