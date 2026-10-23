@@ -6,3 +6,8 @@ Owned by the Music agent (`studio/roles/music.md`). Scores are code: data played
 - `tracks/` — one score per track
 - `player.js` — playback API the game calls
 - `sfx/` — short sound effects
+- `palette.js`, `synth.js` — the palette as data and the Web Audio synth that plays it
+- `soundroom.html` — source of the Sound Room page (published with `palette.js` and `synth.js` beside it)
+- `tools/render-check.js` — offline render check (peak, loudness, tail) in headless Chromium
+
+Sound Room: https://claude.ai/artifact/Nz4Vs5tjXdGoexGgbza3o8
