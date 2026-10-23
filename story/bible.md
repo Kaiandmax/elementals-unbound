@@ -148,7 +148,7 @@ Confluence regions sit where two nations' leylines cross (Steam springs on the L
 
 ## The hero
 
-**Wren Calder**, 18 (proposed name; the design sticks either way).
+**Wren Calder**, 18 (proposed name). The player picks Wren's gender at the start; everything else about Wren is fixed.
 
 - **Origin:** a miller's child from **Brindle Ford** in the Hearthvale. At eight, Wren watched a crowned Fire wild burn half the Ford until Seraphine Vael walked in and ended it in one call. Wren has wanted to be her ever since.
 - **Start:** a fresh Tin-rank binder with one secondhand starter deck and more nerve than skill. Not special. No destiny, no hidden bloodline. Wren rises by working.
@@ -230,7 +230,7 @@ Some romance options, optional and built from camp scenes and loyalty quests. Pr
 - **How it works:** affinity grows through camp-scene choices and loyalty quests. In Act III Wren can commit to one of them, or to none. A committed romance changes camp scenes, at least one key scene per act from then on, and the ending.
 - **What it adds to the story:** each romance raises the stakes in that companion's arc. Pell's choice between his family and his oath, Isa exposing her family, Kes reclaiming his crown, Tamsin facing her god: in each case Wren has a personal reason to stand by them.
 - **Tone:** sincere and slow-burning, in keeping with the game's earnest tone. Nothing explicit.
-- **Open question:** Wren is a fixed character, but the bible hasn't set Wren's gender. Options are (a) a set gender, (b) the player picks at the start (the same character and story with different pronouns and portrait), or (c) left neutral. This affects romance writing for every option.
+- **Wren's gender (designer, 2026-10-23): the player picks at the start.** Same character, voice and story; the choice sets the portrait, the sprite and the pronouns. All four romances are open whichever the player picks. Dialogue that names Wren's gender uses a pronoun token for Game Dev to fill in.
 
 ## What's next
 
