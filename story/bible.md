@@ -107,7 +107,7 @@ For most of the game these are figures far above the hero: names on posters, a c
 
 ### The party (proposed)
 
-A 30–50 hour JRPG needs a travelling party, people whose lives the player learns over dozens of hours. Wren's hunting crew is five companions, **one from each nation**. Every nation's turn in the war is personal for someone at the campfire, and each companion's home is a region the party visits with them. Each one has a personal arc with its own chapter, a loyalty quest and a rank-up beside Wren. (Whether companions fight in battle is a gameplay question; see *Open questions*.)
+A 30–50 hour JRPG needs a travelling party, people whose lives the player learns over dozens of hours. Wren's hunting crew is five companions, **one from each nation**. Every nation's turn in the war is personal for someone at the campfire, and each companion's home is a region the party visits with them. Each one has a personal arc with its own chapter, a loyalty quest and a rank-up beside Wren. (Companions never duel directly; they take on the extra monsters while Wren fights the main one. See *Companions in battle*.)
 
 | Companion | From | Element | Who they are | Arc |
 |---|---|---|---|---|
@@ -214,10 +214,23 @@ These are the world facts other roles build on. Each will be logged as a board d
 - Wilds and bindings: descriptive card names as they are now. Named great wilds keep a name and a history.
 - **Open question:** a few cards use real-world gods' names (Raijin, Raiden, Gaia, Atlas, the Thunder God). The proposal is to rename them into Aster's own legends (Vol, the storm god of the Stormcourt; Earthbinder Gorr; and so on) in a later card-names PR, which Balance reviews.
 
-## Open questions for the designer
+## Companions in battle (designer, 2026-10-23)
 
-- **Do companions fight?** JRPG parties usually do. Options: companions are story-only; you can duel *as* a companion in their chapter (using their deck); or companions add a small effect to your battles (an assist). Changing how battles work is a card-game question for TCG Design and Game Dev, and the final call is yours.
-- **Romance or not?** Many long JRPGs have optional bonds. The default here is close friendships and no romance.
+**Companions don't duel directly. Wren is always the one at the table.** When a fight has more than one monster, the companions take on the others while Wren focuses on the main one. In the story this is how a Covenant crew hunts: the lead binder takes the big wild, and the crew keeps its pack, its brood or the rift's spawn off them.
+
+- This gives every multi-monster scene a reason to have the party there. "Brann, Dove: hold the brood. Wren, the mother's yours."
+- Companions can be seen and heard during the fight (barks, cut-ins) and can win or struggle with their side of it. A companion's fight going badly is a natural story beat; Dove's death in Act III is the crew holding a second front too long.
+- How the side fights show up in the game (pure story, a timer, an effect on Wren's battle, a result after the battle) is a mechanics question for TCG Design and Game Dev.
+
+## Romance (designer, 2026-10-23)
+
+Some romance options, optional and built from camp scenes and loyalty quests. Proposal:
+
+- **Who can be romanced:** Pell, Isa, Kes and Tamsin. Brann is married to Dove, so his bond is friendship and, after Act III, grief.
+- **How it works:** affinity grows through camp-scene choices and loyalty quests. In Act III Wren can commit to one of them, or to none. A committed romance changes camp scenes, at least one key scene per act from then on, and the ending.
+- **What it adds to the story:** each romance raises the stakes in that companion's arc. Pell's choice between his family and his oath, Isa exposing her family, Kes reclaiming his crown, Tamsin facing her god: in each case Wren has a personal reason to stand by them.
+- **Tone:** sincere and slow-burning, in keeping with the game's earnest tone. Nothing explicit.
+- **Open question:** Wren is a fixed character, but the bible hasn't set Wren's gender. Options are (a) a set gender, (b) the player picks at the start (the same character and story with different pronouns and portrait), or (c) left neutral. This affects romance writing for every option.
 
 ## What's next
 
