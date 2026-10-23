@@ -1,0 +1,303 @@
+<title>Elementals Studio Board</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#f4f1ea; --panel:#fffdf8; --panel2:#ebe6db; --line:#d9d2c3; --fg:#1f1c17; --mut:#6b6457; --faint:#9a9284;
+  --accent:#7a4cc2; --accent-fg:#fff;
+  --balance:#b8860b; --story:#a23b5a; --music:#2f7d8c; --gamedev:#c4561f; --you:#4a4ad0;
+  --warn:#b4471d; --ok:#3f7d3a;
+  --shadow:0 1px 0 rgba(40,30,10,.04),0 6px 18px -10px rgba(40,30,10,.25);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#15131a; --panel:#1d1a23; --panel2:#262230; --line:#363042; --fg:#ece7f2; --mut:#a59db3; --faint:#756d84;
+  --accent:#a985ec; --accent-fg:#16121d;
+  --balance:#e0b43f; --story:#e57a98; --music:#5cc0cf; --gamedev:#f08a52; --you:#8f8ff5;
+  --warn:#f08a52; --ok:#7fc274; --shadow:0 6px 18px -10px rgba(0,0,0,.6); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#15131a; --panel:#1d1a23; --panel2:#262230; --line:#363042; --fg:#ece7f2; --mut:#a59db3; --faint:#756d84;
+  --accent:#a985ec; --accent-fg:#16121d;
+  --balance:#e0b43f; --story:#e57a98; --music:#5cc0cf; --gamedev:#f08a52; --you:#8f8ff5;
+  --warn:#f08a52; --ok:#7fc274; --shadow:0 6px 18px -10px rgba(0,0,0,.6); color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--fg);font:15px/1.5 Manrope,system-ui,sans-serif;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
+.wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+h1,h2,h3{font-family:Fraunces,Georgia,serif;font-weight:650;margin:0;text-wrap:balance}
+h1{font-size:30px;letter-spacing:-.01em}
+h2{font-size:19px}
+.lbl{font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:var(--mut);font-weight:700}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12.5px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px}
+header p{margin:4px 0 0;color:var(--mut);max-width:62ch}
+.conn{font-size:12px;color:var(--mut);display:flex;align-items:center;gap:6px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--faint)}
+.dot.live{background:var(--ok)}
+/* role chips */
+.r{--c:var(--mut);color:var(--c);font-weight:700}
+.r-balance{--c:var(--balance)}.r-story{--c:var(--story)}.r-music{--c:var(--music)}.r-gamedev{--c:var(--gamedev)}.r-you{--c:var(--you)}
+/* crew */
+.crew{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.agent{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 14px 12px;box-shadow:var(--shadow);
+  border-top:4px solid var(--c);display:flex;flex-direction:column;gap:6px;min-width:0}
+.agent .top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.agent h3{font-size:17px;color:var(--c)}
+.agent .glyph{font-size:18px;opacity:.85}
+.agent .focus{font-size:13.5px;min-height:2.8em}
+.agent .meta{font-size:12px;color:var(--mut);display:flex;justify-content:space-between;gap:6px;flex-wrap:wrap}
+.pill{display:inline-block;border-radius:999px;padding:1px 8px;font-size:11.5px;font-weight:700;background:var(--panel2);color:var(--mut)}
+.pill.hot{background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--warn)}
+/* layout */
+.main{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(0,1fr);gap:22px;align-items:start}
+.col{display:flex;flex-direction:column;gap:14px;min-width:0}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;box-shadow:var(--shadow);min-width:0}
+.bar{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.chip{border:1px solid var(--line);background:var(--panel);color:var(--fg);border-radius:999px;padding:4px 11px;font:600 13px Manrope,sans-serif;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.chip .n{opacity:.6;margin-left:4px;font-weight:500}
+.sp{flex:1}
+/* messages */
+.msgs{display:flex;flex-direction:column;gap:10px}
+.msg{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--c);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.msg.done{opacity:.62}
+.msg .hd{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:baseline}
+.msg .route{font-size:12.5px}
+.msg .route .arrow{color:var(--faint);margin:0 4px}
+.msg .subj{font-weight:700;font-size:15px;flex-basis:100%}
+.msg .body{white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px}
+.msg .ft{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:12px;color:var(--mut)}
+.files{display:flex;flex-wrap:wrap;gap:4px}
+.files span{background:var(--panel2);border-radius:5px;padding:0 6px}
+.replies{display:flex;flex-direction:column;gap:8px;margin-top:4px;padding-left:12px;border-left:2px dashed var(--line)}
+.reply{display:flex;flex-direction:column;gap:3px}
+.reply .body{font-size:13.5px}
+.st{font-size:11.5px;font-weight:700;border-radius:999px;padding:1px 8px}
+.st-open{background:color-mix(in srgb,var(--accent) 16%,transparent);color:var(--accent)}
+.st-answered{background:color-mix(in srgb,var(--music) 16%,transparent);color:var(--music)}
+.st-done{background:var(--panel2);color:var(--mut)}
+button.mini,select.mini{font:600 12px Manrope,sans-serif;border:1px solid var(--line);background:var(--panel);color:var(--fg);border-radius:7px;padding:3px 9px;cursor:pointer}
+button.mini:hover{border-color:var(--fg)}
+/* compose */
+form{display:flex;flex-direction:column;gap:10px}
+.row{display:flex;flex-wrap:wrap;gap:10px}
+.row>label{flex:1 1 140px;display:flex;flex-direction:column;gap:4px;min-width:0}
+input,textarea,select{font:14px Manrope,sans-serif;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;width:100%}
+textarea{min-height:96px;resize:vertical}
+select.mini{width:auto;padding:3px 6px}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--accent);outline-offset:1px}
+.primary{background:var(--accent);color:var(--accent-fg);border:0;border-radius:8px;padding:9px 16px;font:700 14px Manrope,sans-serif;cursor:pointer}
+.primary:disabled{opacity:.5;cursor:default}
+.threadnote{font-size:12.5px;color:var(--mut);display:flex;gap:8px;align-items:center}
+/* side lists */
+.list{display:flex;flex-direction:column;gap:10px}
+.dec{border-bottom:1px solid var(--line);padding-bottom:10px;display:flex;flex-direction:column;gap:3px}
+.dec:last-child{border-bottom:0;padding-bottom:0}
+.dec b{font-size:14px}
+.dec .body{font-size:13.5px;color:var(--fg);white-space:pre-wrap;overflow-wrap:anywhere}
+.dec .meta,.claim .meta{font-size:12px;color:var(--mut)}
+.claim{display:flex;gap:8px;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:8px}
+.claim:last-child{border-bottom:0;padding-bottom:0}
+.claim>div{min-width:0}
+.claim .mono{overflow-wrap:anywhere}
+.empty{color:var(--mut);font-size:13.5px;padding:18px 6px;text-align:center}
+.empty b{display:block;font-family:Fraunces,serif;font-size:16px;color:var(--fg);margin-bottom:4px}
+.note{font-size:12.5px;color:var(--mut)}
+.err{color:var(--warn);font-size:13px}
+details summary{cursor:pointer;font-weight:700;font-size:13px}
+details pre{white-space:pre-wrap;font-size:12px;background:var(--panel2);padding:10px;border-radius:8px;overflow-x:auto}
+@media (max-width:900px){.main{grid-template-columns:minmax(0,1fr)}.crew{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:460px){.crew{grid-template-columns:minmax(0,1fr)}h1{font-size:25px}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <div class="lbl">Elementals Unbound · studio</div>
+      <h1>Studio Board</h1>
+      <p>Where the four agents hand work to each other and to you. Anything that crosses out of one role's lane gets posted here; each agent checks the board when it starts a task.</p>
+    </div>
+    <div class="conn"><span class="dot" id="dot"></span><span id="connText">Connecting…</span></div>
+  </header>
+
+  <section class="crew" id="crew" aria-label="Agents"></section>
+
+  <div class="main">
+    <div class="col">
+      <div class="bar" id="filters" role="toolbar" aria-label="Filter messages"></div>
+      <div class="bar">
+        <span class="lbl">Show</span>
+        <button class="chip" data-st="active" aria-pressed="true">Open &amp; answered</button>
+        <button class="chip" data-st="all" aria-pressed="false">Everything</button>
+      </div>
+      <div class="msgs" id="msgs"><div class="empty">Loading the board…</div></div>
+    </div>
+
+    <div class="col">
+      <section class="panel" aria-labelledby="composeH">
+        <h2 id="composeH" style="margin-bottom:10px">Post as you</h2>
+        <form id="compose">
+          <div class="threadnote" id="threadNote" hidden><span>Replying in a thread</span><button type="button" class="mini" id="unthread">Start a new thread instead</button></div>
+          <div class="row">
+            <label><span class="lbl">To</span>
+              <select id="fTo">
+                <option value="balance">Balance</option><option value="story">Story</option>
+                <option value="music">Music</option><option value="gamedev">Game Dev</option>
+                <option value="all">All agents</option>
+              </select></label>
+            <label><span class="lbl">Priority</span>
+              <select id="fPri"><option value="normal">Normal</option><option value="high">High</option><option value="blocking">Blocking</option></select></label>
+          </div>
+          <label style="display:flex;flex-direction:column;gap:4px"><span class="lbl">Subject</span><input id="fSubj" maxlength="140" required placeholder="e.g. Boss fights need a phase-two mechanic"></label>
+          <label style="display:flex;flex-direction:column;gap:4px"><span class="lbl">Message</span><textarea id="fBody" required placeholder="What you need, and any constraints."></textarea></label>
+          <div class="row" style="align-items:center"><button class="primary" id="send" type="submit">Post</button><span class="err" id="fErr"></span></div>
+        </form>
+        <p class="note" style="margin:10px 0 0">The agents only read the board when you start or continue their chat, so after posting, nudge that agent's chat with "check the board".</p>
+      </section>
+
+      <section class="panel" aria-labelledby="decH">
+        <h2 id="decH" style="margin-bottom:10px">Decisions</h2>
+        <div class="list" id="decs"></div>
+      </section>
+
+      <section class="panel" aria-labelledby="clH">
+        <h2 id="clH" style="margin-bottom:4px">Files in use</h2>
+        <p class="note" style="margin:0 0 10px">An agent claims a file before editing it so two chats don't overwrite each other. Release one here if an agent forgot.</p>
+        <div class="list" id="claims"></div>
+      </section>
+
+      <details class="panel">
+        <summary>How agents write here</summary>
+        <pre>messages/{id}  from, to, subject, body, status (open|answered|done),
+               priority (normal|high|blocking), created (ms), thread?, files?
+decisions/{id} role, title, body, created
+status/{role}  focus, notes, updated
+claims/{file with / as ~}  file, role, note, since</pre>
+      </details>
+    </div>
+  </div>
+</div>
+
+<script>
+const ROLES={
+  balance:{name:"Balance",glyph:"⚖",blurb:"Card values, decks, win rates"},
+  story:{name:"Story",glyph:"✒",blurb:"World, plot, characters, card flavor"},
+  music:{name:"Music",glyph:"♪",blurb:"Themes, battle and dungeon music"},
+  gamedev:{name:"Game Dev",glyph:"⚒",blurb:"Engine, RPG systems, UI"},
+  you:{name:"You",glyph:"★",blurb:""},
+  all:{name:"All agents",glyph:"",blurb:""}
+};
+const AGENTS=["balance","story","music","gamedev"];
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const rn=r=>(ROLES[r]||{name:r||"?"}).name;
+const rc=r=>"r r-"+(ROLES[r]?r:"x");
+function ago(t){if(!t)return"";const s=(Date.now()-t)/1000;if(s<60)return"just now";if(s<3600)return Math.floor(s/60)+"m ago";if(s<86400)return Math.floor(s/3600)+"h ago";if(s<86400*7)return Math.floor(s/86400)+"d ago";return new Date(t).toLocaleDateString(undefined,{month:"short",day:"numeric"})}
+
+let db=null, canWrite=true;
+const state={msgs:[],decs:[],status:{},claims:[],filter:"all",st:"active",thread:null};
+let lsFilter=null;try{lsFilter=localStorage.getItem("sb.filter")}catch(e){}
+if(lsFilter)state.filter=lsFilter;
+
+function renderCrew(){
+  $("#crew").innerHTML=AGENTS.map(r=>{
+    const s=state.status[r]||{};
+    const open=state.msgs.filter(m=>(m.to===r||m.to==="all")&&m.status==="open"&&!m.thread).length;
+    return `<article class="agent r-${r}" style="--c:var(--${r})">
+      <div class="top"><h3>${ROLES[r].name}</h3><span class="glyph" aria-hidden="true">${ROLES[r].glyph}</span></div>
+      <div class="lbl" style="letter-spacing:.06em">${esc(ROLES[r].blurb)}</div>
+      <div class="focus">${s.focus?esc(s.focus):'<span style="color:var(--mut)">Not started yet</span>'}</div>
+      <div class="meta"><span>${s.updated?"Updated "+ago(s.updated):""}</span><span class="pill ${open?"hot":""}">${open} open for it</span></div>
+    </article>`}).join("");
+}
+function renderFilters(){
+  const top=state.msgs.filter(m=>!m.thread);
+  const cnt=k=>k==="all"?top.length:top.filter(m=>m.to===k||m.from===k||(m.to==="all"&&k!=="you")).length;
+  const keys=["all","you",...AGENTS];
+  $("#filters").innerHTML=`<span class="lbl">Messages</span>`+keys.map(k=>
+    `<button class="chip" data-f="${k}" aria-pressed="${state.filter===k}">${k==="all"?"All":k==="you"?"For you":ROLES[k].name}<span class="n">${cnt(k)}</span></button>`).join("");
+}
+function msgHTML(m,isReply){
+  const files=(Array.isArray(m.files)&&m.files.length)?`<div class="files mono">${m.files.map(f=>`<span>${esc(f)}</span>`).join("")}</div>`:"";
+  const pri=m.priority&&m.priority!=="normal"?`<span class="pill hot">${esc(m.priority)}</span>`:"";
+  if(isReply) return `<div class="reply"><div class="route"><span class="${rc(m.from)}">${rn(m.from)}</span> <span style="color:var(--faint)">· ${ago(m.created)}</span></div><div class="body">${esc(m.body)}</div>${files}</div>`;
+  const reps=state.msgs.filter(x=>x.thread===m.id).sort((a,b)=>a.created-b.created);
+  const ctl=canWrite?`<select class="mini" data-status="${esc(m.id)}" aria-label="Status">${["open","answered","done"].map(s=>`<option ${m.status===s?"selected":""}>${s}</option>`).join("")}</select><button class="mini" data-reply="${esc(m.id)}">Reply</button>`:"";
+  return `<article class="msg ${m.status==="done"?"done":""}" style="--c:var(--${ROLES[m.from]?m.from:"line"})">
+    <div class="hd"><span class="route"><span class="${rc(m.from)}">${rn(m.from)}</span><span class="arrow">→</span><span class="${rc(m.to)}">${rn(m.to)}</span></span>
+      <span class="st st-${esc(m.status||"open")}">${esc(m.status||"open")}</span>${pri}
+      <span class="subj">${esc(m.subject||"(no subject)")}</span></div>
+    <div class="body">${esc(m.body)}</div>${files}
+    ${reps.length?`<div class="replies">${reps.map(r=>msgHTML(r,true)).join("")}</div>`:""}
+    <div class="ft"><span>${ago(m.created)}</span><span class="sp"></span>${ctl}</div>
+  </article>`;
+}
+function renderMsgs(){
+  const f=state.filter;
+  let top=state.msgs.filter(m=>!m.thread);
+  if(f!=="all") top=top.filter(m=>m.to===f||m.from===f||(m.to==="all"&&f!=="you"));
+  if(state.st==="active") top=top.filter(m=>m.status!=="done");
+  const last=m=>Math.max(m.created||0,...state.msgs.filter(x=>x.thread===m.id).map(x=>x.created||0));
+  top.sort((a,b)=>last(b)-last(a));
+  $("#msgs").innerHTML=top.length?top.map(m=>msgHTML(m)).join(""):
+    `<div class="panel empty"><b>${state.msgs.length?"Nothing here":"The board is quiet"}</b>${state.msgs.length?"No messages match this filter.":"Agents post here when a question lands outside their lane, like Story needing a boss mechanic from Game Dev, or Balance asking you to pick between two fixes."}</div>`;
+}
+function renderDecs(){
+  $("#decs").innerHTML=state.decs.length?state.decs.slice(0,40).map(d=>`<div class="dec"><b>${esc(d.title)}</b><div class="body">${esc(d.body)}</div><div class="meta"><span class="${rc(d.role)}">${rn(d.role)}</span> · ${ago(d.created)}</div></div>`).join("")
+    :`<div class="empty" style="padding:8px">No decisions logged yet.</div>`;
+}
+function renderClaims(){
+  $("#claims").innerHTML=state.claims.length?state.claims.map(c=>`<div class="claim"><div><div class="mono">${esc(c.file||c.id.replace(/~/g,"/"))}</div><div class="meta"><span class="${rc(c.role)}">${rn(c.role)}</span> · ${ago(c.since)}${c.note?" · "+esc(c.note):""}</div></div>${canWrite?`<button class="mini" data-release="${esc(c.id)}">Release</button>`:""}</div>`).join("")
+    :`<div class="empty" style="padding:8px">No files claimed.</div>`;
+}
+function renderAll(){renderCrew();renderFilters();renderMsgs();renderDecs();renderClaims();
+  document.querySelectorAll("[data-st]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.st===state.st));}
+
+document.addEventListener("click",async e=>{
+  const t=e.target.closest("button");if(!t)return;
+  if(t.dataset.f){state.filter=t.dataset.f;try{localStorage.setItem("sb.filter",state.filter)}catch(_){}renderAll();}
+  else if(t.dataset.st){state.st=t.dataset.st;renderAll();}
+  else if(t.dataset.reply){const m=state.msgs.find(x=>x.id===t.dataset.reply);if(!m)return;
+    state.thread=m.id;$("#threadNote").hidden=false;$("#fTo").value=m.from==="you"?(AGENTS.includes(m.to)?m.to:"all"):m.from;
+    $("#fSubj").value=(m.subject||"").startsWith("Re: ")?m.subject:"Re: "+(m.subject||"");$("#fBody").focus();
+    $("#compose").scrollIntoView({behavior:"smooth",block:"center"});}
+  else if(t.id==="unthread"){state.thread=null;$("#threadNote").hidden=true;}
+  else if(t.dataset.release&&db){t.disabled=true;try{await db.doc("claims/"+t.dataset.release).delete()}catch(err){t.disabled=false;showErr(err)}}
+});
+document.addEventListener("change",async e=>{
+  const s=e.target.closest("select[data-status]");if(!s||!db)return;
+  try{await db.doc("messages/"+s.dataset.status).update({status:s.value})}catch(err){showErr(err)}
+});
+function showErr(err){const code=err&&err.code;
+  if(code==="invalid_argument"&&!canWrite) return;
+  if(code==="invalid_argument"){canWrite=false;renderAll();$("#fErr").textContent="You can view this board but not post to it.";return}
+  $("#fErr").textContent=code==="quota_exceeded"?"The board is full. Mark old threads done and ask an agent to archive them.":"Couldn't save that. Try again in a moment.";}
+
+$("#compose").addEventListener("submit",async e=>{
+  e.preventDefault();if(!db)return;$("#fErr").textContent="";
+  const subj=$("#fSubj").value.trim(),body=$("#fBody").value.trim();if(!subj||!body)return;
+  const btn=$("#send");btn.disabled=true;
+  const doc={from:"you",to:$("#fTo").value,subject:subj,body,priority:$("#fPri").value,status:"open",created:Date.now()};
+  try{
+    if(state.thread){doc.thread=state.thread;doc.status="answered";}
+    await db.collection("messages").add(doc);
+    if(state.thread){const p=state.msgs.find(x=>x.id===state.thread);if(p&&p.status!=="open"&&p.from!=="you")await db.doc("messages/"+p.id).update({status:"open"});}
+    $("#fSubj").value="";$("#fBody").value="";state.thread=null;$("#threadNote").hidden=true;
+  }catch(err){showErr(err)}finally{btn.disabled=false}
+});
+
+renderAll();
+(async()=>{
+  try{db=await claude.use("db")}catch(e){db=null}
+  if(!db){$("#connText").textContent="Board data unavailable in this view";$("#msgs").innerHTML='<div class="panel empty"><b>Can\'t reach the board</b>Open this page signed in to claude.ai to see and post messages.</div>';$("#send").disabled=true;return}
+  try{const u=await claude.use("user");if(u){const w=await u.can("data.write");if(w===false){canWrite=false;$("#compose").querySelectorAll("input,textarea,select,button").forEach(x=>x.disabled=true);$("#fErr").textContent="View only."}}}catch(e){}
+  const live=()=>{$("#dot").classList.add("live");$("#connText").textContent="Live"};
+  const dead=()=>{$("#dot").classList.remove("live");$("#connText").textContent="Disconnected, reload to reconnect"};
+  db.collection("messages").orderBy("created","desc").limit(400).onSnapshot(s=>{state.msgs=s.docs.map(d=>({id:d.id,...d.data()}));live();renderAll()},dead);
+  db.collection("decisions").orderBy("created","desc").limit(100).onSnapshot(s=>{state.decs=s.docs.map(d=>({id:d.id,...d.data()}));renderDecs()},dead);
+  db.collection("status").onSnapshot(s=>{state.status={};s.docs.forEach(d=>state.status[d.id]=d.data());renderCrew()},dead);
+  db.collection("claims").onSnapshot(s=>{state.claims=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.since||0)-(a.since||0));renderClaims()},dead);
+  setInterval(()=>{renderCrew();renderMsgs();renderDecs();renderClaims()},60000);
+})();
+</script>

@@ -1,0 +1,2148 @@
+<meta charset="utf-8">
+<title>Elementals Unbound Playtest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya+SC:wght@500;700&family=Alegreya+Sans:wght@400;500;700&display=swap">
+<style>
+/* Layout: a card table. Opponent on top, you on the bottom, the turn bar between, a running log on the right. */
+:root{
+  --bg:#101318; --surface:#171c23; --raise:#202733; --line:#2f3946; --ink:#ebe6da; --mute:#97a1ac;
+  --brass:#cda54d; --sapph:#76a2ff; --good:#74d184; --bad:#ef6b5b;
+  --fire:#ea6a3e; --water:#43a0e4; --earth:#b88f4f; --wind:#62cdb1; --lightning:#e8cd47; --volcano:#e2833f; --wildfire:#f0a04b; --plasma:#ec6fb2; --steam:#a9c4d6; --swamp:#7f9a5a; --ice:#9fdcf2; --storm:#7b8cf0; --sand:#d8c08a; --metal:#a3acb9; --tempest:#a6e07a;
+  --geyser:#d68f74; --mirage:#f0c896; --aurora:#b48af5; --ash:#a59089; --forge:#c7703f; --solar:#ffd86a; --glacier:#7ea9e0; --quicksilver:#cfd4ee; --hurricane:#4fb0c6; --glass:#bdeee6;
+  --f-display:"Alegreya SC", Georgia, "Times New Roman", serif;
+  --f-body:"Alegreya Sans", "Segoe UI", system-ui, sans-serif;
+  color-scheme:dark;
+}
+html,body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.35}
+*{box-sizing:border-box}
+button{font:inherit;color:inherit}
+#app{padding-inline:16px;padding-block:14px;max-width:1440px;margin:0 auto}
+h1,h2,h3{font-family:var(--f-display);font-weight:700;margin:0;text-wrap:balance;letter-spacing:.01em}
+.el-volcano{--el:var(--volcano)} .el-wildfire{--el:var(--wildfire)} .el-plasma{--el:var(--plasma)} .el-steam{--el:var(--steam)} .el-swamp{--el:var(--swamp)} .el-ice{--el:var(--ice)} .el-storm{--el:var(--storm)} .el-sand{--el:var(--sand)} .el-metal{--el:var(--metal)} .el-tempest{--el:var(--tempest)} .el-geyser{--el:var(--geyser)} .el-mirage{--el:var(--mirage)} .el-aurora{--el:var(--aurora)} .el-ash{--el:var(--ash)} .el-forge{--el:var(--forge)} .el-solar{--el:var(--solar)} .el-glacier{--el:var(--glacier)} .el-quicksilver{--el:var(--quicksilver)} .el-hurricane{--el:var(--hurricane)} .el-glass{--el:var(--glass)} .el-fire{--el:var(--fire)} .el-water{--el:var(--water)} .el-earth{--el:var(--earth)} .el-wind{--el:var(--wind)} .el-lightning{--el:var(--lightning)}
+.btn{background:var(--raise);border:1px solid var(--line);border-radius:6px;padding:7px 14px;cursor:pointer;font-weight:500}
+.btn:hover{border-color:var(--brass)}
+.btn.primary{background:var(--brass);border-color:var(--brass);color:#1a1408;font-weight:700}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn:focus-visible,.card:focus-visible{outline:2px solid var(--sapph);outline-offset:2px}
+.muted{color:var(--mute)}
+.lbl{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--mute);font-weight:700}
+
+/* Setup */
+.setup{display:grid;gap:22px}
+.setup header p{max-width:62ch;color:var(--mute);margin:.4em 0 0}
+.picks{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:18px}
+.pick{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px;display:grid;gap:10px;align-content:start}
+.tiles{display:flex;flex-wrap:wrap;gap:8px}
+.tiles.conf .tile{padding:5px 10px;min-width:0} .tiles.conf .tile span{font-size:11px}
+.tile{border:1px solid var(--line);background:var(--raise);border-radius:6px;padding:8px 12px;cursor:pointer;display:flex;flex-direction:column;align-items:flex-start;min-width:96px}
+.tile b{font-family:var(--f-display);color:var(--el);font-size:16px}
+.tile span{font-size:12px;color:var(--mute)}
+.tile.on{border-color:var(--el);box-shadow:inset 0 0 0 1px var(--el)}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.decklist{display:grid;gap:10px}
+.tabs{display:flex;gap:6px;border-bottom:1px solid var(--line)}
+.tab{background:none;border:none;border-bottom:3px solid transparent;padding:8px 14px;font-weight:700;cursor:pointer;color:var(--mute)}
+.tab.on{color:var(--ink);border-bottom-color:var(--brass)}
+.decks{display:grid;gap:8px}
+.levels{display:grid;gap:6px}
+.lvrow{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.lvbtn{display:grid;justify-items:center;gap:1px;background:var(--raise);border:1px solid var(--line);border-radius:6px;padding:6px 2px;cursor:pointer}
+.lvbtn b{font-family:var(--f-display);font-size:18px;line-height:1}
+.lvbtn span{font-size:11px;color:var(--mute)}
+.lvbtn.on{border-color:var(--brass);box-shadow:inset 0 0 0 1px var(--brass)}
+.lvbtn.on b{color:var(--brass)}
+.lvbtn:focus-visible{outline:2px solid var(--sapph);outline-offset:2px}
+.lvdesc{margin:0;font-size:13px}
+.deckbtn{--el:var(--mute);display:grid;gap:3px;text-align:left;background:var(--raise);border:1px solid var(--line);border-left:4px solid var(--el);border-radius:6px;padding:8px 12px;cursor:pointer}
+.deckbtn.on{border-color:var(--el);box-shadow:inset 0 0 0 1px var(--el)}
+.deckbtn:focus-visible,.tab:focus-visible,.fbtn:focus-visible,.tile:focus-visible{outline:2px solid var(--sapph);outline-offset:2px}
+.dk-top{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.dk-top b{font-family:var(--f-display);font-size:16px;color:var(--el)}
+.dk-desc{font-size:13px;color:var(--mute)}
+.tier{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;border-radius:10px;padding:1px 8px;border:1px solid currentColor;white-space:nowrap}
+.t-starter{color:var(--brass)} .t-common{color:var(--mute)} .t-uncommon{color:var(--water)} .t-rare{color:var(--lightning)} .t-special{color:var(--aurora)}
+.rt{font-weight:700} .r-s{color:var(--brass)} .r-c{color:var(--mute)} .r-u{color:var(--water)} .r-r{color:var(--lightning)} .r-t{color:var(--mute)}
+.filters{display:grid;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px}
+.frow{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.frow .lbl{min-width:64px}
+.wr-scroll{overflow:auto;max-height:75vh;border:1px solid var(--line);border-radius:8px;margin-top:10px;background:var(--surface)}
+table.wr{border-collapse:separate;border-spacing:0;font-size:12px;font-variant-numeric:tabular-nums}
+table.wr th,table.wr td{padding:3px 5px;border-bottom:1px solid var(--line);border-right:1px solid color-mix(in srgb,var(--line) 50%,transparent);text-align:center;white-space:nowrap}
+table.wr thead th{position:sticky;top:0;z-index:2;background:var(--raise);vertical-align:bottom;color:var(--el,var(--ink))}
+table.wr .wr-col{writing-mode:vertical-rl;transform:rotate(180deg);display:inline-block;max-height:130px;font-weight:700}
+table.wr th.wr-row{position:sticky;left:0;z-index:1;background:var(--raise);text-align:left;border-left:4px solid var(--el,var(--line))}
+table.wr th.wr-row b{color:var(--el,var(--ink))}
+table.wr .wr-corner{left:0;z-index:3;text-align:left;color:var(--mute);font-weight:500}
+table.wr td.wr-self,table.wr td.wr-na{color:var(--mute)}
+.wr-link{background:none;border:none;padding:0;cursor:pointer;color:inherit;font:inherit;text-decoration:underline dotted}
+.wr-focus{margin-top:12px}
+.fbtn{background:var(--raise);border:1px solid var(--line);border-radius:14px;padding:3px 11px;cursor:pointer;font-size:13px}
+.fbtn.on{border-color:var(--brass);color:var(--brass);font-weight:700}
+#libq{flex:1 1 220px;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:7px 10px;color:var(--ink);font:inherit}
+.libcount{margin:4px 0 0}
+.libgrid{padding-top:12px}
+.from{font-size:11px;margin-top:4px;padding-top:4px;border-top:1px dashed var(--line);color:var(--mute)}
+.from span{color:var(--el);font-weight:700}
+.forge{display:grid;gap:12px;padding-top:12px}
+.forge-cols{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.forge-cols.n3{grid-template-columns:1fr 1fr 1fr}
+@media (max-width:640px){.forge-cols,.forge-cols.n3{grid-template-columns:1fr}}
+.flist{display:grid;gap:3px;max-height:340px;overflow:auto;padding:4px;border:1px solid var(--line);border-radius:6px;background:var(--raise)}
+.frow-card{display:grid;grid-template-columns:26px 1fr auto auto;gap:8px;align-items:center;text-align:left;background:none;border:1px solid transparent;border-left:3px solid var(--el);border-radius:4px;padding:4px 8px;cursor:pointer;font:inherit;color:inherit}
+.frow-card:hover{background:var(--bg)}
+.frow-card.on{border-color:var(--brass);background:var(--bg);font-weight:700}
+.frow-card.special i{color:var(--brass);font-style:normal;font-size:11px}
+.fc-cost{font-weight:800;text-align:center}
+.fc-st{color:var(--mute);font-size:12px}
+.forge-eq{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.forge-eq .op{font-size:26px;font-weight:800;color:var(--mute)}
+.card.forged{box-shadow:0 0 0 2px var(--brass)}
+.card.ghost{border-style:dashed;opacity:.6;display:grid;place-items:center;min-height:120px}
+.remind{display:grid;grid-template-columns:auto 1fr;gap:2px 8px;font-size:12px;margin:0;color:var(--mute)}
+.remind dt{font-weight:700;color:var(--ink)}
+.cards{display:flex;flex-wrap:wrap;gap:12px;padding-top:8px}
+
+/* Cards */
+.card{--el:var(--mute);width:128px;min-height:162px;background:var(--raise);border:1px solid var(--line);border-top:4px solid var(--el);border-radius:6px;padding:7px 7px 6px;display:flex;flex-direction:column;gap:3px;font-size:12px;position:relative;transition:transform .12s, outline-color .12s}
+.card .cost{position:absolute;top:-10px;left:-9px;width:24px;height:24px;border-radius:50%;background:var(--brass);color:#1a1408;font-weight:700;display:grid;place-items:center;font-size:13px;font-variant-numeric:tabular-nums;border:2px solid var(--bg)}
+.card .nm{font-family:var(--f-display);font-size:13.5px;line-height:1.1;font-weight:700;padding-left:10px;color:var(--ink)}
+.card .ty{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--el);font-weight:700;padding-left:10px}
+.artbox{display:block;border-radius:4px;overflow:hidden;margin:1px 0;aspect-ratio:240/140;width:100%}
+.art{width:100%;height:100%;display:block}
+.artbox.sm{aspect-ratio:auto;height:40px} .artbox.lg{aspect-ratio:240/140}
+.card .tx{font-size:11.5px;line-height:1.25;color:#d6d1c5;flex:1}
+.card .st{display:flex;justify-content:space-between;font-weight:700;font-variant-numeric:tabular-nums;font-size:14px}
+.card .st .a{color:var(--fire)} .card .st .h{color:var(--good)} .card .st .h.hurt{color:var(--bad)}
+.card .x2{position:absolute;top:4px;right:6px;font-size:11px;color:var(--mute);font-weight:700}
+.card.manifest{border-color:var(--sapph);border-top-color:var(--el);background:linear-gradient(180deg,color-mix(in srgb,var(--sapph) 12%,var(--raise)),var(--raise) 45%)}
+.card.manifest .nm{padding-left:0}
+.card.manifest .ty{padding-left:0}
+.star{position:absolute;top:3px;right:5px;color:var(--sapph);font-size:15px;line-height:1}
+.pips{display:flex;gap:3px;flex-wrap:wrap;margin-right:16px}
+.pip{width:11px;height:11px;border-radius:50%;background:var(--el);box-shadow:0 0 6px color-mix(in srgb,var(--el) 60%,transparent)}
+.pip.empty{background:transparent;box-shadow:none;border:1.5px solid var(--el)}
+.card.playable{outline:2px solid var(--brass);cursor:pointer;transform:translateY(-3px)}
+.card.valid{outline:2px dashed var(--good);cursor:crosshair}
+.card.sel{outline:2px solid var(--sapph);transform:translateY(-3px)}
+.card.dim{opacity:.5}
+
+/* Creatures on the board */
+.cr{--crw:118px;--crh:178px;width:var(--crw);height:var(--crh);min-height:0;overflow:hidden;cursor:default;flex:none}
+.crslot{--crw:118px;--crh:178px;width:var(--crw);height:var(--crh);display:flex;align-items:center;justify-content:center;transition:width .18s,height .18s}
+.crslot.tap{width:var(--crh);height:var(--crw)}
+.crslot .cr{transition:transform .12s, rotate .18s}
+.crslot.tap .cr{rotate:90deg}
+.cr .tag{font-size:10px;text-transform:uppercase;letter-spacing:.06em;font-weight:700;color:var(--mute)}
+.cr .tag.att{color:var(--fire)} .cr .tag.frz{color:var(--water)} .cr .tag.blk{color:var(--sapph)}
+.cr.exh{opacity:.62}
+.cr.frozen{box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--water) 70%,transparent)}
+.cr.attacking{transform:translateY(-6px);box-shadow:0 6px 16px rgba(0,0,0,.45)}
+.mine .cr.attacking{transform:translateY(-6px)}
+.kw{font-size:11px;color:var(--ink);font-weight:700}
+
+/* Combat pairs: an attacker and its blockers share a number and color */
+.pc0{--pc:#ff8f5e} .pc1{--pc:#7cc6ff} .pc2{--pc:#c9a0ff} .pc3{--pc:#8fe08f}
+.card.paired{box-shadow:0 0 0 2px var(--pc),0 0 16px color-mix(in srgb,var(--pc) 50%,transparent)}
+.pair{position:absolute;top:-11px;right:-9px;min-width:26px;height:26px;border-radius:13px;background:var(--pc);color:#121212;font-weight:700;display:grid;place-items:center;font-size:14px;border:2px solid var(--bg);z-index:1}
+.cr .tag.blk{color:var(--pc,var(--sapph))}
+.bar.in-combat{border-color:var(--fire);box-shadow:0 0 0 1px color-mix(in srgb,var(--fire) 40%,transparent)}
+.clash{flex:1 1 100%;display:grid;gap:6px;border-top:1px solid var(--line);padding-top:8px}
+.clash-row{display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;font-size:14px;border-left:4px solid var(--pc);padding:3px 8px;background:color-mix(in srgb,var(--pc) 9%,transparent);border-radius:0 4px 4px 0}
+.pair-in{min-width:22px;height:22px;border-radius:11px;background:var(--pc);color:#121212;font-weight:700;display:grid;place-items:center;font-size:12px}
+.clash .arrow{color:var(--mute)}
+.clash .unb{color:var(--bad);font-weight:700}
+
+/* Game */
+.game{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:16px;align-items:start}
+.table{display:grid;gap:10px;min-width:0}
+.side{display:flex;flex-wrap:wrap;gap:12px 22px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 14px}
+.side .who{display:flex;flex-direction:column;min-width:120px}
+.side .who h2{font-size:19px}
+.side.target{outline:2px dashed var(--good);cursor:crosshair}
+.life{font-family:var(--f-display);font-size:30px;line-height:1;color:var(--bad);font-variant-numeric:tabular-nums}
+.life small{font-size:14px;color:var(--mute);margin-left:2px}
+.hp{font-family:var(--f-body,inherit);font-size:11px;font-weight:700;color:var(--bad);margin-left:6px;white-space:nowrap}
+.dk-meta{display:flex;gap:8px;align-items:baseline}
+.kwt{text-decoration:underline dotted;text-underline-offset:2px;cursor:help;border-radius:3px}
+.kwt:hover,.kwt:focus-visible{background:color-mix(in srgb,var(--el,var(--brass)) 22%,transparent);outline:none}
+#kwtip{position:fixed;z-index:1000;max-width:260px;padding:8px 10px;border-radius:8px;background:var(--panel,#1b1b22);color:var(--ink);
+  border:1px solid color-mix(in srgb,var(--ink) 20%,transparent);box-shadow:0 6px 20px rgba(0,0,0,.35);font-size:12.5px;line-height:1.4;pointer-events:none}
+#kwtip b{display:block;margin-bottom:2px}
+#kwtip[hidden]{display:none}
+.stat{display:flex;flex-direction:column;gap:2px}
+.stat b{font-size:18px;font-variant-numeric:tabular-nums}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--el);color:var(--el);border-radius:20px;padding:1px 9px;font-size:12.5px;font-weight:700;font-variant-numeric:tabular-nums}
+.aura{border:1px solid var(--line);border-left:3px solid var(--el);border-radius:4px;padding:2px 7px;font-size:12px;background:var(--raise)}
+.board{min-height:146px;display:flex;flex-wrap:wrap;gap:12px;align-content:center;padding:14px 12px;border-radius:8px;background:repeating-linear-gradient(135deg,transparent 0 14px,color-mix(in srgb,var(--line) 25%,transparent) 14px 15px),var(--bg);border:1px dashed var(--line)}
+.board .empty{color:var(--mute);font-size:13px;align-self:center}
+.bar{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between;background:var(--surface);border:1px solid var(--brass);border-radius:8px;padding:10px 14px}
+.bar .phase{font-family:var(--f-display);font-size:17px}
+.bar .prompt{flex:1 1 260px;color:var(--ink);font-size:14px}
+.bar .acts{display:flex;gap:8px;flex-wrap:wrap}
+.zone{display:grid;gap:8px}
+.hand{display:flex;flex-wrap:wrap;gap:14px;padding:12px 6px 4px}
+.manis{display:flex;flex-wrap:wrap;gap:14px;padding:12px 6px 4px}
+.rail{position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);display:grid;gap:12px;min-width:0;align-self:start}
+.insp{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px;display:grid;gap:8px;align-content:start;height:min(470px,52vh);overflow-y:auto;overscroll-behavior:contain}
+.fxlayer{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:900;overflow:visible}
+.fxlayer path{fill:none;stroke:var(--brass);stroke-width:4;stroke-linecap:round;filter:drop-shadow(0 0 4px rgba(0,0,0,.6));stroke-dasharray:1200;stroke-dashoffset:1200;animation:fxdraw .45s ease-out forwards}
+.fxlayer marker path{fill:var(--brass);stroke:none;animation:none;stroke-dasharray:none}
+.fxlayer .fxtgt{fill:none;stroke:var(--brass);stroke-width:3;opacity:0;animation:fxtgt .9s ease-out .3s infinite}
+@keyframes fxdraw{to{stroke-dashoffset:0}}
+@keyframes fxtgt{0%{opacity:.9;r:14}100%{opacity:0;r:34}}
+.fxchip{position:fixed;z-index:901;transform:translate(-50%,-140%);background:var(--brass);color:#1a1408;font-weight:700;font-size:13px;padding:3px 10px;border-radius:12px;pointer-events:none;box-shadow:0 4px 12px rgba(0,0,0,.4);white-space:nowrap}
+.fxpop{position:fixed;z-index:902;transform:translate(-50%,-50%);font-family:var(--f-display);font-size:26px;font-weight:700;pointer-events:none;text-shadow:0 2px 6px rgba(0,0,0,.8);animation:fxpop 1.2s ease-out forwards}
+.fxpop.fx-dmg{color:var(--bad)} .fxpop.fx-heal{color:var(--good)} .fxpop.fx-frz{color:var(--water);font-size:18px} .fxpop.fx-info{color:var(--ink);font-size:16px}
+.fxring{position:fixed;z-index:899;width:20px;height:20px;margin:-10px 0 0 -10px;border-radius:50%;border:3px solid var(--bad);pointer-events:none;animation:fxring .6s ease-out forwards}
+.fxring.fx-heal{border-color:var(--good)} .fxring.fx-frz{border-color:var(--water)} .fxring.fx-info{border-color:var(--ink)}
+@keyframes fxpop{0%{opacity:0;transform:translate(-50%,-30%) scale(.7)}15%{opacity:1;transform:translate(-50%,-60%) scale(1.15)}100%{opacity:0;transform:translate(-50%,-160%) scale(1)}}
+@keyframes fxring{0%{opacity:.9;transform:scale(.6)}100%{opacity:0;transform:scale(4)}}
+@media (prefers-reduced-motion:reduce){.fxlayer path{animation:none;stroke-dashoffset:0}.fxlayer .fxtgt{display:none}.fxpop{animation:fxfade 1.2s linear forwards}.fxring{display:none}}
+@keyframes fxfade{0%,70%{opacity:1}100%{opacity:0}}
+.insp p{margin:0;font-size:13.5px}
+.insp-card{--el:var(--mute);border-left:4px solid var(--el);padding-left:10px;display:grid;gap:6px}
+.insp-card h3{font-size:19px;color:var(--el)}
+.star-in{color:var(--sapph)}
+.insp-meta{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--mute);font-weight:700}
+.insp dl{display:grid;grid-template-columns:auto 1fr;gap:3px 10px;margin:0;font-size:13.5px}
+.insp dt{color:var(--mute)} .insp dd{margin:0;font-variant-numeric:tabular-nums}
+.insp-text{background:var(--raise);border-radius:5px;padding:7px 9px;line-height:1.35}
+.notice{display:block;margin-top:4px;color:var(--fire);font-size:13px}
+.insp-status{display:flex;flex-wrap:wrap;gap:5px}
+.insp-status span{font-size:12px;border:1px solid var(--line);border-radius:12px;padding:1px 8px;color:var(--ink)}
+.mchip{--el:var(--mute);border:1px solid var(--sapph);border-radius:12px;padding:1px 8px;font-size:12px;color:var(--mute);cursor:help}
+.mchip.ready{color:var(--ink);background:color-mix(in srgb,var(--sapph) 22%,transparent);box-shadow:0 0 8px color-mix(in srgb,var(--sapph) 50%,transparent)}
+.aura{cursor:help}
+.coinflip .flash-in{display:grid;justify-items:center;gap:10px;text-align:center}
+.coin{width:96px;height:96px;position:relative;transform-style:preserve-3d;animation:coinspin 1.4s cubic-bezier(.2,.7,.3,1) forwards}
+.coin.foe{animation-name:coinspinfoe}
+.coin .face{position:absolute;inset:0;display:grid;place-items:center;border-radius:50%;font-family:var(--f-display);font-weight:700;font-size:18px;backface-visibility:hidden;border:4px solid color-mix(in srgb,var(--brass) 70%,#000)}
+.coin .f-you{background:var(--brass);color:#1a1408}
+.coin .f-foe{background:var(--bad);color:#1a0806;transform:rotateY(180deg)}
+@keyframes coinspin{from{transform:rotateY(0)}to{transform:rotateY(1800deg)}}
+@keyframes coinspinfoe{from{transform:rotateY(0)}to{transform:rotateY(1980deg)}}
+@media (prefers-reduced-motion:reduce){.coin{animation:none}.coin.foe{transform:rotateY(180deg)}}
+.flash{position:fixed;inset:0;display:grid;place-items:center;pointer-events:none;z-index:9;background:radial-gradient(circle at center,color-mix(in srgb,var(--sapph) 30%,transparent),rgba(5,7,10,.55) 60%);animation:flashIn .35s ease-out}
+.flash-in{display:grid;gap:14px;justify-items:center}
+.flash-lbl{font-family:var(--f-display);font-size:26px;color:var(--ink);text-shadow:0 2px 10px rgba(0,0,0,.7)}
+.card.bigcard{width:230px;min-height:290px;font-size:14px;padding:12px;box-shadow:0 0 40px color-mix(in srgb,var(--sapph) 60%,transparent)}
+.card.bigcard .nm{font-size:20px} .card.bigcard .tx{font-size:15px} .card.bigcard .ty{font-size:12px}
+@keyframes flashIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:none}}
+.log{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px;max-height:calc(100vh - min(470px,52vh) - 60px);min-height:180px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.logcard{color:var(--el,inherit);font-weight:700;text-decoration:underline dotted;text-underline-offset:2px;cursor:help}
+.logcard:hover,.logcard:focus-visible{background:var(--raise);outline:none;border-radius:3px}
+.log ol{list-style:none;margin:0;padding:0;overflow-y:auto;display:flex;flex-direction:column;gap:3px;font-size:13px}
+.log li{border-bottom:1px solid color-mix(in srgb,var(--line) 60%,transparent);padding:2px 0}
+.log li.turn{color:var(--brass);font-family:var(--f-display);font-size:14px;border-bottom-color:var(--brass);padding-top:6px}
+.log li.big{color:var(--sapph);font-weight:700}
+.log li.dmg{color:#f2a493}
+details.rules{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 14px}
+details.rules summary{cursor:pointer;font-weight:700}
+details.rules ul{margin:.5em 0 0;padding-left:1.2em;max-width:80ch;display:grid;gap:4px;font-size:14px}
+.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px}
+.top h1{font-size:22px}
+.modal{position:fixed;inset:0;background:rgba(5,7,10,.66);display:grid;place-items:center;padding:16px;z-index:10}
+.modal .box{background:var(--surface);border:1px solid var(--brass);border-radius:10px;padding:20px;max-width:440px;width:100%;display:grid;gap:14px}
+.modal .box h2{font-size:22px}
+@media (max-width:960px){.game{grid-template-columns:minmax(0,1fr)}.rail{position:static}.log{max-height:280px}}
+@media (max-width:520px){.card{width:108px;min-height:150px}.cr,.crslot{--crw:104px;--crh:164px}.hand,.manis{gap:12px}}
+@media (prefers-reduced-motion:reduce){.flash{animation:none}.card,.crslot,.crslot .cr{transition:none}.card.playable,.card.sel,.cr.attacking{transform:none}}
+</style>
+
+<div id="app"></div>
+
+<script>
+"use strict";
+const HEADLESS = typeof document === "undefined";
+const ELS = { fire:"Fire", water:"Water", earth:"Earth", wind:"Wind", lightning:"Lightning" , volcano:"Volcano", wildfire:"Wildfire", plasma:"Plasma", steam:"Steam", swamp:"Swamp", ice:"Ice", storm:"Storm", sand:"Sand", metal:"Metal", tempest:"Tempest",
+  geyser:"Geyser", mirage:"Mirage", aurora:"Aurora", ash:"Ash", forge:"Forge", solar:"Solar", glacier:"Glacier", quicksilver:"Quicksilver", hurricane:"Hurricane", glass:"Glass" };
+const BASE_ELS = ["fire","water","earth","wind","lightning"];
+// Order matters for naming: the first element's card gives the descriptive word, the second the noun.
+const CONFLUENCE = { volcano:["fire","earth"], wildfire:["fire","wind"], plasma:["fire","lightning"], steam:["fire","water"],
+  swamp:["water","earth"], ice:["water","wind"], storm:["lightning","water"], sand:["wind","earth"], metal:["lightning","earth"], tempest:["wind","lightning"],
+  // Triple confluences: three base elements. Naming takes the first element's descriptor and the last element's noun.
+  geyser:["fire","water","earth"], mirage:["fire","water","wind"], aurora:["fire","water","lightning"], ash:["fire","earth","wind"], forge:["fire","earth","lightning"],
+  solar:["fire","wind","lightning"], glacier:["water","earth","wind"], quicksilver:["water","earth","lightning"], hurricane:["water","wind","lightning"], glass:["earth","wind","lightning"] };
+const DUAL_ELS = Object.keys(CONFLUENCE).filter(c=>CONFLUENCE[c].length===2), TRIPLE_ELS = Object.keys(CONFLUENCE).filter(c=>CONFLUENCE[c].length===3);
+const HOSTILE = { enemyAny:true, enemyCreature:true, enemyAttacker:true };
+const CONF_WORD = { volcano:"Magma", wildfire:"Blaze", plasma:"Plasma", steam:"Steam", swamp:"Bog", ice:"Rime", storm:"Storm", sand:"Dune", metal:"Iron", tempest:"Gale",
+  geyser:"Geyser", mirage:"Mirage", aurora:"Aurora", ash:"Ash", forge:"Forged", solar:"Solar", glacier:"Glacial", quicksilver:"Quicksilver", hurricane:"Cyclone", glass:"Glass" };
+const EL_STYLE = { fire:"Aggression and burn. Ignite rewards spending charge.", water:"Control, card draw and Reactions.", earth:"Big bodies. Fortify grows them every turn.", wind:"Airborne tempo. Bounce and replay.", lightning:"Chain: cheap cards that pile up in one turn." , volcano:"Fused Fire and Earth: huge bodies and eruptions.",
+  wildfire:"Fused Fire and Wind: fliers and damage that spreads.", plasma:"Fused Fire and Lightning: raw power at a cost in life.",
+  steam:"Fused Fire and Water: scalding blockers and card flow.", swamp:"Fused Water and Earth: regrowth, Drain and returning dead.",
+  ice:"Fused Water and Wind: freeze the enemy and hold the sky.", storm:"Fused Lightning and Water: draw deep, then strike.",
+  sand:"Fused Wind and Earth: erode the enemy board with bounce and grit.", metal:"Fused Lightning and Earth: armor up and grow.",
+  tempest:"Fused Wind and Lightning: pure speed in the air.",
+  geyser:"Fire, Water and Earth: every bit of life you gain erupts as damage.", mirage:"Fire, Water and Wind: illusions that copy, silence and steal.",
+  aurora:"Fire, Water and Lightning: charge floods in and Manifests come early.", ash:"Fire, Earth and Wind: tokens that burn out and rise again.",
+  forge:"Fire, Earth and Lightning: auras that build an engine.", solar:"Fire, Wind and Lightning: every hit on the enemy fuels more burn.",
+  glacier:"Water, Earth and Wind: walls of ice that punish attackers.", quicksilver:"Water, Earth and Lightning: shapeshifters that swap and transform.",
+  hurricane:"Water, Wind and Lightning: sweep the board back to hand and profit.", glass:"Earth, Wind and Lightning: Barriers and shards that strike back." };
+// The play style each confluence's special cards and special Manifests push toward.
+const ARCHETYPE = { volcano:["Eruption","Sacrifice your own creatures for explosive damage."], wildfire:["Spreading Flames","Burn the whole enemy board, and profit as it dies."],
+  plasma:["Overload","Hurt yourself on purpose; Desperate cards hit hardest at low life."], steam:["Pressure","A full hand fuels everything."],
+  swamp:["Grave Tide","Venom, and creatures that climb back out of the grave."], ice:["Shatter","Freeze everything, then cash frozen creatures in."],
+  storm:["Spellstorm","Spells that grow stronger the more you cast."], sand:["Erosion","Shrink enemy creatures permanently and send them home."],
+  metal:["Plating","Barriers and permanent armor; creatures that fight."], tempest:["Blitz","Haste, untap and double attacks."],
+  geyser:["Wellspring","Life gain that erupts into damage."], mirage:["Illusions","Copy, silence and steal."], aurora:["Radiance","Charge and Manifests, early and often."],
+  ash:["Cinders","Tokens that burn out and rise again."], forge:["Artifice","Auras that power each other."], solar:["Sunfire","Every hit on the enemy fuels more burn."],
+  glacier:["Bulwark","Walls and blockers that win by defending."], quicksilver:["Shapeshift","Swap, copy and transform."], hurricane:["Maelstrom","Mass bounce and replay."],
+  glass:["Shards","Barriers and damage reflected back."] };
+const KW_NAMES = { pierce:"Pierce", airborne:"Airborne", haste:"Haste", wall:"Wall", ward:"Ward", drain:"Drain", skyguard:"Skyguard", vigilant:"Vigilant", barrier:"Barrier", venom:"Venom" };
+const KW_REMIND = {
+  airborne:"Can only be blocked by Airborne or Skyguard creatures.",
+  haste:"Can attack the turn it arrives.",
+  pierce:"Damage beyond what kills its blockers carries over to the enemy.",
+  wall:"Can't attack.",
+  ward:"Can't be targeted by enemy cards.",
+  drain:"Combat damage it deals also heals you.",
+  skyguard:"Can block Airborne creatures.",
+  vigilant:"Attacking doesn't tap it.",
+  barrier:"Prevents the next damage it would take, then the Barrier breaks.",
+  venom:"Any combat damage it deals to a creature destroys that creature.",
+  desperate:"Bonus if your life is at or below the number.",
+  fortify:"At the start of your turn, it gets +N/+N permanently.",
+  ignite:"Bonus if you spent charge earlier this turn.",
+  chain:"Bonus if you played N or more other cards this turn.",
+  attuned:"Bonus if you have N or more charge of the card's element.",
+  overcharge:"You may spend N charge when you play it for the bonus.",
+  lastgasp:"Triggers when it's destroyed."
+};
+const RARITY = { s:"Starter", c:"Common", u:"Uncommon", r:"Rare", t:"Token" };
+// Other game terms that get a hover/tap explanation wherever they appear in card text.
+const TERM_HELP = {
+  freeze:"A frozen creature is tapped and doesn't untap at the start of its controller's next turn. Freezing an attacker removes it from combat.",
+  tapped:"Can't attack or block until it untaps at the start of its controller's turn.",
+  arrived:"Creatures can't attack the turn they arrive unless they have Haste.",
+  noblock:"This creature can't block this turn.",
+  silence:"Removes all of a creature's abilities and keywords.",
+  token:"A creature made by a card effect. If it leaves play it's gone for good; it never goes to a hand.",
+  manifest:"A big card from your Manifest deck, cast by spending charge instead of Energy. Each Manifest can be cast once per game.",
+  charge:"Each basic card you play gives charge of its element (fused cards give their confluence's). Spend charge to cast Manifests and pay Overcharge.",
+  reaction:"Can be played at any time, even on the enemy's turn (paid with banked Energy). Counters only work in response to an enemy card.",
+  basic:"Any card that isn't a Manifest. Basic creatures can be returned to hand; Manifest creatures can't.",
+  steal:"You control that creature from now on.",
+  life:"Starting life depends on the deck's element; a normal encounter gives the enemy 5 less."
+};
+const termHelp = k => KW_REMIND[k] || TERM_HELP[k] || "";
+const TERM_RE = /\b(Airborne|Haste|Pierce|Walls?|Ward|Drain|Skyguard|Vigilant|Barrier|Venom|Fortify(?: \d+)?|Ignite|Chain \d+|Attuned \d+|Overcharge \d+|Last Gasp|Desperate \d+|freez(?:e|es|ing)|frozen|silence[sd]?|tokens?|Manifests?|charge|Reactions?|basic|take control)\b/gi;
+function termKey(m){
+  const w = m.toLowerCase().replace(/ \d+$/,"");
+  return ({walls:"wall", "last gasp":"lastgasp", freezes:"freeze", freezing:"freeze", frozen:"freeze", silences:"silence", silenced:"silence",
+    tokens:"token", manifests:"manifest", reactions:"reaction", "take control":"steal"})[w] || w;
+}
+// A term the player can hover, focus or tap to see what it means.
+const termSpan = (label, k) => `<span class="kwt" tabindex="0" data-tip="${k}">${label}</span>`;
+// Card text with every keyword and game term marked up.
+function kwText(t){ return esc(t||"").replace(TERM_RE, m => { const k = termKey(m); return termHelp(k) ? termSpan(m, k) : m; }); }
+
+/* ---------------- Card library ---------------- */
+const LIB = {};
+function card(o){ o.charge = o.charge ?? 1; o.cost = o.cost ?? 0; o.kw = o.kw || []; o.r = o.r || "s"; if (LIB[o.id]) throw new Error("Duplicate card id "+o.id); LIB[o.id] = o; return o; }
+const nonManifest = t => t.kind === "creature" && !t.c.d.manifest;
+
+// FIRE
+card({id:"ember_imp",name:"Ember Imp",el:"fire",type:"creature",cost:1,atk:2,hp:1,text:"Last Gasp: gain 1 Fire charge.",death:x=>gainCharge(x.p,"fire",1)});
+card({id:"searing_spark",name:"Searing Spark",el:"fire",type:"spell",cost:1,target:{type:"enemyAny"},ai:"dmg",n:2,text:"Deal 2 damage to an enemy creature or the enemy.",play:x=>dmgT(x.t,2)});
+card({id:"cinder_hound",name:"Cinder Hound",el:"fire",type:"creature",cost:2,atk:3,hp:3,text:"Ignite: if you spent charge this turn, it can attack right away.",play:x=>{ if(x.p.spent){ x.self.sick=false; log("Ignite: Cinder Hound can attack right away."); } }});
+card({id:"flame_lash",name:"Flame Lash",el:"fire",type:"spell",cost:2,target:{type:"enemyCreature"},ai:"dmg",n:3,text:"Deal 3 damage to an enemy creature. Ignite: also deal 2 damage to the enemy.",play:x=>{ dmgT(x.t,3); if(x.p.spent) dmgPlayer(x.o,2,"Ignite"); }});
+card({id:"blazing_command",name:"Blazing Command",el:"fire",type:"spell",cost:2,target:{type:"enemyCreature"},ai:"cantblock",text:"An enemy creature can't block this turn. Draw a card.",play:x=>{ x.t.c.noBlock=true; drawN(x.p,1); }});
+card({id:"kindling_hearth",name:"Kindling Hearth",el:"fire",type:"aura",cost:2,text:"Whenever you spend charge, deal 1 damage to the enemy.",on:{spend:x=>dmgPlayer(x.o,1,"Kindling Hearth")}});
+card({id:"wildfire_ignition",name:"Wildfire Ignition",el:"fire",type:"reaction",win:["combat"],cost:1,target:{type:"ownAttacker"},ai:"trick",n:3,text:"Combat: your attacking creature gets +3/+0 this turn.",play:x=>buff(x.t.c,3,0,true)});
+card({id:"pyre_dancer",name:"Pyre Dancer",el:"fire",type:"creature",cost:3,atk:3,hp:3,target:{type:"enemyAny",ocOnly:true},ai:"dmg",n:3,oc:{cost:2,text:"deal 3 damage to an enemy creature or the enemy"},text:"Overcharge 2: when played, deal 3 damage to an enemy creature or the enemy.",play:x=>{ if(x.oc && x.t) dmgT(x.t,3); }});
+card({id:"magma_golem",name:"Magma Golem",el:"fire",type:"creature",cost:4,atk:5,hp:4,kw:["pierce"],charge:2,text:"Pierce. Gives 2 Fire charge."});
+card({id:"fireball",name:"Fireball",el:"fire",type:"spell",cost:4,target:{type:"enemyAny"},ai:"dmg",n:4,oc:{cost:2,text:"deal 6 damage instead"},text:"Deal 4 damage to an enemy creature or the enemy. Overcharge 2: deal 6 instead.",play:x=>dmgT(x.t,x.oc?6:4)});
+// Fire Manifests
+card({id:"combustion_burst",name:"Combustion Burst",el:"fire",manifest:true,mcost:{fire:3},type:"spell",target:{type:"enemyCreature"},ai:"dmg",n:5,text:"Deal 5 damage to an enemy creature. If it dies, deal 2 damage to the enemy.",play:x=>{ dmgT(x.t,5); if(isDead(x.t.c)) dmgPlayer(x.o,2,"Combustion Burst"); }});
+card({id:"pyroclastic_surge",name:"Pyroclastic Surge",el:"fire",manifest:true,mcost:{fire:4},type:"spell",aiOk:x=>x.o.board.length>0,text:"Deal 3 damage to every enemy creature.",play:x=>x.o.board.forEach(c=>dmgCreature(c,3))});
+card({id:"heart_of_sun",name:"Heart of the Sun",el:"fire",manifest:true,mcost:{fire:4},type:"aura",text:"At the start of your turn, deal 2 damage to the enemy.",on:{start:x=>dmgPlayer(x.o,2,"Heart of the Sun")}});
+card({id:"phoenix",name:"Pyre Phoenix",el:"fire",manifest:true,mcost:{fire:5},type:"creature",atk:5,hp:4,kw:["haste","airborne"],text:"Haste. Airborne."});
+card({id:"inferno_lord",name:"Inferno Lord",el:"fire",manifest:true,mcost:{fire:6},type:"creature",atk:6,hp:6,kw:["pierce"],text:"Pierce. When played, deal 3 damage to the enemy.",play:x=>dmgPlayer(x.o,3,"Inferno Lord")});
+
+// WATER
+card({id:"tide_sprite",name:"Tide Sprite",el:"water",type:"creature",cost:1,atk:1,hp:3,text:"A sturdy early blocker."});
+card({id:"riverbank_sage",name:"Riverbank Sage",el:"water",type:"creature",cost:2,atk:2,hp:3,text:"When played, draw a card.",play:x=>drawN(x.p,1)});
+card({id:"dispel",name:"Dispel",el:"water",type:"reaction",win:["counter"],counter:true,cost:2,text:"Counter: cancel a basic card the enemy plays. It gives no charge. Manifests can't be countered."});
+card({id:"frost_snap",name:"Frost Snap",el:"water",type:"reaction",win:["main","combat"],cost:2,target:{type:"enemyCreature"},ai:"freeze",text:"Freeze an enemy creature: tap it, and it doesn't untap during its controller's next untap. If attacking, it leaves combat. Draw a card.",play:x=>{ freeze(x.t.c); drawN(x.p,1); }});
+card({id:"undertow",name:"Undertow",el:"water",type:"reaction",win:["combat"],cost:2,target:{type:"enemyCreature",filter:nonManifest},ai:"bounce",text:"Return an enemy basic creature to its owner's hand. If it was attacking, draw a card.",play:x=>{ const was = x.t.c.attacking; bounce(x.t.c); if (was) drawN(x.p,1); }});
+card({id:"tidal_insight",name:"Tidal Insight",el:"water",type:"spell",cost:2,oc:{cost:2,text:"draw 3 cards instead"},text:"Draw 2 cards. Overcharge 2: draw 3 instead.",play:x=>drawN(x.p,x.oc?3:2)});
+card({id:"coral_warden",name:"Coral Warden",el:"water",type:"creature",cost:3,atk:3,hp:5,text:"When played, gain 2 life.",play:x=>heal(x.p,2)});
+card({id:"whirlpool_mage",name:"Whirlpool Mage",el:"water",type:"creature",cost:3,atk:2,hp:3,target:{type:"enemyCreature",filter:t=>nonManifest(t)&&t.c.d.cost<=3},ai:"bounce",text:"When played, return an enemy basic creature that costs 3 or less to its owner's hand.",play:x=>{ if(x.t) bounce(x.t.c); }});
+card({id:"healing_spring",name:"Healing Spring",el:"water",type:"aura",cost:2,text:"At the start of your turn, gain 1 life and 1 Water charge.",on:{start:x=>{ heal(x.p,1); gainCharge(x.p,"water",1); }}});
+card({id:"leviathan_calf",name:"Leviathan Calf",el:"water",type:"creature",cost:4,atk:4,hp:6,charge:2,text:"Gives 2 Water charge."});
+// Water Manifests
+card({id:"wellspring",name:"Wellspring",el:"water",manifest:true,mcost:{water:3},type:"spell",text:"Draw 2 cards and gain 4 life. Your creatures get +0/+2 permanently.",play:x=>{ drawN(x.p,2); heal(x.p,4); x.p.board.forEach(c=>buff(c,0,2,false)); }});
+card({id:"mirror_lake",name:"Mirror Lake",el:"water",manifest:true,mcost:{water:3},type:"aura",st:[{k:"cost",type:"reaction",n:1}],text:"Your Reactions cost 1 less. At the start of your turn, freeze the enemy creature with the highest attack.",on:{start:x=>{ const t=[...x.o.board].sort((a,b)=>atkOf(b)-atkOf(a))[0]; if(t) freeze(t); }}});
+card({id:"tidal_wave",name:"Tidal Wave",el:"water",manifest:true,mcost:{water:4},type:"spell",aiOk:x=>x.o.board.filter(c=>!c.d.manifest).length>=2,text:"Return every enemy basic creature to its owner's hand.",play:x=>[...x.o.board].filter(c=>!c.d.manifest).forEach(bounce)});
+card({id:"kraken",name:"Kraken of the Deep",el:"water",manifest:true,mcost:{water:5},type:"creature",atk:5,hp:7,text:"When played, freeze every enemy creature.",play:x=>x.o.board.forEach(freeze)});
+card({id:"maelstrom",name:"Maelstrom",el:"water",manifest:true,mcost:{water:6},type:"spell",aiOk:x=>boardPower(x.o)>=boardPower(x.p)+3,text:"Destroy every creature.",play:x=>[...x.p.board,...x.o.board].forEach(c=>{ c.dmg=999; })});
+
+// EARTH
+card({id:"pebble_golem",name:"Pebble Golem",el:"earth",type:"creature",cost:1,atk:1,hp:2,fort:1,text:"Fortify 1."});
+card({id:"stonecaller",name:"Stonecaller",el:"earth",type:"creature",cost:2,atk:2,hp:3,charge:2,text:"Gives 2 Earth charge instead of 1."});
+card({id:"bedrock_wall",name:"Bedrock Wall",el:"earth",type:"creature",cost:2,atk:0,hp:6,kw:["wall"],text:"Wall: can't attack."});
+card({id:"earthen_blessing",name:"Earthen Blessing",el:"earth",type:"spell",cost:1,target:{type:"ownCreature"},ai:"buff",text:"A creature gets +2/+2 permanently.",play:x=>buff(x.t.c,2,2,false)});
+card({id:"quarry_shaman",name:"Quarry Shaman",el:"earth",type:"creature",cost:3,atk:2,hp:4,st:[{k:"bank",n:2}],text:"Your Energy bank holds 2 more."});
+card({id:"geode_burrower",name:"Geode Burrower",el:"earth",type:"creature",cost:3,atk:3,hp:3,text:"Last Gasp: gain 2 Earth charge.",death:x=>gainCharge(x.p,"earth",2)});
+card({id:"rockslide",name:"Rockslide",el:"earth",type:"spell",cost:3,target:{type:"enemyCreature"},ai:"dmg",n:4,oc:{cost:2,text:"deal 6 damage instead"},text:"Deal 4 damage to an enemy creature. Overcharge 2: deal 6 instead.",play:x=>dmgT(x.t,x.oc?6:4)});
+card({id:"mountains_patience",name:"Mountain's Patience",el:"earth",type:"aura",cost:2,text:"At the start of your turn, gain 1 Earth charge.",on:{start:x=>gainCharge(x.p,"earth",1)}});
+card({id:"ironbark_treant",name:"Ironbark Treant",el:"earth",type:"creature",cost:4,atk:3,hp:5,fort:1,text:"Fortify 1."});
+card({id:"granite_behemoth",name:"Granite Behemoth",el:"earth",type:"creature",cost:5,atk:6,hp:7,charge:2,text:"Gives 2 Earth charge."});
+// Earth Manifests
+card({id:"living_mountain",name:"Living Mountain",el:"earth",manifest:true,mcost:{earth:3},type:"creature",atk:2,hp:8,fort:2,text:"Fortify 2."});
+card({id:"worldroot",name:"Worldroot",el:"earth",manifest:true,mcost:{earth:4},type:"aura",text:"At the start of your turn, your creatures get +1/+1.",on:{start:x=>x.p.board.forEach(c=>buff(c,1,1,false))}});
+card({id:"tectonic_rise",name:"Tectonic Rise",el:"earth",manifest:true,mcost:{earth:4},type:"spell",aiOk:x=>x.p.board.length>=2,text:"Your creatures get +3/+3 permanently.",play:x=>x.p.board.forEach(c=>buff(c,3,3,false))});
+card({id:"avalanche",name:"Avalanche",el:"earth",manifest:true,mcost:{earth:5},type:"spell",aiOk:x=>x.o.board.length>=1,text:"Destroy the enemy creature with the highest attack. Your creatures get +1/+1 permanently.",play:x=>{ const t=[...x.o.board].sort((a,b)=>atkOf(b)-atkOf(a))[0]; if (t) t.dmg=999; x.p.board.forEach(c=>buff(c,1,1,false)); }});
+card({id:"titan",name:"Titan of the Peaks",el:"earth",manifest:true,mcost:{earth:6},type:"creature",atk:7,hp:7,kw:["pierce"],fort:1,text:"Pierce. Fortify 1."});
+
+// WIND
+card({id:"gust_sprite",name:"Gust Sprite",el:"wind",type:"creature",cost:1,atk:1,hp:1,kw:["airborne","haste"],text:"Airborne. Haste."});
+card({id:"skyward_scout",name:"Skyward Scout",el:"wind",type:"creature",cost:2,atk:2,hp:3,kw:["airborne"],text:"Airborne."});
+card({id:"zephyr_courier",name:"Zephyr Courier",el:"wind",type:"creature",cost:2,atk:1,hp:2,kw:["airborne"],target:{type:"ownCreature",filter:nonManifest,optional:true},ai:"none",text:"Airborne. When played, you may return another basic creature to its owner's hand.",play:x=>{ if(x.t) bounce(x.t.c); }});
+card({id:"tailwind",name:"Tailwind",el:"wind",type:"reaction",win:["combat"],cost:1,target:{type:"ownAttacker"},ai:"trick",n:2,text:"Combat: your attacking creature gets +2/+0 and Airborne this turn.",play:x=>{ buff(x.t.c,2,0,true); addKw(x.t.c,"airborne",true); }});
+card({id:"cyclone_kick",name:"Cyclone Kick",el:"wind",type:"spell",cost:2,target:{type:"enemyCreature",filter:nonManifest},ai:"bounce",oc:{cost:2,text:"also draw a card"},text:"Return an enemy basic creature to its owner's hand. Overcharge 2: also draw a card.",play:x=>{ bounce(x.t.c); if(x.oc) drawN(x.p,1); }});
+card({id:"updraft",name:"Updraft",el:"wind",type:"spell",cost:1,target:{type:"ownCreature",filter:nonManifest},ai:"skip",text:"Return a basic creature to its owner's hand. Gain 1 Energy.",play:x=>{ bounce(x.t.c); gainEnergy(x.p,1); }});
+card({id:"featherfall_hawk",name:"Featherfall Hawk",el:"wind",type:"creature",cost:3,atk:3,hp:3,kw:["airborne"],target:{type:"enemyAny"},ai:"dmg",n:1,text:"Airborne. When played, deal 1 damage to an enemy creature or the enemy.",play:x=>{ if(x.t) dmgT(x.t,1); }});
+card({id:"wind_dancer",name:"Wind Dancer",el:"wind",type:"creature",cost:3,atk:2,hp:3,kw:["airborne"],text:"Airborne. When played, gain 1 Energy.",play:x=>gainEnergy(x.p,1)});
+card({id:"sky_temple",name:"Sky Temple",el:"wind",type:"aura",cost:2,st:[{k:"lord",f:"air",atk:1,hp:0}],text:"Your Airborne creatures get +1/+0."});
+card({id:"storm_roc",name:"Storm Roc",el:"wind",type:"creature",cost:4,atk:4,hp:4,kw:["airborne"],charge:2,text:"Airborne. Gives 2 Wind charge."});
+// Wind Manifests
+card({id:"gale_force",name:"Gale Force",el:"wind",manifest:true,mcost:{wind:3},type:"spell",aiOk:x=>x.o.board.filter(c=>!c.d.manifest&&c.d.cost<=3).length>=1,text:"Return every enemy basic creature that costs 3 or less to its owner's hand.",play:x=>[...x.o.board].filter(c=>!c.d.manifest&&c.d.cost<=3).forEach(bounce)});
+card({id:"second_wind",name:"Second Wind",el:"wind",manifest:true,mcost:{wind:3},type:"spell",ai:"skip",text:"Return all your basic creatures to your hand. Gain 3 Energy.",play:x=>{ [...x.p.board].filter(c=>!c.d.manifest).forEach(bounce); gainEnergy(x.p,3); }});
+card({id:"skyborne_armada",name:"Skyborne Armada",el:"wind",manifest:true,mcost:{wind:4},type:"spell",text:"Summon three 2/2 Airborne Wisps.",play:x=>{ for(let i=0;i<3;i++) summon(x.p,TOKENS.wisp); }});
+card({id:"eye_of_storm",name:"Eye of the Storm",el:"wind",manifest:true,mcost:{wind:4},type:"aura",st:[{k:"grant",f:"all",kw:"airborne"}],text:"Your creatures have Airborne."});
+card({id:"sovereign_gales",name:"Sovereign of Gales",el:"wind",manifest:true,mcost:{wind:5},type:"creature",atk:5,hp:5,kw:["airborne","haste"],text:"Airborne. Haste."});
+
+
+// LIGHTNING
+card({id:"spark_mite",name:"Spark Mite",el:"lightning",type:"creature",cost:1,atk:1,hp:1,kw:["haste"],text:"Haste. Chain: if you played 2+ other cards this turn, it gets +2/+0 this turn.",play:x=>{ if (x.chain>=2) x.self.tAtk += 2; }});
+card({id:"static_bolt",name:"Static Bolt",el:"lightning",type:"spell",cost:1,target:{type:"enemyAny"},ai:"dmg",n:1,chainDmg:true,oc:{cost:2,text:"deal 2 more damage"},text:"Deal 1 damage, +1 for each other card you played this turn. Overcharge 2: deal 2 more.",play:x=>dmgT(x.t,1+x.chain+(x.oc?2:0))});
+card({id:"charge_conduit",name:"Charge Conduit",el:"lightning",type:"spell",cost:1,text:"Draw a card.",play:x=>drawN(x.p,1)});
+card({id:"volt_runner",name:"Volt Runner",el:"lightning",type:"creature",cost:2,atk:2,hp:1,kw:["haste"],text:"Haste."});
+card({id:"arc_lash",name:"Arc Lash",el:"lightning",type:"spell",cost:2,target:{type:"enemyCreature"},ai:"dmg",n:2,text:"Deal 2 damage to an enemy creature. Chain: if you played 2+ other cards this turn, also deal 2 to the enemy.",play:x=>{ dmgT(x.t,2); if(x.chain>=2) dmgPlayer(x.o,2,"Arc Lash"); }});
+card({id:"overclock",name:"Overclock",el:"lightning",type:"spell",cost:1,text:"Gain 2 Energy.",play:x=>gainEnergy(x.p,2)});
+card({id:"blitz",name:"Blitz",el:"lightning",type:"reaction",win:["combat"],cost:1,target:{type:"ownAttacker"},ai:"trick",n:2,text:"Combat: your attacking creature gets +2/+1 this turn.",play:x=>buff(x.t.c,2,1,true)});
+card({id:"thunderclap_adept",name:"Thunderclap Adept",el:"lightning",type:"creature",cost:4,atk:2,hp:3,text:"Whenever you play a spell, deal 1 damage to the enemy.",on:{played:x=>{ if (x.data.card.type==="spell") dmgPlayer(x.o,1,"Thunderclap Adept"); }}});
+card({id:"galvanic_golem",name:"Galvanic Golem",el:"lightning",type:"creature",cost:4,atk:3,hp:4,text:"Costs 1 less for each other card you played this turn (minimum 1)."});
+card({id:"tesla_coil",name:"Tesla Coil",el:"lightning",type:"aura",cost:2,text:"Whenever you play your third card in a turn, deal 1 damage to the enemy and gain 1 Lightning charge.",on:{played:x=>{ if(x.p.played===3){ dmgPlayer(x.o,1,"Tesla Coil"); gainCharge(x.p,"lightning",1); } }}});
+// Lightning Manifests
+card({id:"surge_conduit",name:"Surge Conduit",el:"lightning",manifest:true,mcost:{lightning:4},type:"spell",text:"Gain 2 Energy and draw 2 cards.",play:x=>{ gainEnergy(x.p,2); drawN(x.p,2); }});
+card({id:"chain_storm",name:"Chain Storm",el:"lightning",manifest:true,mcost:{lightning:4},type:"spell",target:{type:"enemyCreature"},ai:"dmg",n:3,text:"Deal 3 damage to an enemy creature and 2 damage to the enemy.",play:x=>{ dmgT(x.t,3); dmgPlayer(x.o,2,"Chain Storm"); }});
+card({id:"overload_engine",name:"Overload Engine",el:"lightning",manifest:true,mcost:{lightning:5},type:"aura",st:[{k:"cost",type:"spell",n:1}],text:"Your spells cost 1 less."});
+card({id:"thunderstorm",name:"Thunderstorm",el:"lightning",manifest:true,late:true,mcost:{lightning:6},type:"spell",text:"For each card you played this turn, including this one, deal 1 damage to every enemy creature. Deal 3 damage to the enemy.",play:x=>{ const n=x.chain+1; x.o.board.forEach(c=>dmgCreature(c,n)); dmgPlayer(x.o,3,"Thunderstorm"); }});
+card({id:"raijin",name:"Raijin, Drum of Thunder",el:"lightning",manifest:true,late:true,mcost:{lightning:6},type:"creature",atk:5,hp:5,kw:["haste"],text:"Haste. When played, deal damage to the enemy equal to the other cards you played this turn (up to 5).",play:x=>dmgPlayer(x.o,Math.min(5,x.chain),"Raijin")});
+
+/*__CARDS__*/
+/* ---------------- Engine ---------------- */
+let g = null;
+let uidSeq = 1;
+const OVER = { over:true };
+const STALE = "stale";
+
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function deckOf(ref){ return DECK_BY_ID[ref] || DECK_BY_ID[ref+"_starter"]; }
+function newPlayer(i, ref, name, isAI, life){
+  const dk = deckOf(ref);
+  const deck = [];
+  dk.main.forEach(id=>{ if (!LIB[id]) throw new Error("Unknown card "+id+" in "+dk.id); deck.push(LIB[id], LIB[id]); });
+  return { i, el:dk.el, deckId:dk.id, deckName:dk.name, name, isAI, life, maxLife:life, energy:0, deck:shuffle(deck), hand:[], board:[], auras:[], grave:[],
+    manifests: dk.manifests.map(id=>{ if (!LIB[id]) throw new Error("Unknown manifest "+id); return LIB[id]; }), charge:{}, played:0, spent:false, fatigue:0,
+    chargeAs: CONFLUENCE[dk.el] ? dk.el : null };
+}
+function opp(p){ return g.P[1-p.i]; }
+function log(s, cls){ if (g.sim) return; g.log.unshift({s, cls}); if(g.log.length>220) g.log.length=220; }
+
+function sleep(ms){
+  const id = g.id;
+  return new Promise((res, rej)=>setTimeout(()=> id===g.id ? res() : rej(STALE), HEADLESS?0:ms));
+}
+
+/* ---- Visual cues: targeting arrows and hit numbers (real game only, never in AI lookahead) ---- */
+const FX = { q:[] };
+const fxOn = () => !HEADLESS && g && !g.sim && typeof document!=="undefined";
+const crSel = c => `[data-cr="${c.uid}"]`, lifeSel = p => `.side[data-pl="${p.i}"] .life`, whoSel = p => `.side[data-pl="${p.i}"] .who`;
+function fxRect(sel){ const el = document.querySelector(sel); if (!el) return null; const r = el.getBoundingClientRect(); return r.width ? { x:r.left+r.width/2, y:r.top+r.height/2 } : null; }
+// Remember where something was hit (before the board re-renders) so a number can pop there.
+function fxNote(kind, sel, text){ if (!fxOn()) return; const r = fxRect(sel); if (r) FX.q.push({ kind, sel, r, text }); }
+function fxPlay(){
+  if (!FX.q.length || typeof document==="undefined") return;
+  const q = FX.q; FX.q = [];
+  q.forEach((e, i) => setTimeout(() => {
+    e.r = fxRect(e.sel) || e.r;      // where it is now (the board may have shifted); a destroyed creature keeps its old spot
+    const el = document.createElement("div"); el.className = "fxpop fx-"+e.kind; el.textContent = e.text;
+    el.style.left = e.r.x+"px"; el.style.top = e.r.y+"px"; document.body.appendChild(el);
+    const ring = document.createElement("div"); ring.className = "fxring fx-"+e.kind; ring.style.left = e.r.x+"px"; ring.style.top = e.r.y+"px"; document.body.appendChild(ring);
+    setTimeout(() => { el.remove(); ring.remove(); }, 1300);
+  }, i*90));
+}
+const reduceMotion = () => typeof matchMedia!=="undefined" && matchMedia("(prefers-reduced-motion: reduce)").matches;
+// Draw arrows from sources to targets (a label rides along), hold them briefly, then clear.
+async function fxArrows(pairs, label, ms){
+  if (!fxOn() || !pairs.length) return;
+  const pts = pairs.map(([a,b]) => [fxRect(a), fxRect(b)]).filter(([a,b]) => a && b);
+  if (!pts.length) return;
+  const NS = "http://www.w3.org/2000/svg", svg = document.createElementNS(NS, "svg");
+  svg.setAttribute("class", "fxlayer"); svg.setAttribute("aria-hidden", "true");
+  svg.innerHTML = `<defs><marker id="fxhead" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>`;
+  for (const [a,b] of pts){
+    const mx = (a.x+b.x)/2, my = (a.y+b.y)/2, dx = b.x-a.x, dy = b.y-a.y, len = Math.hypot(dx,dy) || 1;
+    const cx = mx - dy/len*Math.min(80, len*0.25), cy = my + dx/len*Math.min(80, len*0.25);
+    const path = document.createElementNS(NS, "path"); path.setAttribute("d", `M${a.x},${a.y} Q${cx},${cy} ${b.x},${b.y}`); path.setAttribute("marker-end", "url(#fxhead)");
+    svg.appendChild(path);
+    const tgt = document.createElementNS(NS, "circle"); tgt.setAttribute("cx", b.x); tgt.setAttribute("cy", b.y); tgt.setAttribute("r", 26); tgt.setAttribute("class","fxtgt"); svg.appendChild(tgt);
+  }
+  document.body.appendChild(svg);
+  let chip = null;
+  if (label){ chip = document.createElement("div"); chip.className = "fxchip"; chip.textContent = label; chip.style.left = pts[0][0].x+"px"; chip.style.top = pts[0][0].y+"px"; document.body.appendChild(chip); }
+  try { await sleep(reduceMotion() ? Math.min(ms, 500) : ms); } finally { svg.remove(); chip && chip.remove(); }
+}
+function onBoard(c){ return g.P[c.owner].board.includes(c); }
+function baseKw(c, k){ if (k==="barrier") return !!c.shield; return c.d.kw.includes(k) || (c.kws && c.kws.includes(k)) || (c.tKws && c.tKws.includes(k)); }
+function addKw(c, k, temp){ if (!onBoard(c)) return; if (k==="barrier"){ c.shield = true; return; } if (temp) c.tKws = [...(c.tKws||[]), k]; else c.kws = [...(c.kws||[]), k]; }
+function stMatch(f, c, src){
+  switch (f){
+    case "all": return true;
+    case "other": return c!==src;
+    case "air": return baseKw(c,"airborne") || grantedAir(c);
+    case "oair": return c!==src && (baseKw(c,"airborne") || grantedAir(c));
+    case "tok": return !!c.d.token;
+    default: return true;
+  }
+}
+function grantedAir(c){
+  const p = g.P[c.owner];
+  for (const a of p.auras) if (a.st) for (const s of a.st) if (s.k==="grant" && s.kw==="airborne" && s.f==="all") return true;
+  for (const b of p.board) if (b.d.st) for (const s of b.d.st) if (s.k==="grant" && s.kw==="airborne" && (s.f==="all" || (s.f==="other" && b!==c))) return true;
+  return false;
+}
+function forStatics(p, fn){
+  for (const a of p.auras) if (a.st) for (const s of a.st) fn(s, null);
+  for (const b of p.board) if (b.d.st) for (const s of b.d.st) fn(s, b);
+}
+// Hot paths for the AI's simulations: plain loops instead of callbacks.
+function hasKw(c, k){
+  if (baseKw(c,k)) return true;
+  const p = g.P[c.owner];
+  for (const a of p.auras){ const st = a.st; if (st) for (const s of st) if (s.k==="grant" && s.kw===k && stMatch(s.f, c, null)) return true; }
+  for (const b of p.board){ const st = b.d.st; if (st) for (const s of st) if (s.k==="grant" && s.kw===k && stMatch(s.f, c, b)) return true; }
+  return false;
+}
+function statSum(c, key){
+  let n = 0; const p = g.P[c.owner];
+  for (const a of p.auras){ const st = a.st; if (st) for (const s of st) if (s.k==="lord" && s[key] && stMatch(s.f, c, null)) n += s[key]; }
+  for (const b of p.board){ const st = b.d.st; if (st) for (const s of st) if (s.k==="lord" && s[key] && stMatch(s.f, c, b)) n += s[key]; }
+  return n;
+}
+function atkOf(c){ return Math.max(0, c.atk + c.tAtk + statSum(c,"atk")); }
+function hpOf(c){ return c.hp + c.tHp + statSum(c,"hp"); }
+function hpLeft(c){ return hpOf(c) - c.dmg; }
+function isDead(c){ return c.dmg >= hpOf(c); }
+function boardPower(p){ return p.board.reduce((s,c)=>s+atkOf(c)+hpOf(c),0); }
+function bankCap(p){ let n = 3; forStatics(p, s=>{ if (s.k==="bank") n += s.n; }); return n; }
+
+function costOf(cardDef, p){
+  let c = cardDef.cost;
+  forStatics(p, s=>{ if (s.k==="cost" && s.type===cardDef.type) c -= s.n; });
+  if (cardDef.id==="galvanic_golem" || (cardDef.fused && cardDef.fused.includes("galvanic_golem"))) return Math.max(1, c - p.played);
+  return Math.max(0,c);
+}
+
+// Reactive triggers (life gain, draws, enemy damage...) can't set off further reactive triggers.
+let REACT_DEPTH = 0;
+function react(p, evt, data){ if (REACT_DEPTH>0 || !g) return; REACT_DEPTH++; try { hook(p, evt, data||{}); } finally { REACT_DEPTH--; } }
+function dmgPlayer(p, n, src){
+  if (n<=0) return;
+  fxNote("dmg", lifeSel(p), "−"+n);
+  p.life -= n;
+  log(`${src ? src+": " : ""}${p.name} ${p.isAI?"takes":"take"} ${n} damage.`, "dmg");
+  react(opp(p), "face", {n, x:n});
+}
+function dmgCreature(c, n){
+  if (n<=0) return 0;
+  if (c.shield){ c.shield = false; log(`${c.d.name}'s Barrier breaks.`); fxNote("info", crSel(c), "Barrier"); return 0; }
+  fxNote("dmg", crSel(c), "−"+n);
+  c.dmg += n;
+  if (c.d.onHurt && onBoard(c) && REACT_DEPTH===0){ REACT_DEPTH++; try { c.d.onHurt({p:g.P[c.owner], o:opp(g.P[c.owner]), self:c, data:{n, x:n}}); } finally { REACT_DEPTH--; } }
+  return n;
+}
+function dmgT(t, n){
+  if (!t) return;
+  if (t.kind==="player") dmgPlayer(t.p, n);
+  else if (onBoard(t.c)) { dmgCreature(t.c, n); log(`${t.c.d.name} takes ${n} damage.`); }
+}
+function heal(p, n){ if (n<=0) return; fxNote("heal", lifeSel(p), "+"+n); p.life = Math.min(p.maxLife, p.life+n); log(`${p.name} ${p.isAI?"gains":"gain"} ${n} life.`); react(p, "heal", {n, x:n}); }
+// A confluence deck has a single charge type: every charge it gains or spends is that confluence's.
+function chEl(p, el){ return p.chargeAs || el; }
+function gainCharge(p, el, n){ if(n<=0) return; el = chEl(p, el); p.charge[el] = (p.charge[el]||0) + n; react(p, "charge", {n, x:n}); }
+function gainEnergy(p, n){ p.energy += n; }
+function spendCharge(p, el, n){
+  el = chEl(p, el);
+  if (n<=0) return;
+  p.charge[el] -= n; p.spent = true;
+  hook(p, "spend", {n});
+}
+function drawN(p, n){
+  for (let i=0;i<n;i++){
+    if (!p.deck.length){ p.fatigue++; dmgPlayer(p, p.fatigue, "Empty deck"); continue; }
+    p.hand.push(p.deck.pop());
+    react(p, "draw", {});
+  }
+}
+function makeCreature(d, p){
+  return { uid: uidSeq++, d, owner:p.i, atk:d.atk, hp:d.hp, dmg:0, tAtk:0, tHp:0, tKws:null, kws:null,
+    sick: !d.kw.includes("haste"), exhausted:false, frozen:false, attacking:false, noBlock:false, shield: d.kw.includes("barrier") };
+}
+const BOARD_MAX = 8;   // creatures per side
+function summon(p, d){ if (p.board.length>=BOARD_MAX) return null; const c = makeCreature(d,p); p.board.push(c); if (d.token) react(p, "token", {c}); return c; }
+function buff(c, a, h, temp){ if(!onBoard(c)) return; if(temp){ c.tAtk+=a; c.tHp+=h; } else { c.atk+=a; c.hp+=h; } }
+function freeze(c){
+  if (!onBoard(c)) return;
+  c.exhausted = true; c.frozen = true; fxNote("frz", crSel(c), "Frozen");
+  if (c.attacking){ c.attacking=false; log(`${c.d.name} is frozen out of combat.`); }
+  else log(`${c.d.name} is frozen.`);
+  react(opp(g.P[c.owner]), "freeze", {c});
+}
+function bounce(c){
+  if (!onBoard(c)) return;
+  const owner = g.P[c.owner];
+  fxNote("info", crSel(c), "Returned");
+  owner.board.splice(owner.board.indexOf(c),1);
+  c.attacking = false;
+  if (c.d.token){ log(`${c.d.name} fades away.`); return; }
+  owner.hand.push(c.d);
+  log(`${c.d.name} returns to ${owner.isAI?"the enemy's":"your"} hand.`);
+  react(opp(owner), "ebounce", {c});
+}
+function hook(p, evt, data={}){
+  const o = opp(p);
+  for (const c of [...p.board]){ const h=c.d.on && c.d.on[evt]; if(h && data.inst!==c && onBoard(c)) h({p,o,self:c,data}); }
+  for (const a of [...p.auras]){ const h=a.on && a.on[evt]; if(h) h({p,o,self:a,data}); }
+}
+function checkDeaths(){
+  let again = true;
+  while (again){
+    again = false;
+    for (const p of g.P){
+      for (const c of [...p.board]){
+        if (isDead(c)){
+          p.board.splice(p.board.indexOf(c),1);
+          if (!c.d.token) p.grave.push(c.d);
+          log(`${c.d.name} is destroyed.`);
+          const x = Math.max(0, c.atk + c.tAtk);
+          if (c.d.death){ c.d.death({p,o:opp(p),self:c, data:{x}}); again = true; }
+          hook(p, "die", {x, d:c.d}); hook(opp(p), "edie", {x, d:c.d}); again = true;
+        }
+      }
+    }
+  }
+  checkWin();
+}
+function checkWin(){
+  const [a,b] = g.P;
+  if (a.life<=0 || b.life<=0){
+    g.over = a.life<=0 && b.life<=0 ? "draw" : (a.life<=0 ? "enemy" : "you");
+    throw OVER;
+  }
+}
+
+// Targeted cards can pick any creature on either side (Ward only stops the enemy's cards).
+// The spec type keeps the card's intent (hostile or friendly) for AI defaults and fused auto-targets.
+function targetsFor(spec, p, intentOnly){
+  const o = opp(p);
+  const legal = c => !(hasKw(c,"ward") && c.owner!==p.i);
+  const side = intentOnly ? (HOSTILE[spec.type] ? [o] : [p]) : [p, o];
+  const crs = side.flatMap(pl => pl.board).filter(legal).map(c=>({kind:"creature", c}));
+  let out = [];
+  switch (spec.type){
+    case "enemyAny": out = [...crs, {kind:"player", p:o}]; break;
+    case "enemyCreature": case "ownCreature": out = crs; break;
+    case "ownAttacker": case "enemyAttacker": out = crs.filter(t=>t.c.attacking); break;
+  }
+  if (spec.filter) out = out.filter(spec.filter);
+  return out;
+}
+function targetStillValid(t){ return !t || t.kind==="player" || onBoard(t.c); }
+function canOC(p, d){ return !!d.oc && (p.charge[chEl(p, d.el)]||0) >= d.oc.cost; }
+function needsTargetPick(p, d){
+  if (!d.target) return false;
+  if (d.target.ocOnly && !canOC(p,d)) return false;
+  return true;
+}
+function targetRequired(d){ return d.target && d.type!=="creature" && !d.target.optional; }
+function canPlayNow(p, d, win){
+  if (costOf(d,p) > p.energy) return false;
+  if (d.type==="creature" && p.board.length>=BOARD_MAX) return false;
+  if (d.counter) return win==="respond";
+  if (win!=="main" && d.type!=="reaction") return false;
+  if (targetRequired(d) && !targetsFor(d.target,p).length) return false;
+  return true;
+}
+// Why a card can't be played right now (null when it can).
+const TARGET_NEEDS = { enemyAny:"a creature or the enemy", enemyCreature:"a creature (enemy creatures with Ward can't be targeted)", ownCreature:"a creature", ownAttacker:"an attacking creature", enemyAttacker:"an attacking creature" };
+function whyNotPlayable(p, d, win){
+  if (d.manifest){
+    const short = Object.entries(d.mcost).filter(([el,n])=>(p.charge[el]||0)<n).map(([el,n])=>`${n} ${ELS[el]} charge (you have ${p.charge[el]||0})`);
+    if (short.length) return `Needs ${short.join(" and ")}.`;
+  } else {
+    if (costOf(d,p) > p.energy) return `Costs ${costOf(d,p)} Energy; you have ${p.energy}.`;
+    if (d.type==="creature" && p.board.length>=BOARD_MAX) return `Your side is full (${BOARD_MAX} creatures).`;
+    if (d.counter) return "A counter: you can only play it when the enemy casts a card.";
+    if (win!=="main" && d.type!=="reaction") return "Only Reactions can be played right now.";
+  }
+  if (targetRequired(d) && !targetsFor(d.target,p).length) return `No legal target: it needs ${TARGET_NEEDS[d.target.type]||"a target"}${d.target.filter?" that matches its condition":""}.`;
+  return null;
+}
+function canAffordManifest(p, m){ return Object.entries(m.mcost).every(([el,n])=>(p.charge[el]||0)>=n); }
+function canCastManifest(p, m){
+  if (!canAffordManifest(p,m)) return false;
+  if (m.type==="creature" && p.board.length>=BOARD_MAX) return false;
+  if (targetRequired(m) && !targetsFor(m.target,p).length) return false;
+  return true;
+}
+function canAttack(c){ return !c.exhausted && (!c.sick || hasKw(c,"haste")) && !hasKw(c,"wall"); }
+function canBlock(b, a){ return !b.exhausted && !b.noBlock && (!hasKw(a,"airborne") || hasKw(b,"airborne") || hasKw(b,"skyguard")); }
+
+function resolveCard(p, d, t, oc){
+  const o = opp(p);
+  if (!targetStillValid(t)) t = null;
+  const x = { p, o, t, oc, chain:p.played, card:d };
+  if (d.type==="creature"){
+    const c = makeCreature(d,p); p.board.push(c); x.self = c;
+    if (d.play) d.play(x);
+    afterPlay(p, d, c);
+  } else if (d.type==="aura"){
+    p.auras.push(d);
+    if (d.play) d.play(x);
+    afterPlay(p, d, null);
+  } else {
+    if (targetRequired(d) && !t){ log(`${d.name} has no target and fizzles.`); }
+    else if (d.play) d.play(x);
+    if (!d.manifest) p.grave.push(d);
+    afterPlay(p, d, null);
+  }
+  if (d.manifest) hook(p, "manifest", {card:d});
+  checkDeaths();
+}
+function afterPlay(p, d, inst){
+  if (!d.manifest) gainCharge(p, d.el, d.charge);
+  p.played++;
+  if (d.type==="spell" || d.type==="reaction") p.spells = (p.spells||0) + 1;
+  if (d.manifest) p.maniCast = (p.maniCast||0) + 1;
+  hook(p, "played", {card:d, inst});
+}
+
+async function castCard(p, hi, t, oc){
+  const d = p.hand[hi];
+  p.energy -= costOf(d,p);
+  p.hand.splice(hi,1);
+  log(`${p.name} ${p.isAI?"plays":"play"} ${d.name}${oc?" (Overcharged)":""}.`);
+  render();
+  if (await counterCheck(opp(p), d, t, oc)){ p.grave.push(d); render(); return; }
+  if (oc && canOC(p,d)) spendCharge(p, d.el, d.oc.cost); else oc = false;
+  if (t) await fxArrows([[whoSel(p), t.kind==="player" ? lifeSel(t.p) : crSel(t.c)]], d.name, p.isAI ? 900 : 350);
+  resolveCard(p, d, t, oc);
+  render();
+}
+async function castManifest(p, mi, t){
+  const m = p.manifests[mi];
+  p.manifests.splice(mi,1);
+  for (const [el,n] of Object.entries(m.mcost)) spendCharge(p, el, n);
+  log(`${p.name} ${p.isAI?"casts":"cast"} the Manifest ${m.name}!`, "big");
+  if (!HEADLESS){ g.inspect = { def:m, where:(p.isAI?"Enemy":"Your")+" Manifest" }; g.flash = { m, who:p.isAI?"The enemy casts a Manifest":"You cast a Manifest" }; render(); await sleep(p.isAI?1900:1100); g.flash = null; }
+  if (t) await fxArrows([[whoSel(p), t.kind==="player" ? lifeSel(t.p) : crSel(t.c)]], m.name, p.isAI ? 900 : 350);
+  resolveCard(p, m, t, false);
+  render();
+}
+async function counterCheck(o, d, t, oc){
+  if (o.isAI){ const hi = aiShouldCounter(o, d, t, oc); return hi>=0 ? doCounter(o, hi, d) : false; }
+  while (true){
+    const opts = o.hand.map((c,i)=>i).filter(i=>canPlayNow(o,o.hand[i],"respond") && (!o.hand[i].counter || counterOK(o.hand[i], d)));
+    if (!opts.length) return false;
+    g.inspect = { def:d, where:"Enemy card being cast" };
+    const v = await waitUI("respond", { text:`The enemy is casting ${d.name}. You can respond with a Reaction before it resolves.`, card:d, options:opts });
+    if (typeof v !== "number") return false;
+    if (o.hand[v].counter) return doCounter(o, v, d);
+    await humanCast(o, v, "respond");
+  }
+}
+function counterOK(c, d){ return !c.counterIf || c.counterIf(d); }
+function doCounter(o, pick, d){
+  const c = o.hand[pick];
+  o.energy -= costOf(c,o);
+  o.hand.splice(pick,1);
+  o.grave.push(c);
+  log(`${o.name} ${o.isAI?"counters":"counter"} ${d.name} with ${c.name}. It gives no charge.`, "big");
+  if (c.afterCounter) c.afterCounter({p:o, o:opp(o)});
+  afterPlay(o, c, null);
+  checkDeaths();
+  return true;
+}
+
+/* Combat */
+async function runCombat(ap, attackers){
+  if (!attackers.length) return;
+  const dp = opp(ap);
+  log(`${ap.name} ${ap.isAI?"attacks":"attack"} with ${attackers.map(c=>c.d.name).join(", ")}.`);
+  declareAttack(ap, attackers);
+  render();
+  await fxArrows(attackers.filter(onBoard).map(c=>[crSel(c), lifeSel(dp)]), null, ap.isAI ? 900 : 300);
+  if (dp.isAI) applyBlocks(aiDefend(dp));
+  else {
+    const eligible = dp.board.some(b=>attackers.some(a=>canBlock(b,a)));
+    if (!eligible){ log("You have no creatures that can block."); render(); await sleep(1100); }
+    if (eligible){
+      const assign = await waitUI("block", { assign:new Map(), sel:null });
+      for (const [bu, au] of assign){
+        const b = dp.board.find(c=>c.uid===bu), a = attackers.find(c=>c.uid===au);
+        if (!b || !a) continue;
+        if (!g.combat.blocks.has(a.uid)) g.combat.blocks.set(a.uid, []);
+        g.combat.blocks.get(a.uid).push(b);
+      }
+    }
+  }
+  for (const [au, bl] of g.combat.blocks){
+    const a = attackers.find(c=>c.uid===au);
+    log(`${bl.map(b=>b.d.name).join(" and ")} ${bl.length>1?"block":"blocks"} ${a.d.name}.`);
+  }
+  blockTriggers(dp);
+  render();
+  { const bp = []; for (const [au, bl] of g.combat.blocks) for (const b of bl) bp.push([crSel(b), `[data-cr="${au}"]`]); await fxArrows(bp, null, dp.isAI ? 900 : 300); }
+  if (dp.isAI) await aiCombatReact(dp); else await reactionWindow(dp, "Blocks are set. You can play Reactions, or let damage happen.");
+  if (ap.isAI) await aiCombatReact(ap); else await reactionWindow(ap, g.combat.blocks.size ? "The enemy has chosen its blocks (shown below)." : "The enemy didn't block.", true);
+  resolveCombat(ap);
+}
+function declareAttack(ap, attackers){
+  attackers.forEach(c=>{ c.attacking=true; c.exhausted = !hasKw(c,"vigilant"); });
+  g.combat = { att: attackers, blocks: new Map() };
+  const o = opp(ap);
+  for (const c of attackers) if (c.d.onAttack && onBoard(c)) c.d.onAttack({p:ap, o, self:c});
+  checkDeaths();
+}
+function blockTriggers(dp){
+  if (!g.combat) return;
+  const o = opp(dp);
+  for (const bl of g.combat.blocks.values()) for (const b of bl) if (b.d.onBlock && onBoard(b)) b.d.onBlock({p:dp, o, self:b});
+  checkDeaths();
+}
+function resolveCombat(ap){
+  const dp = opp(ap);
+  const pending = new Map(), drains = [], venom = new Set();
+  const add = (c,n,src)=>{ pending.set(c,(pending.get(c)||0)+n); if (n>0 && hasKw(src,"venom")) venom.add(c); };
+  for (const a of g.combat.att){
+    if (!onBoard(a) || !a.attacking) continue;
+    const bl = (g.combat.blocks.get(a.uid)||[]).filter(b=>onBoard(b));
+    const atk = atkOf(a);
+    if (!bl.length){ dmgPlayer(dp, atk, a.d.name); if (hasKw(a,"drain")) drains.push([ap,atk]); continue; }
+    let rem = atk;
+    bl.forEach((b,idx)=>{
+      const last = idx===bl.length-1;
+      const give = last && !hasKw(a,"pierce") ? rem : Math.min(rem, Math.max(0,hpLeft(b)));
+      add(b, give, a); rem -= give;
+      add(a, atkOf(b), b);
+      if (hasKw(b,"drain") && atkOf(b)>0) drains.push([dp, atkOf(b)]);
+    });
+    if (rem>0 && hasKw(a,"pierce")) dmgPlayer(dp, rem, `${a.d.name} (Pierce)`);
+    if (hasKw(a,"drain") && atk>0) drains.push([ap, atk]);
+  }
+  for (const [pl,n] of drains) heal(pl, n);
+  for (const [c,n] of pending){ const hit = dmgCreature(c,n); if (hit && venom.has(c) && onBoard(c)){ c.dmg = Math.max(c.dmg, hpOf(c)); log(`Venom destroys ${c.d.name}.`); } }
+  g.combat.att.forEach(c=>c.attacking=false);
+  g.combat = null;
+  checkDeaths();
+  render();
+}
+
+/* Turn flow */
+function startTurn(p){
+  g.P.forEach(q=>{ q.played=0; q.spent=false; q.spells=0; });
+  p.energy += 3;
+  for (const c of p.board){
+    if (c.frozen){ c.frozen=false; c.exhausted=true; } else c.exhausted=false;
+    c.sick = false;
+    const fo = (c.d.fort||0) + (c.fortB||0); if (fo){ c.atk += fo; c.hp += fo; }
+  }
+  log(`Turn ${g.turnNo}: ${p.isAI?"Enemy":"You"} (${p.energy} Energy)`, "turn");
+  hook(p, "start");
+  checkDeaths();
+  if (g.turnNo>1) drawN(p,1);
+  checkWin();
+}
+function endTurn(p){
+  hook(p, "end"); checkDeaths();
+  for (const q of g.P) for (const c of q.board){ c.dmg=0; c.tAtk=0; c.tHp=0; c.tKws=null; c.noBlock=false; }
+  while (p.hand.length>7){ const d=p.hand.pop(); p.grave.push(d); log(`${p.name} ${p.isAI?"discards":"discard"} ${d.name} (hand limit).`); }
+  const cap = bankCap(p);
+  if (p.energy>cap) p.energy = cap;
+}
+async function runGame(){
+  try {
+    if (!HEADLESS && g.coin){ render(); await sleep(reduceMotion() ? 1200 : 2000); g.coin = null; }
+    while (true){
+      const p = g.P[g.active];
+      g.turnNo++;
+      startTurn(p);
+      render();
+      if (p.isAI) await aiTurn(p); else await humanTurn(p);
+      endTurn(p);
+      const o = opp(p);
+      if (o.isAI){ g.phase = "end"; await aiInstantWindow(o); }
+      g.active = 1-g.active;
+    }
+  } catch(e){
+    if (e===STALE) return;
+    if (e===OVER){ log(g.over==="you"?"Victory!":g.over==="enemy"?"Defeat.":"Draw.", "big"); g.ui={mode:"idle"}; render(); return g.over; }
+    console.error(e); if(g) { log("Engine error: "+(e && e.message), "dmg"); render(); }
+    throw e;
+  }
+}
+
+/* Human input via promises */
+function waitUI(mode, data){
+  if (HEADLESS) throw new Error("waitUI in headless");
+  return new Promise(res=>{ g.ui = Object.assign({mode, res}, data); render(); });
+}
+function finishUI(v){ const r=g.ui.res; g.ui={mode:"idle"}; g.notice=null; r && r(v); render(); }
+
+async function humanTurn(p){
+  await humanMain(p, "main1");
+  const elig = p.board.filter(canAttack);
+  if (elig.length){
+    g.phase = "combat";
+    const att = await waitUI("attack", { sel:new Set() });
+    await runCombat(p, p.board.filter(c=>att.includes(c.uid)));
+  }
+  await humanMain(p, "main2");
+}
+async function humanMain(p, phase){
+  g.phase = phase;
+  while (true){
+    const v = await waitUI("main", {});
+    if (v==="next") return;
+    if (v.hand!=null) await humanCast(p, v.hand, "main");
+    else if (v.man!=null) await humanManifest(p, v.man);
+  }
+}
+async function reactionWindow(p, label, force){
+  if (!force && !p.hand.some(d=>canPlayNow(p,d,"instant"))) return;
+  while (true){
+    const v = await waitUI("react", { label });
+    if (v==="done") return;
+    await humanCast(p, v, "instant");
+    if (!force && !p.hand.some(d=>canPlayNow(p,d,"instant"))) return;
+  }
+}
+async function pickTarget(p, d){
+  const valid = targetsFor(d.target,p);
+  const optional = d.type==="creature" || !!d.target.optional;
+  if (!valid.length) return optional ? null : "cancel";
+  const t = await waitUI("target", { valid, optional, name:d.name });
+  return t==="skip" ? null : t;
+}
+async function humanCast(p, hi, win){
+  const d = p.hand[hi];
+  if (!d || !canPlayNow(p,d,win)) return;
+  let t = null;
+  if (needsTargetPick(p,d)){ t = await pickTarget(p,d); if (t==="cancel") return; }
+  let oc = false;
+  if (canOC(p,d) && !(d.target && d.target.ocOnly && !t)){
+    oc = await waitUI("confirm", { title:`Overcharge ${d.name}?`, text:`Spend ${d.oc.cost} ${ELS[chEl(p,d.el)]} charge to ${d.oc.text}. You have ${p.charge[d.el]}.`, yes:"Overcharge", no:"Play normally" });
+  }
+  await castCard(p, p.hand.indexOf(d), t, oc);
+}
+async function humanManifest(p, mi){
+  const m = p.manifests[mi];
+  if (!m || !canCastManifest(p,m)) return;
+  let t = null;
+  if (m.target){ t = await pickTarget(p,m); if (t==="cancel") return; }
+  await castManifest(p, p.manifests.indexOf(m), t);
+}
+
+/* ---------------- AI ----------------
+   Five difficulty levels:
+   1 Novice      random legal plays, never casts Manifests
+   2 Apprentice  plays the best move one at a time, simple attack and block rules, no look-ahead
+   3 Adept       sequences its hand two plays deep and weighs next-turn threats; quick combat checks
+   4 Strategist  full combat look-ahead, exhaustive blocking, end-of-turn Reactions, plus deck and matchup strategy
+   5 Master      Strategist plus it cheats: sees your hand and draw order and plays out your whole next turn
+   Levels 1-4 never look at hidden cards: their simulations shuffle unknown decks. */
+const AI_LEVELS = {
+  1:{ name:"Novice",     desc:"Plays random legal cards and never casts Manifests." },
+  2:{ name:"Apprentice", desc:"Spends its resources and casts Manifests, but only thinks one move at a time." },
+  3:{ name:"Adept",      desc:"Plans its hand a couple of plays ahead and watches for your threats." },
+  4:{ name:"Strategist", desc:"Full combat look-ahead plus knowledge of both decks: plans a race or a defense around the matchup." },
+  5:{ name:"Master",     desc:"Cheats: sees your hand and your draw order and plays out your next turn before choosing." }
+};
+const AIW = { life:1.2, lowLife:1.6, hand:1.6, energy:0.55, reactHold:1.8, charge:0.9, chargeExtra:0.25,
+  maniOpt:1.5, maniProg:2.2, aura:4, maniAura:3.3, danger:0.45, lethal:30, pressure:0.2,
+  atk:1, hp:0.65, air:0.35, engine:2.5, fort:2.2, oppScale:1 };
+const AIW2 = { ...AIW, danger:0, lethal:0, pressure:0, reactHold:0, noThreat:true };
+function levelOf(p){ return p.level || 3; }
+const L5OPT = { deep:true, burn:true, counter:true, trick:true, turns:3, k:4, blocks:true, strongOpp:true, avgH:true, mix:"avg" };
+let AI_HIDE = false;          // set per decision: hide unknown cards from levels 1-4
+function aiCtx(p){ if (!g.sim) AI_HIDE = levelOf(p) < 5; }
+const rnd = a => a[Math.floor(Math.random()*a.length)];
+
+function findCr(uid){ for (const p of g.P) for (const c of p.board) if (c.uid===uid) return c; return null; }
+function refT(t){ return !t ? null : t.kind==="player" ? {kind:"player", pi:t.p.i} : {kind:"creature", uid:t.c.uid}; }
+function liveT(r){ if (!r) return null; if (r.kind==="player") return {kind:"player", p:g.P[r.pi]}; const c=findCr(r.uid); return c ? {kind:"creature", c} : null; }
+function cloneState(src){
+  const map = new Map();
+  const cc = c => { let n = map.get(c); if (!n){ n = {...c}; map.set(c,n); } return n; };
+  const hide = AI_HIDE && !src.sim;
+  const P = src.P.map(p=>({...p, deck: hide ? shuffle([...p.deck]) : [...p.deck], hand:[...p.hand], board:p.board.map(cc), auras:[...p.auras], grave:[...p.grave], manifests:[...p.manifests], charge:{...p.charge}}));
+  const combat = src.combat ? { att:src.combat.att.map(cc), blocks:new Map([...src.combat.blocks].map(([k,v])=>[k, v.map(cc)])) } : null;
+  return {...src, P, combat, log:[], sim:true, ui:{mode:"idle"}, flash:null};
+}
+function simulate(fn, pi){
+  const saved = g; g = cloneState(saved);
+  let v;
+  try { fn(); v = evalState(pi); }
+  catch(e){ if (e!==OVER){ g = saved; throw e; } v = evalState(pi); }
+  g = saved;
+  return v;
+}
+function sumObj(o){ let s=0; for (const k in o) s+=o[k]; return s; }
+function crVal(c, W){
+  const d = c.d;
+  if (hasKw(c,"wall")) return 0.8 + (hpOf(c)-c.tHp)*0.6 + (d.onBlock?1.5:0) + (d.on||d.st?W.engine:0);
+  const a = atkOf(c) - c.tAtk, h = hpOf(c) - c.tHp;
+  let v = 0.8 + a*W.atk + h*W.hp;
+  if (hasKw(c,"airborne")) v += a*W.air + (W.airBonus||0);
+  if (d.kw.includes("pierce")) v += a*0.15;
+  if (d.fort || c.fortB) v += ((d.fort||0)+(c.fortB||0))*W.fort;
+  if (d.on) v += W.engine;
+  if (d.st) v += W.engine*0.8;
+  if (d.onAttack || d.onBlock) v += 1.5;
+  if (hasKw(c,"ward")) v += 0.8;
+  if (hasKw(c,"drain")) v += a*0.3;
+  if (hasKw(c,"skyguard")) v += 0.5 + (W.airBonus||0);
+  if (hasKw(c,"vigilant")) v += a*0.3;
+  if (d.death) v += 1.2;
+  if (c.frozen) v -= a*0.5;
+  return v;
+}
+function sideVal(p, W){
+  const l = p.life, low = W.lowAt || 6;
+  let v = l*W.life - (l<low ? (low-l)*W.lowLife : 0);
+  for (const c of p.board) v += crVal(c, W);
+  for (const a of p.auras) v += a.manifest ? W.maniAura : W.aura;
+  v += p.hand.length*W.hand;
+  const keep = Math.min(p.energy, bankCap(p));
+  v += keep*W.energy;
+  let cheap = 99; for (const d of p.hand) if (d.type==="reaction") cheap = Math.min(cheap, costOf(d,p));
+  if (keep>=cheap) v += W.reactHold;
+  const need = {};
+  for (const m of p.manifests) for (const el in m.mcost) need[el] = Math.max(need[el]||0, m.mcost[el]);
+  for (const el in p.charge){ const n = p.charge[el], u = Math.min(n, need[el]||0); v += u*W.charge + (n-u)*W.chargeExtra; }
+  for (const m of p.manifests){
+    let have = 0; for (const el in m.mcost) have += Math.min(p.charge[el]||0, m.mcost[el]);
+    v += W.maniOpt + W.maniProg*Math.pow(have/sumObj(m.mcost), 2);
+  }
+  return v;
+}
+// Damage `att` can expect to push through on its next attack against `def`.
+function threat(att, def){
+  const A = att.board.filter(c=>!hasKw(c,"wall") && !c.frozen && atkOf(c)-c.tAtk>0).map(c=>({a:atkOf(c)-c.tAtk, air:hasKw(c,"airborne")})).sort((x,y)=>y.a-x.a);
+  const B = def.board.filter(c=> g.active===def.i ? !c.exhausted : !c.frozen);
+  const used = new Array(A.length).fill(false);
+  for (const b of B){
+    const air = hasKw(b,"airborne") || hasKw(b,"skyguard");
+    const i = A.findIndex((x,j)=>!used[j] && (!x.air || air));
+    if (i>=0) used[i] = true;
+  }
+  let inc = 0; A.forEach((x,j)=>{ if (!used[j]) inc += x.a; });
+  for (const a of att.auras) if (a.id==="heart_of_sun") inc += 2;
+  return inc;
+}
+// Level 5 only: face damage the opponent can deal from the cards actually in their hand next turn.
+function handBurn(p){
+  const energy = Math.min(p.energy, bankCap(p)) + 3;
+  let dmg = 0, spent = 0;
+  const opts = p.hand.map(d=>({d, c:d.cost, v:(d.burn||0) + (d.kw.includes("haste") ? (d.atk||0) : 0)})).filter(x=>x.v>0).sort((a,b)=>b.v/Math.max(1,b.c)-a.v/Math.max(1,a.c));
+  for (const x of opts) if (spent + x.c <= energy){ spent += x.c; dmg += x.v; }
+  return dmg;
+}
+function evalState(pi){
+  if (g.hAvg!=null && !g.over){ const h = g.hAvg; g.hAvg = null; const v = evalState(pi); g.hAvg = h; return (v + 2*h)/3; }
+  // A lost position still prefers losing by less, so the AI keeps blocking when an attack is lethal anyway.
+  if (g.over){ if (g.over==="draw") return -500; return ((g.over==="you")===(pi===0)) ? 10000 - g.turnNo : -10000 + g.turnNo + Math.max(-40, g.P[pi].life)*3; }
+  const me = g.P[pi], op = g.P[1-pi], W = me.aiW || AIW;
+  let v = sideVal(me, W) - W.oppScale*sideVal(op, W);
+  if (!W.noThreat){
+    let t = threat(op, me);
+    if (W.cheat && L5OPT.burn) t += handBurn(op);
+    v -= (t>=me.life ? W.lethal + t*0.5 : t*W.danger) * (g.active===pi ? 1 : 0.6);
+    const t2 = threat(me, op);
+    v += (t2>=op.life ? 8 : t2*W.pressure);
+  }
+  if (W.sweepRisk && me.board.length>3) v -= (me.board.length-3) * W.sweepRisk;
+  if (g.active===pi && g.phase==="main1" && !g.combat && !g.lookAhead){
+    const blockers = op.board.filter(b=>!b.exhausted && !b.noBlock);
+    for (const c of me.board) if (canAttack(c) && atkOf(c)>0) v += atkOf(c) * (blockers.some(b=>canBlock(b,c)) ? 0.15 : 0.75);
+  }
+  return v;
+}
+function genActions(p, win){
+  const acts = [], seen = new Set();
+  p.hand.forEach((d,hi)=>{
+    if (seen.has(d.id) || d.counter || !canPlayNow(p,d,win)) return;
+    seen.add(d.id);
+    let tl = [null];
+    if (d.target){
+      const ts = targetsFor(d.target,p).map(refT);
+      tl = (d.type==="creature" || d.target.optional || d.target.ocOnly) ? [null, ...ts] : ts;
+      if (!tl.length) return;
+    }
+    const ocs = canOC(p,d) ? [false,true] : [false];
+    for (const t of tl) for (const oc of ocs){
+      if (d.target && d.target.ocOnly && (!!t)!==oc) continue;
+      acts.push({kind:"card", hi, t, oc});
+    }
+  });
+  if (win==="main" && levelOf(p)>=2) p.manifests.forEach((m,mi)=>{
+    if (!canCastManifest(p,m)) return;
+    let tl = [null];
+    if (m.target){ tl = targetsFor(m.target,p).map(refT); if (!tl.length) return; }
+    for (const t of tl) acts.push({kind:"man", mi, t});
+  });
+  return acts;
+}
+function applyAction(pi, a){
+  const p = g.P[pi];
+  if (a.kind==="card"){
+    const d = p.hand[a.hi];
+    p.energy -= costOf(d,p); p.hand.splice(a.hi,1);
+    const oc = a.oc && canOC(p,d); if (oc) spendCharge(p, d.el, d.oc.cost);
+    resolveCard(p, d, liveT(a.t), oc);
+  } else {
+    const m = p.manifests[a.mi]; p.manifests.splice(a.mi,1);
+    for (const el in m.mcost) spendCharge(p, el, m.mcost[el]);
+    resolveCard(p, m, liveT(a.t), false);
+  }
+}
+const finishCombat = ()=>{ if (g.combat) resolveCombat(g.P[g.active]); };
+
+/* ---- strategy layer (levels 4-5) ---- */
+function deckProfile(p){
+  const cards = [...p.deck, ...p.hand, ...p.grave, ...p.manifests, ...p.board.map(c=>c.d)];
+  const all = cards.length || 1;
+  let cheap=0, haste=0, burn=0, sweep=0, fliers=0, antiAir=0, heal=0, counters=0, removal=0, bigHp=0, creatures=0;
+  for (const d of cards){
+    const t = (d.text||"").toLowerCase();
+    if (d.type==="creature"){ creatures++; if (d.cost<=2 && !d.manifest) cheap++; if (d.kw.includes("haste")) haste++; if (d.kw.includes("airborne")){ fliers++; antiAir++; } if (d.kw.includes("skyguard")) antiAir++; if ((d.hp||0)>=6) bigHp++; }
+    if (/to the enemy\b/.test(t)) burn++;
+    if (/every enemy (basic )?creature/.test(t) || t.includes("every creature")) sweep++;
+    if (t.includes("gain") && t.includes("life")) heal++;
+    if (d.counter) counters++;
+    if (/(damage to an enemy creature|destroy an|freeze an|return an enemy)/.test(t)) removal++;
+  }
+  const r = n => n/all;
+  return { aggro: r(cheap)+r(haste)+r(burn), control: r(removal)+r(heal)+r(counters)+r(bigHp), fliers, antiAir, sweep, counters, burn };
+}
+function sweeperNear(op){
+  // A board wipe the opponent could cast soon: one of their remaining Manifests, within 2 charge.
+  for (const m of op.manifests){
+    if (!/every enemy (basic )?creature|every creature/.test((m.text||"").toLowerCase())) continue;
+    let short = 0; for (const el in m.mcost) short += Math.max(0, m.mcost[el] - (op.charge[el]||0));
+    if (short<=2) return true;
+  }
+  return false;
+}
+// Recomputed at the start of each AI turn: choose a role from race math plus both decks' plans.
+function strategicWeights(p){
+  const op = opp(p);
+  p.prof = p.prof || deckProfile(p); op.prof = op.prof || deckProfile(op);
+  const power = q => q.board.filter(c=>!hasKw(c,"wall")).reduce((s,c)=>s+atkOf(c)-c.tAtk,0);
+  // The opponent's board already holds what they played last turn; count what this turn's Energy can still add to ours,
+  // or the AI reads every turn start as being behind and almost always defends.
+  const myClock = op.life / Math.max(1, power(p) + p.energy + 2);
+  const opClock = p.life / Math.max(1, power(op) + 2);
+  let lean = (opClock - myClock) * 0.6 + (p.prof.aggro - op.prof.aggro) * 4 + (op.prof.control - p.prof.control) * 2;
+  lean = Math.max(-1.5, Math.min(1.5, lean));         // + = race them, - = defend and grind
+  const W = { ...AIW };
+  W.pressure = AIW.pressure + 0.18*lean;
+  W.danger = AIW.danger - 0.1*lean;
+  W.life = AIW.life - 0.15*lean;
+  W.hand = AIW.hand - 0.15*lean;
+  W.atk = AIW.atk + 0.08*lean;
+  W.hp = AIW.hp - 0.07*lean;
+  if (op.prof.fliers >= 6 && p.prof.antiAir < op.prof.fliers) W.airBonus = 1.2;   // they fly: value anything that can block fliers
+  if (op.prof.burn >= 6) W.lowAt = 8;                                              // they burn: protect your life total earlier
+  if (sweeperNear(op)) W.sweepRisk = 0.9;                                          // don't overcommit into a board wipe
+  W.role = lean>0.3 ? "race" : lean<-0.3 ? "defend" : "balanced";
+  if (levelOf(p)>=5) W.cheat = true;
+  return W;
+}
+
+/* ---- decisions ---- */
+function aiBest(p, win, after, depth2){
+  aiCtx(p);
+  const pi = p.i, fin = after || (()=>{});
+  const base = simulate(fin, pi) + 0.15;
+  const scored = genActions(p, win).map(a=>({a, v:simulate(()=>{ applyAction(pi, a); fin(); }, pi)}));
+  if (levelOf(p)>=5 && L5OPT.counter && !g.sim) for (const s of scored) counterAware(p, s, fin);
+  if (depth2 && scored.length>1){
+    // Look one play further for the most promising options, so the AI can sequence (ramp, then the big card).
+    scored.sort((x,y)=>y.v-x.v);
+    for (const s of scored.slice(0, levelOf(p)>=4 ? 7 : 4)){
+      const saved = g; g = cloneState(saved);
+      try {
+        applyAction(pi, s.a);
+        for (const b of genActions(g.P[pi], win)){
+          const v = simulate(()=>{ applyAction(pi, b); fin(); }, pi);
+          if (v>s.v) s.v = v;
+        }
+      } catch(e){ if (e!==OVER){ g = saved; throw e; } }
+      g = saved;
+    }
+  }
+  let best = null, bv = base;
+  for (const s of scored) if (s.v>bv){ bv = s.v; best = s.a; }
+  return best;
+}
+// Level 5 knows when you're holding a counter: assume you'll use it if it helps you.
+function counterAware(p, s, fin){
+  if (s.a.kind!=="card") return;
+  const op = opp(p), d = p.hand[s.a.hi];
+  const ci = op.hand.findIndex(c=>c.counter && costOf(c,op)<=op.energy && counterOK(c, d));
+  if (ci<0) return;
+  const pi = p.i;
+  const v = simulate(()=>{ const P = g.P[pi], O = g.P[1-pi]; P.energy -= costOf(d,P); P.hand.splice(s.a.hi,1); P.grave.push(d);
+    const c = O.hand[ci]; O.energy -= costOf(c,O); O.hand.splice(ci,1); if (c.afterCounter) c.afterCounter({p:O, o:P}); afterPlay(O,c,null); checkDeaths(); fin(); }, pi);
+  if (v < s.v) s.v = v;
+}
+// Level 5: play out the rest of this turn and the opponent's whole next turn with their real hand and draws.
+function simOppTurn(pi){
+  const me = g.P[pi], op = g.P[1-pi];
+  if (g.combat) resolveCombat(g.P[g.active]);
+  endTurn(me);
+  g.active = op.i; g.turnNo++;
+  startTurn(op);
+  g.phase = "main1";
+  for (let i=0;i<6;i++){ const a = quickBest(op); if (!a) break; applyAction(op.i, a); }
+  g.phase = "combat";
+  const att = aiChooseAttack(op, true);
+  simAttack(op.i, att.map(c=>c.uid));
+  g.phase = "main2";
+  for (let i=0;i<3;i++){ const a = quickBest(op); if (!a) break; applyAction(op.i, a); }
+  endTurn(op);
+  g.active = me.i; g.phase = "end";
+}
+// A full simulated turn at Adept quality (used by level 5 to forecast).
+function syncMain(p, n){ for (let i=0;i<n;i++){ const a = aiBest(p, "main", null, true); if (!a) break; applyAction(p.i, a); } }
+function syncCombat(p){
+  const att = aiChooseAttack(p, true);
+  if (!att.length) return;
+  declareAttack(p, att);
+  if (!g.combat) return;
+  applyBlocks(aiPlanBlocks(1-p.i, true)); blockTriggers(opp(p));
+  if (g.combat) resolveCombat(p);
+}
+function syncTurn(p, strong){
+  g.phase="main1";
+  if (strong){ const look = ()=>bestAttackAfter(p.i); for (let i=0;i<6;i++){ const a = aiBest(p, "main", look, true); if (!a) break; applyAction(p.i, a); } g.lookAhead = false; }
+  else syncMain(p, 6);
+  g.phase="combat"; syncCombat(p); g.phase="main2"; syncMain(p, 3);
+}
+function nextTurn(){ const cur = g.P[g.active]; endTurn(cur); g.active = 1-g.active; g.turnNo++; const nx = g.P[g.active]; startTurn(nx); return nx; }
+// Finish my turn (stopNow: no more plays this main phase), then forecast `rounds` more turns.
+function forecast(pi, stopNow, turns){
+  const me = g.P[pi];
+  if (g.combat) resolveCombat(g.P[g.active]);
+  if (g.phase==="main1"){ if (!stopNow) syncMain(me, 5); g.phase="combat"; syncCombat(me); g.phase="main2"; syncMain(me, 3); }
+  else if (!stopNow) syncMain(me, 3);
+  let acc = 0;
+  for (let i=0;i<turns;i++){ const nx = nextTurn(); syncTurn(nx, L5OPT.strongOpp && i===0); if (L5OPT.avgH) acc += evalState(pi); }
+  if (L5OPT.avgH) g.hAvg = acc/turns;
+}
+// Forecast against a careful opponent and, optionally, a reckless one; combine the two.
+function forecastValue(pi, apply, stopNow){
+  const careful = simulate(()=>{ apply(); forecast(pi, stopNow, L5OPT.turns); }, pi);
+  if (!L5OPT.mix) return careful;
+  const reckless = simulate(()=>{ g.P[1-pi].aiW = AIW2; apply(); forecast(pi, stopNow, L5OPT.turns); }, pi);
+  return L5OPT.mix==="min" ? Math.min(careful, reckless) : (careful + reckless)/2;
+}
+function sameAct(a, b){ return a && b && a.kind===b.kind && a.hi===b.hi && a.mi===b.mi && a.oc===b.oc && JSON.stringify(a.t)===JSON.stringify(b.t); }
+// Greedy finish of the current turn: more plays, attack, second main phase.
+function finishMyTurn(pi, stopNow){
+  const p = g.P[pi];
+  if (g.phase==="main1"){
+    if (!stopNow) for (let i=0;i<5;i++){ const a = quickBest(p); if (!a) break; applyAction(pi, a); }
+    const att = aiChooseAttack(p, true);
+    simAttack(pi, att.map(c=>c.uid));
+  }
+  g.phase = "main2";
+  for (let i=0;i<4;i++){ const a = quickBest(p); if (!a) break; applyAction(pi, a); }
+}
+// Level 5 in combat: let the other side answer with its best trick from its real hand.
+function oppTrick(pi){
+  const o = g.P[1-pi];
+  let best = null, bv = simulate(finishCombat, o.i) + 0.3;
+  for (const a of genActions(o, "instant")){ const v = simulate(()=>{ applyAction(o.i, a); finishCombat(); }, o.i); if (v>bv){ bv = v; best = a; } }
+  if (best) applyAction(o.i, best);
+}
+function quickBest(p){
+  const pi = p.i; let best = null, bv = simulate(()=>{}, pi) + 0.15;
+  for (const a of genActions(p, "main")){ const v = simulate(()=>applyAction(pi, a), pi); if (v>bv){ bv = v; best = a; } }
+  return best;
+}
+// Re-rank the top candidates by how the opponent's next turn would go.
+function deepRank(p, cands, apply){
+  const pi = p.i;
+  let best = null, bv = -Infinity;
+  for (const c of cands){
+    const v = simulate(()=>{ apply(c); simOppTurn(pi); }, pi);
+    if (v>bv){ bv = v; best = c; }
+  }
+  return best;
+}
+async function aiExec(p, a){
+  await sleep(650);
+  if (a.kind==="card") await castCard(p, a.hi, liveT(a.t), a.oc);
+  else await castManifest(p, a.mi, liveT(a.t));
+}
+// In the first main phase, each option is scored by how the best attack plays out afterwards.
+function bestAttackAfter(pi){
+  if (g.phase!=="main1") return;
+  g.lookAhead = true;
+  const p = g.P[pi];
+  const att = aiChooseAttack(p, levelOf(p)<4);
+  simAttack(pi, att.map(c=>c.uid));
+}
+async function aiMain(p, phase){
+  g.phase = phase;
+  const L = levelOf(p);
+  if (L===1){
+    for (let guard=0; guard<10 && Math.random()<0.75; guard++){
+      const opts = p.hand.map((d,hi)=>({d,hi})).filter(x=>!x.d.counter && canPlayNow(p,x.d,"main"));
+      if (!opts.length) return;
+      const {d, hi} = rnd(opts);
+      let t = null;
+      if (d.target){ const ts = targetsFor(d.target,p,true); const all = ts.length ? ts : targetsFor(d.target,p); if (all.length) t = rnd(all); }
+      await sleep(650);
+      await castCard(p, hi, t, canOC(p,d) && Math.random()<0.5);
+    }
+    return;
+  }
+  const look = L>=4 && phase==="main1" ? (()=>bestAttackAfter(p.i)) : null;
+  for (let guard=0; guard<20; guard++){
+    let a;
+    if (L>=5 && L5OPT.deep){
+      // Shortlist like a Strategist, then pick by playing out the rest of this turn
+      // and the opponent's whole next turn with their real hand and draws.
+      const pi = p.i;
+      const first = aiBest(p, "main", look, true);
+      const cand = genActions(p, "main").map(x=>({x, v:simulate(()=>{ applyAction(pi, x); if (look) look(); }, pi)})).sort((u,w)=>w.v-u.v).slice(0,L5OPT.k).map(s=>s.x);
+      if (first && !cand.some(c=>sameAct(c, first))) cand.push(first);
+      let bv = -Infinity; a = null;
+      for (const c of [...cand, null]){
+        const v = forecastValue(pi, ()=>{ if (c) applyAction(pi, c); }, c===null);
+        if (v>bv + (c===null ? 0 : 0)){ bv = v; a = c; }
+      }
+    } else a = aiBest(p, "main", look, L>=3);
+    if (L>=5 && !L5OPT.deep && false) {}
+    if (!a) return;
+    await aiExec(p, a);
+  }
+}
+function applyBlocks(m){ for (const [au, bus] of m){ const bl = bus.map(findCr).filter(Boolean); if (bl.length) g.combat.blocks.set(au, bl); } }
+function aiPlanBlocks(di, quick){
+  const dp = g.P[di];
+  aiCtx(dp);
+  const att = g.combat.att.filter(a=>onBoard(a) && a.attacking);
+  const B = dp.board.filter(b=>att.some(a=>canBlock(b,a)));
+  if (!B.length) return new Map();
+  // Inside look-ahead simulations, very wide boards use quick block rules (simulating every pairing gets too slow).
+  if (quick && B.length*(att.length+1) > 30) return ruleBlocks(dp, att);
+  const opts = B.map(b=>[null, ...att.filter(a=>canBlock(b,a)).map(a=>a.uid)]);
+  const toMap = asg=>{ const m = new Map(); asg.forEach((au,i)=>{ if (au!=null){ if (!m.has(au)) m.set(au,[]); m.get(au).push(B[i].uid); } }); return m; };
+  const cheat = levelOf(dp)>=5 && !g.sim && L5OPT.trick;
+  const score = asg=>simulate(()=>{ applyBlocks(toMap(asg)); blockTriggers(g.P[di]); if (cheat) oppTrick(di); finishCombat(); }, di);
+  const total = opts.reduce((s,o)=>s*o.length, 1);
+  let cur = B.map(()=>null), cv = score(cur);
+  if (!quick && total<=1500){
+    const idx = B.map(()=>0), all = [];
+    for (let k=0;k<total;k++){
+      const asg = idx.map((j,i)=>opts[i][j]);
+      const v = score(asg); all.push({asg, v}); if (v>cv+1e-9){ cv = v; cur = asg; }
+      for (let i=0;i<idx.length;i++){ if (++idx[i]<opts[i].length) break; idx[i]=0; }
+    }
+    if (cheat && L5OPT.blocks && all.length>1){
+      // Level 5: forecast the best few block plans through the following turns.
+      all.sort((a,b)=>b.v-a.v);
+      let bv = -Infinity;
+      for (const c of all.slice(0,3)){
+        const v = simulate(()=>{ applyBlocks(toMap(c.asg)); blockTriggers(g.P[di]); oppTrick(di); finishCombat();
+          const atk = g.P[1-di]; g.phase = "main2"; syncMain(atk, 3); for (let t=0;t<2;t++){ const nx = nextTurn(); syncTurn(nx); } }, di);
+        if (v>bv){ bv = v; cur = c.asg; }
+      }
+    }
+  } else {
+    for (let pass=0; pass<2; pass++){
+      let improved = false;
+      for (let i=0;i<B.length;i++) for (const o of opts[i]){
+        if (o===cur[i]) continue;
+        const tr = cur.slice(); tr[i] = o;
+        const v = score(tr); if (v>cv+1e-9){ cv = v; cur = tr; improved = true; }
+      }
+      if (!improved) break;
+    }
+  }
+  return toMap(cur);
+}
+function ruleBlocks(dp, att){
+  const m = new Map(), used = new Set();
+  let incoming = att.reduce((s,a)=>s+atkOf(a),0);
+  for (const a of [...att].sort((x,y)=>atkOf(y)-atkOf(x))){
+    const avail = dp.board.filter(b=>!used.has(b) && canBlock(b,a));
+    if (!avail.length) continue;
+    let pick = avail.find(b=>atkOf(b)>=hpLeft(a) && hpLeft(b)>atkOf(a)) || avail.find(b=>hpLeft(b)>atkOf(a));
+    if (!pick && incoming>=dp.life) pick = [...avail].sort((x,y)=>(x.d.cost||0)-(y.d.cost||0))[0];
+    if (pick){ m.set(a.uid, [pick.uid]); used.add(pick); incoming -= atkOf(a); }
+  }
+  return m;
+}
+// Blocking by level: 1 random, 2 simple rules, 3+ simulated.
+function aiDefend(dp){
+  const L = levelOf(dp);
+  const att = g.combat.att.filter(a=>onBoard(a) && a.attacking);
+  const m = new Map(), used = new Set();
+  const put = (a,b)=>{ if (!m.has(a.uid)) m.set(a.uid,[]); m.get(a.uid).push(b.uid); used.add(b); };
+  if (L===1){
+    for (const b of dp.board){ const can = att.filter(a=>canBlock(b,a)); if (can.length && Math.random()<0.4) put(rnd(can), b); }
+    return m;
+  }
+  if (L===2){
+    let incoming = att.reduce((s,a)=>s+atkOf(a),0);
+    for (const a of [...att].sort((x,y)=>atkOf(y)-atkOf(x))){
+      const avail = dp.board.filter(b=>!used.has(b) && canBlock(b,a));
+      if (!avail.length) continue;
+      let pick = avail.find(b=>atkOf(b)>=hpLeft(a) && hpLeft(b)>atkOf(a)) || avail.find(b=>hpLeft(b)>atkOf(a));
+      if (!pick && incoming>=dp.life) pick = [...avail].sort((x,y)=>(x.d.cost||0)-(y.d.cost||0))[0];
+      if (pick){ put(a, pick); incoming -= atkOf(a); }
+    }
+    return m;
+  }
+  return aiPlanBlocks(dp.i, L<4);
+}
+function simAttack(pi, uids, cheat){
+  g.phase = "main2";
+  if (!uids.length) return;
+  const att = uids.map(findCr);
+  declareAttack(g.P[pi], att);
+  if (!g.combat) return;
+  applyBlocks(aiPlanBlocks(1-pi, true));
+  blockTriggers(g.P[1-pi]);
+  if (cheat) oppTrick(pi);
+  if (!g.combat) return;
+  resolveCombat(g.P[pi]);
+}
+function aiChooseAttack(p, quick){
+  const elig = p.board.filter(c=>canAttack(c) && atkOf(c)>0);
+  if (!elig.length) return [];
+  aiCtx(p);
+  const n = elig.length, subsets = [];
+  if (n<=(quick?3:5)){ for (let m=0;m<(1<<n);m++) subsets.push(elig.filter((_,i)=>m>>i&1)); }
+  else { subsets.push([], elig); const key = quick && n>5 ? [...elig].sort((x,y)=>atkOf(y)-atkOf(x)).slice(0,3) : elig;   // wide boards in look-ahead: vary only the 3 biggest attackers
+    key.forEach(c=>{ subsets.push([c]); subsets.push(elig.filter(x=>x!==c)); }); }
+  const cheat = !quick && !g.sim && levelOf(p)>=5 && L5OPT.trick;
+  const scored = subsets.map(S=>{ const uids = S.map(c=>c.uid); return {S, uids, v:simulate(()=>simAttack(p.i, uids, cheat), p.i)}; }).sort((a,b)=>b.v-a.v);
+  if (!quick && !g.sim && levelOf(p)>=5 && L5OPT.deep){
+    const top = scored.slice(0,L5OPT.k);
+    let best = top[0], bv = -Infinity;
+    for (const s of top){ const v = forecastValue(p.i, ()=>simAttack(p.i, s.uids, L5OPT.trick), false); if (v>bv){ bv = v; best = s; } }
+    return best.S;
+  }
+  return scored[0].S;
+}
+// Attacking by level: 1 random, 2 simple rules, 3+ simulated.
+function aiAttackers(p){
+  const L = levelOf(p), o = opp(p);
+  const elig = p.board.filter(c=>canAttack(c) && atkOf(c)>0);
+  if (L===1) return elig.filter(()=>Math.random()<0.5);
+  if (L===2){
+    const blockers = o.board.filter(b=>!b.exhausted && !b.noBlock);
+    if (!blockers.length) return elig;
+    return elig.filter(c=>!blockers.some(b=>canBlock(b,c) && atkOf(b)>=hpLeft(c) && hpLeft(b)>atkOf(c)));
+  }
+  return aiChooseAttack(p, L<4);
+}
+async function aiCombatReact(p){
+  const L = levelOf(p);
+  if (L===1) return;
+  for (let guard=0; guard<4; guard++){
+    const a = aiBest(p, "instant", finishCombat);
+    if (!a) return;
+    await aiExec(p, a);
+  }
+}
+async function aiInstantWindow(p){
+  if (levelOf(p)<4) return;
+  for (let guard=0; guard<3; guard++){
+    const a = aiBest(p, "instant");
+    if (!a) return;
+    await aiExec(p, a);
+  }
+}
+function aiShouldCounter(o, d, t, oc){
+  const L = levelOf(o);
+  if (L===1) return -1;
+  const hiC = o.hand.findIndex(c=>c.counter && canPlayNow(o,c,"respond") && counterOK(c, d));
+  if (hiC<0) return -1;
+  if (L===2) return (d.cost>=3 || (d.type==="creature" && (d.atk||0)>=4)) ? hiC : -1;
+  aiCtx(o);
+  const oi = o.i, ci = 1-oi, tr = refT(t);
+  const vLet = simulate(()=>{ const P = g.P[ci]; const oc2 = oc && canOC(P,d); if (oc2) spendCharge(P,d.el,d.oc.cost); resolveCard(P,d,liveT(tr),oc2); finishCombat(); }, oi);
+  const vCtr = simulate(()=>{ const O = g.P[oi], c = O.hand[hiC]; O.energy -= costOf(c,O); O.hand.splice(hiC,1); if (c.afterCounter) c.afterCounter({p:O, o:g.P[ci]}); afterPlay(O,c,null); checkDeaths(); finishCombat(); }, oi);
+  return vCtr > vLet + 0.8 ? hiC : -1;
+}
+async function aiTurn(p){
+  const L = levelOf(p);
+  p.aiW = L===2 ? AIW2 : L>=4 ? strategicWeights(p) : (p.aiW && !p.aiW.role && !p.aiW.noThreat ? p.aiW : AIW);
+  if (L>=4 && p.aiW.role!==p.lastRole){ p.lastRole = p.aiW.role; if (!HEADLESS) log(`Enemy plan: ${p.aiW.role==="race" ? "race you down" : p.aiW.role==="defend" ? "defend and outlast" : "play a balanced game"}.`, "big"); }
+  await sleep(500);
+  await aiMain(p, "main1");
+  g.phase = "combat";
+  let att = aiAttackers(p);
+  if (att.length){
+    const h = opp(p);
+    if (!h.isAI) await reactionWindow(h, `The enemy is about to attack with ${att.map(c=>c.d.name).join(", ")}. You can play a Reaction first.`);
+    att = att.filter(c=>onBoard(c) && canAttack(c));
+    if (att.length){ await sleep(500); await runCombat(p, att); }
+  }
+  await aiMain(p, "main2");
+  g.phase = "end";
+  await sleep(300);
+}
+
+/* ---------------- Game setup ---------------- */
+function newGame(myDeck, enemyDeck, enemyLife, kinds){
+  g = { id: Math.random(), screen:"game", P:[], active:0, turnNo:0, phase:"main1", ui:{mode:"idle"}, log:[], combat:null, over:null, cfg:{myDeck, enemyDeck, enemyLife} };
+  // Each side starts at its element's life; a normal encounter gives the enemy 5 less.
+  g.P = [ newPlayer(0, myDeck, "You", HEADLESS, deckLife(myDeck)), newPlayer(1, enemyDeck, "Enemy", true, deckLife(enemyDeck) + ((enemyLife ?? 15) - 15)) ];
+  g.P.forEach(p=>drawN(p,5));
+  // A coin flip decides who goes first (simulations keep seat 0 first so seats can be alternated).
+  const first = HEADLESS ? 0 : (Math.random() < 0.5 ? 0 : 1);
+  g.active = first; g.P[1-first].energy = 1;
+  if (!HEADLESS) g.coin = { first };
+  const lv = k => typeof k==="number" ? k : 3;
+  if (kinds){ g.P[0].level = lv(kinds[0]); g.P[1].level = lv(kinds[1]); }
+  else g.P[1].level = setup.level;
+  log(`${g.P[0].deckName} vs. ${g.P[1].deckName}. Coin flip: ${first===0 ? "you go first and skip your first draw. The enemy goes second and starts with 1 banked Energy." : "the enemy goes first and skips its first draw. You go second and start with 1 banked Energy."}`, "big");
+  return runGame();
+}
+
+/* ---------------- Rendering ---------------- */
+const setup = { wr:{ lv:"3", view:"el", group:"all", tier:"all", sort:"el", focus:null }, my:"fire_starter", enemy:"water_starter", myEl:"fire", enemyEl:"water", life:15, view:"fire_starter", tab:"play",
+  lib:{ el:"fire", r:"all", type:"all", kind:"all", q:"", limit:120 }, level:3,
+  forge:{ conf:"volcano", pick:{}, type:"creature", r:"all", q:"" } };
+function esc(s){ return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+function pipsHTML(m, p){
+  let h = "";
+  for (const [el,n] of Object.entries(m.mcost)){
+    const have = p ? (p.charge[el]||0) : n;
+    for (let i=0;i<n;i++) h += `<span class="pip el-${el} ${i<have?"":"empty"}"></span>`;
+  }
+  return `<div class="pips" title="Charge cost">${h}</div>`;
+}
+function allKwNames(c){
+  const k = Object.keys(KW_NAMES).filter(x=>hasKw(c,x)).map(x=>KW_NAMES[x]);
+  if (c.d.fort) k.push(`Fortify ${c.d.fort}`);
+  return k;
+}
+function kwLine(d){
+  const k = d.kw.map(x=>KW_NAMES[x]).filter(Boolean);
+  if (d.fort) k.push(`Fortify ${d.fort}`);
+  return k;
+}
+/*__ART__*/
+function cardHTML(d, opts={}){
+  const cls = ["card", "el-"+d.el];
+  if (d.manifest) cls.push("manifest");
+  if (opts.cls) cls.push(opts.cls);
+  const typeLabel = (d.manifest?"Manifest ":"") + d.type[0].toUpperCase()+d.type.slice(1);
+  const cost = d.manifest ? "" : `<span class="cost" title="Energy cost">${opts.cost ?? d.cost}</span>`;
+  const top = d.manifest ? `<span class="star" aria-label="Manifest">✦</span>${pipsHTML(d, opts.p)}` : "";
+  const stats = d.type==="creature" ? `<div class="st"><span class="a">${d.atk} ATK</span><span class="h">${d.hp} HP</span></div>` : "";
+  const rar = `<span class="rt r-${d.r}">${RARITY[d.r]}</span>`;
+  return `<div class="${cls.join(" ")}" ${opts.attr||""} ${opts.attr?'tabindex="0" role="button"':""}>${cost}${top}${opts.x2?`<span class="x2">×2</span>`:""}
+    <div class="nm">${esc(d.name)}</div><div class="ty">${typeLabel} · ${rar}</div><div class="artbox">${cardArt(d)}</div><div class="tx">${kwText(d.text)}</div>${stats}${opts.from ? fromHTML(d) : ""}</div>`;
+}
+function creatureHTML(c, extra){
+  const d = c.d, cls = ["card","cr","el-"+d.el];
+  if (extra.pair) cls.push("paired", "pc"+((extra.pair-1)%4));
+  if (d.manifest) cls.push("manifest");
+  if (c.exhausted) cls.push("exh");
+  if (c.frozen) cls.push("frozen");
+  if (c.attacking) cls.push("attacking");
+  if (extra.cls) cls.push(extra.cls);
+  const tags = [];
+  if (c.attacking) tags.push(`<span class="tag att">Attacking</span>`);
+  if (c.frozen) tags.push(`<span class="tag frz kwt" tabindex="0" data-tip="freeze">Frozen</span>`);
+  else if (c.exhausted) tags.push(`<span class="tag kwt" tabindex="0" data-tip="tapped">Tapped</span>`);
+  if (c.sick && !hasKw(c,"haste") && !hasKw(c,"wall") && g.active===c.owner) tags.push(`<span class="tag kwt" tabindex="0" data-tip="arrived">Just arrived</span>`);
+  if (c.noBlock) tags.push(`<span class="tag kwt" tabindex="0" data-tip="noblock">Can't block</span>`);
+  if (extra.tag) tags.push(extra.tag);
+  const k = allKwNames(c);
+  const left = hpLeft(c);
+  // Tapped creatures turn sideways, as in Magic; the slot swaps width and height so the board reflows around them.
+  return `<div class="crslot ${c.exhausted?"tap":""}"><div class="${cls.join(" ")}" data-cr="${c.uid}" tabindex="0" role="button" aria-label="${esc(d.name)}${c.exhausted?" (tapped)":""}">
+    ${extra.pair?`<span class="pair" title="Combat pair ${extra.pair}">${extra.pair}</span>`:""}${d.manifest&&!extra.pair?'<span class="star">✦</span>':""}<div class="nm" style="padding-left:0">${esc(d.name)}</div>
+    <div class="artbox sm">${cardArt(d)}</div><div class="kw">${k.map(n=>termSpan(n, termKey(n))).join(" · ")}</div>${tags.join("")}<div style="flex:1"></div>
+    <div class="st"><span class="a">${atkOf(c)} ATK</span><span class="h ${c.dmg>0?"hurt":""}">${left}/${hpOf(c)} HP</span></div></div></div>`;
+}
+function chargeHTML(p){
+  const els = Object.keys(ELS).filter(el=>(p.charge[el]||0)>0 || el===chEl(p,p.el));
+  return `<div class="chips">${els.map(el=>`<span class="chip el-${el}">${ELS[el]} ${p.charge[el]||0}</span>`).join("")}</div>`;
+}
+function sideHTML(p, isTarget){
+  const auras = p.auras.length ? `<div class="stat"><span class="lbl">Auras</span><div class="chips">${p.auras.map((a,ai)=>`<span class="aura el-${a.el}" data-aura="${p.i}-${ai}" tabindex="0">${esc(a.name)}</span>`).join("")}</div></div>` : "";
+  return `<div class="side ${isTarget?"target":""}" data-pl="${p.i}" ${isTarget?'tabindex="0" role="button"':""}>
+    <div class="who"><span class="lbl">${p.isAI?`Enemy · AI ${levelOf(p)} ${AI_LEVELS[levelOf(p)].name}`:"You"} · ${esc(p.deckName)}</span><span class="life kwt" tabindex="0" data-tip="life" aria-label="Life ${p.life} of ${p.maxLife}">${p.life}<small>/${p.maxLife}</small></span></div>
+    <div class="stat"><span class="lbl">Energy</span><b>${p.energy}</b><span class="muted" style="font-size:12px">banks up to ${bankCap(p)}</span></div>
+    <div class="stat"><span class="lbl">Charge</span>${chargeHTML(p)}</div>
+    <div class="stat"><span class="lbl">Hand · Deck</span><b>${p.hand.length} · ${p.deck.length}</b></div>
+    <div class="stat"><span class="lbl">Manifests left (${p.manifests.length})</span>${p.isAI ? `<div class="chips">${p.manifests.map((m,mi)=>`<span class="mchip el-${m.el} ${canAffordManifest(p,m)?"ready":""}" data-emani="${mi}" tabindex="0">✦ ${esc(m.name)} · ${Object.values(m.mcost).reduce((a,b)=>a+b,0)}</span>`).join("") || '<span class="muted">None</span>'}</div>` : `<b>${p.manifests.length}</b>`}</div>
+    ${auras}</div>`;
+}
+const PHASE_NAMES = { main1:"Main phase", combat:"Combat", main2:"Second main phase" };
+
+function renderGame(){
+  const me = g.P[0], en = g.P[1], ui = g.ui;
+  const validCr = new Set(), validPl = new Set();
+  if (ui.mode==="target") ui.valid.forEach(t=> t.kind==="creature" ? validCr.add(t.c.uid) : validPl.add(t.p.i));
+  // Pair attackers with their blockers: same number and color on both.
+  const findCr = uid => [...me.board, ...en.board].find(x=>x.uid===uid);
+  const att = g.combat ? g.combat.att.filter(c=>c.attacking && onBoard(c)) : [];
+  const blockMap = new Map();
+  if (ui.mode==="block"){ for (const [bu,au] of ui.assign){ if(!blockMap.has(au)) blockMap.set(au,[]); blockMap.get(au).push(bu); } }
+  else if (g.combat){ for (const [au,bl] of g.combat.blocks) blockMap.set(au, bl.filter(onBoard).map(b=>b.uid)); }
+  const pairs = new Map();
+  att.forEach((a,i)=>pairs.set(a.uid, i+1));
+  for (const [au,bus] of blockMap){ const n = pairs.get(au); if (n) bus.forEach(bu=>pairs.set(bu,n)); }
+  const crExtra = (c)=>{
+    const e = { pair: pairs.get(c.uid) };
+    if (validCr.has(c.uid)) e.cls = "valid";
+    if (ui.mode==="attack" && c.owner===0){ if (ui.sel.has(c.uid)) e.cls="sel"; else if (canAttack(c)) e.cls="playable"; }
+    if (ui.mode==="block"){
+      if (c.owner===1 && c.attacking){ e.cls = ui.sel===c.uid ? "sel" : "playable"; const n=[...ui.assign.values()].filter(v=>v===c.uid).length; if(n) e.tag=`<span class="tag blk">${n} blocker${n>1?"s":""}</span>`; }
+      if (c.owner===0){ const au = ui.assign.get(c.uid); if (au){ const a=en.board.find(x=>x.uid===au); e.cls="sel"; e.tag=`<span class="tag blk">Blocking ${esc(a?a.d.name:"")}</span>`; } else if (ui.sel && canBlock(c, en.board.find(x=>x.uid===ui.sel))) e.cls="valid"; }
+    }
+    if (g.combat && ui.mode!=="block"){
+      for (const [au,bl] of g.combat.blocks){ if (bl.includes(c)){ const a=[...g.P[0].board,...g.P[1].board].find(x=>x.uid===au); e.tag=`<span class="tag blk">Blocking ${esc(a?a.d.name:"")}</span>`; } }
+    }
+    return e;
+  };
+  const clashHTML = () => {
+    if (!att.length) return "";
+    const rows = att.map(a=>{
+      const n = pairs.get(a.uid), bl = (blockMap.get(a.uid)||[]).map(findCr).filter(Boolean);
+      const who = a.owner===1 ? "you" : "the enemy";
+      const side = a.owner===1 ? "Enemy" : "Your";
+      const result = bl.length
+        ? `<span class="arrow">blocked by</span> <b>${bl.map(b=>esc(b.d.name)+` <span class="muted">(${atkOf(b)}/${hpLeft(b)})</span>`).join(" + ")}</b>`
+        : `<span class="unb">unblocked: hits ${who} for ${atkOf(a)}</span>`;
+      return `<div class="clash-row pc${(n-1)%4}"><span class="pair-in">${n}</span><span>${side} <b>${esc(a.d.name)}</b> <span class="muted">(${atkOf(a)}/${hpLeft(a)})</span></span>${result}</div>`;
+    }).join("");
+    return `<div class="clash"><span class="lbl">${ui.mode==="block"?"Your blocks so far":"Attacks and blocks"}</span>${rows}</div>`;
+  };
+  const board = (p) => p.board.length ? p.board.map(c=>creatureHTML(c, crExtra(c))).join("") : `<span class="empty">No creatures</span>`;
+
+  let prompt = "", acts = "";
+  const myTurn = g.active===0;
+  if (g.over){ prompt = g.over==="you" ? "You win this fight." : g.over==="enemy" ? "You were defeated." : "Both sides fell."; }
+  else switch (ui.mode){
+    case "main":
+      prompt = g.phase==="main1" ? "Play cards from your hand or cast a Manifest. Then go to combat." : "Play more cards, then end your turn. Unspent Energy is banked.";
+      acts = `<button class="btn primary" data-btn="next">${g.phase==="main1" ? (me.board.some(canAttack)?"Go to combat":"End main phase") : "End turn"}</button>`;
+      break;
+    case "attack":
+      prompt = "Click your creatures to choose attackers. Attacking taps them, so they can't block on the enemy's turn.";
+      acts = `<button class="btn" data-btn="skip">Skip combat</button><button class="btn primary" data-btn="attack">Attack with ${ui.sel.size}</button>`;
+      break;
+    case "block":
+      prompt = ui.sel ? "Now click your creatures to block it. Click a blocker again to unassign. Several creatures can gang-block one attacker." : "Click an attacking enemy creature, then choose your blockers.";
+      acts = `<button class="btn primary" data-btn="confirm">Confirm blocks</button>`;
+      break;
+    case "react":
+      prompt = ui.label + (me.hand.some(d=>canPlayNow(me,d,"instant")) ? " You can play highlighted Reactions first." : "");
+      acts = `<button class="btn primary" data-btn="done">Resolve damage</button>`;
+      break;
+    case "target":
+      prompt = `Choose a target for ${esc(ui.name)}.`;
+      acts = (ui.optional?`<button class="btn" data-btn="skip">No target</button>`:"") + `<button class="btn" data-btn="cancel">Cancel</button>`;
+      break;
+    default:
+      prompt = myTurn ? "…" : "The enemy is taking its turn.";
+  }
+  const handCls = (d)=>{
+    if (ui.mode==="main" && canPlayNow(me,d,"main")) return "playable";
+    if (ui.mode==="react" && canPlayNow(me,d,"instant")) return "playable";
+    return "";
+  };
+  const handHTML = me.hand.map((d,i)=>cardHTML(d,{cls:handCls(d), cost:costOf(d,me), attr:`data-hand="${i}"`})).join("") || `<span class="muted">Your hand is empty.</span>`;
+  const maniHTML = me.manifests.map((m,i)=>cardHTML(m,{p:me, cls: ui.mode==="main" && canCastManifest(me,m) ? "playable" : (canAffordManifest(me,m)?"":"dim"), attr:`data-man="${i}"`})).join("") || `<span class="muted">All Manifests used.</span>`;
+
+  let modal = "";
+  if (ui.mode==="confirm"){
+    modal = `<div class="modal"><div class="box"><h2>${esc(ui.title)}</h2><p>${esc(ui.text)}</p><div class="row"><button class="btn primary" data-btn="yes">${esc(ui.yes)}</button><button class="btn" data-btn="no">${esc(ui.no)}</button></div></div></div>`;
+  } else if (ui.mode==="respond"){
+    modal = `<div class="modal"><div class="box"><h2>Respond to ${esc(ui.card.name)}?</h2><p>${esc(ui.text)}</p><div class="cards">${cardHTML(ui.card)}</div><div class="row">${ui.options.map(i=>`<button class="btn primary" data-btn="opt-${i}">${me.hand[i].counter?"Counter with ":"Play "}${esc(me.hand[i].name)} (${costOf(me.hand[i],me)} Energy)</button>`).join("")}<button class="btn" data-btn="pass">Let it resolve</button></div></div></div>`;
+  } else if (g.over){
+    modal = `<div class="modal"><div class="box"><h2>${g.over==="you"?"Victory":g.over==="enemy"?"Defeat":"Draw"}</h2><p>${g.over==="you"?"The enemy is out of life.":"Your life reached 0."} The game lasted ${g.turnNo} turns.</p><div class="row"><button class="btn primary" data-btn="again">Play again</button><button class="btn" data-btn="decks">Change decks</button><button class="btn" data-btn="close">Look at the board</button></div></div></div>`;
+    if (g.closed) modal = "";
+  }
+
+  if (g.coin) modal += `<div class="flash coinflip" aria-live="polite"><div class="flash-in"><div class="coin ${g.coin.first===0?"you":"foe"}"><span class="face f-you">You</span><span class="face f-foe">Enemy</span></div><span class="flash-lbl">Coin flip: ${g.coin.first===0 ? "you go first" : "the enemy goes first"}</span><span class="muted">${g.coin.first===0 ? "You skip your first draw; the enemy starts with 1 banked Energy." : "The enemy skips its first draw; you start with 1 banked Energy."}</span></div></div>`;
+  if (g.flash) modal += `<div class="flash" aria-live="polite"><div class="flash-in"><span class="flash-lbl">${esc(g.flash.who)}</span>${cardHTML(g.flash.m,{cls:"bigcard"})}</div></div>`;
+  return `<div class="top"><h1>Elementals Unbound</h1><div class="row"><span class="muted">Turn ${g.turnNo} · ${myTurn?"Your turn":"Enemy turn"}</span><button class="btn" data-btn="decks">Change decks</button><button class="btn" data-btn="again">Restart</button></div></div>
+  <div class="game" style="margin-top:12px">
+    <section class="table">
+      ${sideHTML(en, validPl.has(1))}
+      <div class="board" aria-label="Enemy creatures">${board(en)}</div>
+      <div class="bar ${att.length?"in-combat":""}"><span class="phase">${att.length?"Combat":myTurn?PHASE_NAMES[g.phase]||"":"Enemy turn"}</span><span class="prompt">${prompt}${g.notice && ui.mode==="main" ? `<span class="notice">${esc(g.notice)}</span>` : ""}</span><span class="acts">${acts}</span>${clashHTML()}</div>
+      <div class="board mine" aria-label="Your creatures">${board(me)}</div>
+      ${sideHTML(me, validPl.has(0))}
+      <div class="zone"><span class="lbl">Your Manifest deck (cast with charge, once each)</span><div class="manis">${maniHTML}</div></div>
+      <div class="zone"><span class="lbl">Your hand</span><div class="hand">${handHTML}</div></div>
+      ${rulesHTML()}
+    </section>
+    <aside class="rail"><div id="insp" class="insp">${inspectorHTML()}</div>
+    <div class="log"><span class="lbl">Game log</span><ol>${g.log.map(l=>`<li class="${l.cls||""}">${logLineHTML(l.s)}</li>`).join("")}</ol></div></aside>
+  </div>${modal}`;
+}
+function rulesHTML(){
+  return `<details class="rules"><summary>Playtest rules</summary><ul>
+  <li>Each player starts with 5 cards and the life total of their deck's element (about 15; the deck list shows it). A coin flip decides who goes first; that player skips their first draw, and the player going second starts with 1 banked Energy.</li>
+  <li>You gain 3 Energy each turn. Unspent Energy banks, up to 3 (Quarry Shaman raises the cap).</li>
+  <li>Each basic card gives 1 charge of its element when it resolves. Countered cards give none.</li>
+  <li>Manifests are cast from your Manifest deck by spending charge, during your main phase, once per game. Mono decks get 5 Manifests.</li>
+  <li>Creatures can't attack the turn they arrive unless they have Haste. As in Magic, attacking taps a creature and it stays tapped until the start of your next turn, so it can't block on the enemy's turn. Blocking doesn't tap. Every attack is a choice between pressure and defense.</li>
+  <li>The defender picks blockers. Several creatures can gang-block one attacker; the attacker's damage goes to the first blocker until it would die, then the next.</li>
+  <li>Airborne creatures can only be blocked by Airborne. Pierce sends excess damage to the player. Walls can't attack.</li>
+  <li>Reactions can be played at any time: in your main phases, in combat, before the enemy attacks, or in response to an enemy card. Counters only work in response. Reactions on the enemy's turn are paid with banked Energy, so banking holds up answers.</li>
+  <li>Fortify N: at the start of your turn, gains +N/+N. Ignite: a bonus if you spent charge this turn. Chain: counts other cards you played this turn. Overcharge: optionally spend charge for a bigger effect.</li>
+  <li>Damage on creatures clears at the end of each turn. Hand limit is 7. Each side holds at most 8 creatures. Drawing from an empty deck deals growing damage.</li>
+  <li>Targeted cards can choose any creature, yours or the enemy's (Ward only stops enemy cards). Fused cards always talk about their confluence's charge, never a base element's.</li>
+  <li>Hover over or tap any card, including card names in the game log, to see its full details in the panel beside the board.</li>
+  <li>Basic creatures that cost 4 or more give 2 charge. Rarity runs Starter and Common (baseline), Uncommon (stronger) and Rare (strongest).</li>
+  <li>Keywords: ${Object.keys(KW_NAMES).map(k=>`<b>${KW_NAMES[k]}</b>: ${KW_REMIND[k]}`).join(" ")}</li>
+  <li>Fusion: two cards of the same type from a dual confluence's elements make a dual card; a dual card plus a card of the missing element makes a triple card (the same as fusing all three base cards). Special recipes turn specific card sets into unique cards. Every fused or special card gives 1 charge of its confluence, and a confluence deck's charge is all that confluence's.</li>
+  <li>Zaps: "deal N damage to a random enemy creature X times" picks a new target each time. Fortify can also be given to a creature by a card.</li>
+  <li>Special mechanics: Desperate N (a bonus while your life is N or less), Last Gasp, token copies, silence (removes all abilities and keywords), take control, transform, swap (attack and health trade places), sacrifice (destroy your own creature with the lowest attack, often for damage equal to its attack), and putting creatures from your grave back into play.</li>
+  <li>Prototype simplifications: one round of combat Reactions per side, and Manifest creatures can't be returned to hand.</li>
+  </ul></details>`;
+}
+// Card names in the log become hoverable links to that card's details.
+function logNames(){
+  if (g.logNames) return g.logNames;
+  const byName = new Map();
+  const add = d => { if (d && d.name && !byName.has(d.name)) byName.set(d.name, d); };
+  for (const ref of [g.cfg.myDeck, g.cfg.enemyDeck]){ const dk = deckOf(ref); if (dk) [...dk.main, ...dk.manifests].forEach(id => add(LIB[id])); }
+  Object.values(TOKENS).forEach(add);
+  const names = [...byName.keys()].sort((a,b)=>b.length-a.length).map(n=>n.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"));
+  g.logNames = { byName, re: names.length ? new RegExp(`(${names.join("|")})`, "g") : null };
+  return g.logNames;
+}
+function logLineHTML(s){
+  const { byName, re } = logNames();
+  if (!re) return esc(s);
+  return String(s).split(re).map((part, i) => i%2 && byName.has(part)
+    ? `<span class="logcard el-${byName.get(part).el}" data-logcard="${esc(byName.get(part).id)}" tabindex="0" role="button">${esc(part)}</span>` : esc(part)).join("");
+}
+function inspectFrom(el){
+  if (!g || g.screen!=="game" || !el) return false;
+  const ds = el.dataset, me = g.P[0], en = g.P[1];
+  let s = null;
+  if (ds.cr!=null) s = { uid:+ds.cr };
+  else if (ds.hand!=null && me.hand[+ds.hand]) s = { def:me.hand[+ds.hand], where:"In your hand", hand:true };
+  else if (ds.man!=null && me.manifests[+ds.man]) s = { def:me.manifests[+ds.man], where:"Your Manifest deck", owner:me };
+  else if (ds.emani!=null && en.manifests[+ds.emani]) s = { def:en.manifests[+ds.emani], where:"Enemy Manifest deck", owner:en };
+  else if (ds.aura){ const [pi,ai] = ds.aura.split("-").map(Number); const a = g.P[pi].auras[ai]; if (a) s = { def:a, where:(pi?"Enemy":"Your")+" aura in play" }; }
+  else if (ds.logcard){
+    const d = LIB[ds.logcard] || Object.values(TOKENS).find(t=>t.id===ds.logcard);
+    const live = [...g.P[0].board, ...g.P[1].board].find(c=>c.d.id===ds.logcard);
+    if (live) s = { uid:live.uid }; else if (d) s = { def:d, where:"From the game log (not in play now)" };
+  }
+  if (!s) return false;
+  const cur = g.inspect;
+  if (cur && cur.uid===s.uid && cur.def===s.def && cur.where===s.where) return true;
+  g.inspect = s;
+  const box = document.getElementById("insp"); if (box) box.innerHTML = inspectorHTML();
+  return true;
+}
+function remindersHTML(d, c){
+  const t = (d.text||"").toLowerCase(), keys = new Set();
+  for (const k of Object.keys(KW_NAMES)) if (d.kw.includes(k) || t.includes(KW_NAMES[k].toLowerCase()) || (c && hasKw(c,k))) keys.add(k);
+  if (d.fort) keys.add("fortify");
+  for (const [k,w] of [["ignite","ignite"],["chain","chain "],["attuned","attuned"],["overcharge","overcharge"],["lastgasp","last gasp"],["desperate","desperate"]]) if (t.includes(w)) keys.add(k);
+  if (!keys.size) return "";
+  const name = k => KW_NAMES[k] || {fortify:"Fortify N", ignite:"Ignite", chain:"Chain N", attuned:"Attuned N", overcharge:"Overcharge N", lastgasp:"Last Gasp", desperate:"Desperate N"}[k];
+  return `<dl class="remind">${[...keys].map(k=>`<dt>${name(k)}</dt><dd>${KW_REMIND[k]}</dd>`).join("")}</dl>`;
+}
+function inspectorHTML(){
+  const s = g && g.inspect;
+  const empty = `<span class="lbl">Card details</span><p class="muted">Hover over or tap any card to see its cost, stats, keywords and full text: creatures and auras on either side, your hand, and both Manifest decks.</p>`;
+  if (!s) return empty;
+  let c = null, d = s.def, where = s.where;
+  if (s.uid!=null){
+    c = [...g.P[0].board, ...g.P[1].board].find(x=>x.uid===s.uid);
+    if (!c) return empty.replace("</p>"," That creature has left the field.</p>");
+    d = c.d; where = c.owner ? "Enemy creature in play" : "Your creature in play";
+  }
+  const me = g.P[0];
+  const typeLabel = (d.manifest?"Manifest ":"") + d.type[0].toUpperCase()+d.type.slice(1);
+  let cost;
+  if (d.manifest){
+    const owner = s.owner || (c ? g.P[c.owner] : null);
+    cost = `${Object.entries(d.mcost).map(([el,n])=>`${n} ${ELS[el]} charge`).join(" + ")}${owner?` <span class="muted">(${owner.isAI?"enemy has":"you have"} ${Object.keys(d.mcost).map(el=>owner.charge[el]||0).join("/")})</span>`:""}`;
+  } else {
+    cost = `${d.cost} Energy`;
+    if (s.hand){ const now = costOf(d,me); if (now!==d.cost) cost += ` <span class="muted">(${now} right now)</span>`; }
+  }
+  const rows = [["Cost", cost], ["Gives", d.manifest ? "No charge (Manifest)" : d.token ? "No charge (token)" : `${d.charge} ${ELS[d.el]} charge when it resolves`]];
+  if (d.type==="reaction") rows.push(["Timing", d.counter ? "Only in response to an enemy card" : "Any time you have the Energy, on either turn"]);
+  if (d.type==="creature"){
+    if (c){
+      const perm = c.atk - d.atk, permH = c.hp - d.hp;
+      const sky = atkOf(c) - c.atk - c.tAtk;
+      const bits = [`base ${d.atk}`]; if (perm) bits.push(`${perm>0?"+":""}${perm} permanent`); if (c.tAtk) bits.push(`+${c.tAtk} this turn`); if (sky>0) bits.push(`+${sky} from auras`);
+      const hb = [`base ${d.hp}`]; if (permH) hb.push(`${permH>0?"+":""}${permH} permanent`); if (c.tHp) hb.push(`+${c.tHp} this turn`); if (c.dmg) hb.push(`${c.dmg} damage taken`);
+      rows.push(["Attack", `<b>${atkOf(c)}</b> <span class="muted">(${bits.join(", ")})</span>`]);
+      rows.push(["Health", `<b>${hpLeft(c)}/${hpOf(c)}</b> <span class="muted">(${hb.join(", ")})</span>`]);
+    } else rows.push(["Stats", `${d.atk} ATK / ${d.hp} HP`]);
+  }
+  const kws = kwLine(d);
+  if (c){ ["airborne"].forEach(k=>{ if (hasKw(c,k) && !d.kw.includes(k)) kws.push("Airborne (granted)"); }); }
+  if (kws.length) rows.push(["Keywords", kws.join(", ")]);
+  const status = [];
+  if (c){
+    if (c.attacking) status.push("Attacking");
+    if (c.frozen) status.push("Frozen: doesn't untap at the start of its controller's next turn");
+    if (c.exhausted && !c.frozen) status.push("Tapped: can't attack or block until it untaps at the start of its controller's turn");
+    if (c.sick && !hasKw(c,"haste") && !hasKw(c,"wall") && g.active===c.owner) status.push("Just arrived: can attack next turn");
+    if (c.noBlock) status.push("Can't block this turn");
+    if (!status.length) status.push("Ready");
+  }
+  if (s.hand && g.P[0].hand.includes(d) && g.ui.mode==="main"){ const why = whyNotPlayable(g.P[0], d, "main"); if (why) status.push("Can't play now: "+why); }
+  if (s.owner===g.P[0] && d.manifest && g.ui.mode==="main"){ const why = whyNotPlayable(g.P[0], d, "main"); if (why) status.push("Can't cast now: "+why); }
+  return `<span class="lbl">Card details · ${esc(where)}</span>
+    <div class="insp-card el-${d.el}"><h3>${d.manifest?'<span class="star-in">✦</span> ':""}${esc(d.name)}</h3>
+    <div class="insp-meta">${ELS[d.el]} · ${typeLabel} · ${RARITY[d.r]}</div><div class="artbox lg">${cardArt(d)}</div>
+    <dl>${rows.map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join("")}</dl>
+    <p class="insp-text">${kwText(d.text)}</p>${remindersHTML(d, c)}
+    ${status.length?`<div class="insp-status">${status.map(x=>`<span>${esc(x)}</span>`).join("")}</div>`:""}</div>`;
+}
+const TYPE_ORDER = { creature:0, spell:1, aura:2, reaction:3 };
+function libCards(){
+  const f = setup.lib, q = f.q.trim().toLowerCase();
+  const rOrd = { s:0, c:1, u:2, r:3 };
+  return Object.values(LIB).filter(d=>
+    (f.el==="all" || d.el===f.el) && (f.r==="all" || d.r===f.r) &&
+    (f.type==="all" || (f.type==="manifest" ? d.manifest : (!d.manifest && d.type===f.type))) &&
+    (f.kind==="all" || (f.kind==="special" ? !!d.special : f.kind==="fused" ? !!d.fused : f.kind==="recipe" ? (!!d.recipe && !d.special) : (!d.fused && !d.special && !d.recipe))) &&
+    (!q || (d.name+" "+d.text).toLowerCase().includes(q)))
+    .sort((a,b)=> Object.keys(ELS).indexOf(a.el)-Object.keys(ELS).indexOf(b.el) || rOrd[a.r]-rOrd[b.r] || (a.manifest-b.manifest) ||
+      (a.manifest ? sumObj(a.mcost)-sumObj(b.mcost) : a.cost-b.cost) || a.name.localeCompare(b.name));
+}
+function libGridHTML(){
+  const cards = libCards();
+  const lim = setup.lib.limit || 120, shown = cards.slice(0, lim);
+  return `<p class="muted libcount">${cards.length} card${cards.length===1?"":"s"}${cards.length>lim?` · showing ${lim}`:""}</p><div class="cards libgrid">${shown.map(d=>cardHTML(d,{from:true, attr: d.recipe && !d.manifest ? `data-recipe="${d.id}" title="Tap to open its recipe in the Fusion Forge"` : ""})).join("")}</div>${cards.length>lim?`<div class="row"><button class="btn" data-lib="more:1">Show ${Math.min(120, cards.length-lim)} more</button></div>`:""}`;
+}
+function deckPickHTML(side){
+  const elKey = side==="my" ? "myEl" : "enemyEl";
+  const el = setup[elKey];
+  const tile = e=>`<button class="tile el-${e} ${el===e?"on":""}" data-pickel="${side}:${e}"><b>${ELS[e]}<span class="hp" title="Starting life">♥ ${EL_LIFE[e]||15}</span></b><span>${CONFLUENCE[e] ? CONFLUENCE[e].map(x=>ELS[x]).join(" + ") : EL_STYLE[e]}</span></button>`;
+  const tiles = BASE_ELS.map(tile).join("") + `</div><span class="lbl">Dual confluences (two elements fused)</span><div class="tiles conf">` + DUAL_ELS.map(tile).join("")
+    + `</div><span class="lbl">Triple confluences (three elements fused)</span><div class="tiles conf">` + TRIPLE_ELS.map(tile).join("");
+  const decks = DECKS[el].map(d=>`<button class="deckbtn el-${d.el} ${setup[side]===d.id?"on":""}" data-pickdeck="${side}:${d.id}">
+    <span class="dk-top"><b>${esc(d.name)}</b><span class="dk-meta"><span class="hp" title="Starting life">♥ ${deckLife(d.id)} life</span><span class="tier t-${d.tier}">${TIER_NAME[d.tier]}</span></span></span><span class="dk-desc">${esc(d.desc)}</span></button>`).join("");
+  return `<div class="tiles">${tiles}</div><div class="decks">${decks}</div>`;
+}
+function parentsOf(d){
+  const ids = d.recipe || d.fused; if (!ids) return null;
+  const order = CONFLUENCE[d.el] || [];
+  return ids.map(i=>LIB[i]).sort((x,y)=>order.indexOf(x.el)-order.indexOf(y.el));
+}
+function fromHTML(d){
+  const ps = parentsOf(d); if (!ps) return "";
+  return `<div class="from">${d.recipe?"Special recipe: ":""}${ps.map(c=>`<span class="el-${c.el}">${esc(c.name)}</span>`).join(" + ")}</div>`;
+}
+function forgeHTML(){
+  const f = setup.forge, els = CONFLUENCE[f.conf], q = f.q.trim().toLowerCase();
+  const rOrd = { s:0, c:1, u:2, r:3 };
+  const picked = els.map(e => f.pick[e] && LIB[f.pick[e]]).filter(Boolean);
+  // Cards that would complete a special recipe together with what's already picked (any type).
+  const recipeHits = new Set();
+  if (picked.length) for (const id of Object.values(RECIPES)){ const d = LIB[id]; if (d.el!==f.conf) continue;
+    if (picked.every(p => d.recipe.includes(p.id))) for (const r of d.recipe) recipeHits.add(r); }
+  const pool = el => Object.values(LIB).filter(d=>d.el===el && !d.manifest && !d.token &&
+      (f.r==="all" || d.r===f.r || (f.r==="c" && d.r==="s")) && (!q || (d.name+" "+d.text).toLowerCase().includes(q)) &&
+      (d.type===f.type || recipeHits.has(d.id)))
+    .sort((a,b)=>(recipeHits.has(b.id)-recipeHits.has(a.id)) || rOrd[a.r]-rOrd[b.r] || a.cost-b.cost || a.name.localeCompare(b.name));
+  const row = (d, el) => {
+    const on = f.pick[el]===d.id, special = recipeHits.has(d.id) && !on;
+    return `<button class="frow-card el-${d.el} ${on?"on":""} ${special?"special":""}" data-forge="${el}:${d.id}">
+      <span class="fc-cost">${d.cost}</span><span class="fc-nm">${esc(d.name)}${special?' <i>✦ recipe</i>':""}</span>
+      <span class="fc-st">${d.type==="creature"?`${d.atk}/${d.hp}`:""}</span><span class="rt r-${d.r}">${RARITY[d.r][0]}</span></button>`;
+  };
+  const opt = (key, val, label)=>`<button class="fbtn ${f[key]===val?"on":""}" data-forgef="${key}:${val}">${label}</button>`;
+  const names = els.map(e=>ELS[e]);
+  let result = `<p class="muted">Pick one ${joinAnd(names)} card${els.length===3?", all":", both"} of the same type. Fusing never uses up your cards: the same cards always make the same ${ELS[f.conf]} card.${els.length===3 ? ` A triple card is the same as fusing a dual card with a card of the missing element, in any order: only the three base cards matter.` : ""}</p>`;
+  const eq = cs => cs.map(c=>cardHTML(c)).join('<span class="op">+</span>');
+  if (picked.length===els.length){
+    let out = null, err = "";
+    const ids = picked.map(c=>c.id);
+    try { const key = fuseKey(ids); out = RECIPES[key] ? LIB[RECIPES[key]] : (picked.every(c=>c.type===picked[0].type) ? fuseParts(ids) : null); } catch(e){ err = e.message; }
+    let via = "";
+    if (out && !out.recipe && els.length===3){
+      const ds = [[0,1,2],[0,2,1],[1,2,0]].map(([a,b,c]) => { try { const dual = canFuse(picked[a].id, picked[b].id) ? fuse(picked[a].id, picked[b].id) : null; return dual && !dual.recipe ? `<span class="el-${dual.el}" style="color:var(--el)">${esc(dual.name)}</span> + <span class="el-${picked[c].el}" style="color:var(--el)">${esc(picked[c].name)}</span>` : null; } catch(e){ return null; } }).filter(Boolean);
+      if (ds.length) via = ` Same as fusing ${ds.join(", or ")}.`;
+    }
+    result = out ? `<div class="forge-eq">${eq(picked)}<span class="op">=</span>${cardHTML(out,{cls:"forged", from:!!out.recipe})}</div>
+      <p class="muted">${out.recipe ? `A special recipe: these ${els.length===3?"three":"two"} cards make a unique card.` :
+        `Cost ${out.cost} (${out.type==="creature" ? (els.length===3 ? "the highest cost plus a fifth of the other two, rounded down" : "the highest cost") : "the highest cost plus half the rest, rounded down"}). ${out.type==="creature"?`Stats: the biggest of each plus half the rest, rounded up. `:""}Rarity: the average, rounded down. Gives 1 ${ELS[out.el]} charge.${via}`}</p>`
+      : `<p class="muted">${esc(err || "These cards can't be fused: pick cards of the same type (or a special recipe).")}</p>`;
+  } else if (picked.length){
+    const miss = els.filter(e=>!f.pick[e]).map(e=>`<div class="card ghost"><div class="nm">Pick a ${ELS[e]} ${f.type}</div></div>`);
+    result = `<div class="forge-eq">${[...picked.map(c=>cardHTML(c)), ...miss].join('<span class="op">+</span>')}</div>`;
+  }
+  const specials = Object.values(LIB).filter(d=>d.el===f.conf && d.recipe && !d.manifest).sort((a,b)=>(!!b.special-!!a.special) || rOrd[a.r]-rOrd[b.r] || a.cost-b.cost);
+  const confBtn = c => `<button class="fbtn el-${c} ${f.conf===c?"on":""}" data-forgef="conf:${c}" title="${CONFLUENCE[c].map(x=>ELS[x]).join(" + ")}">${ELS[c]}</button>`;
+  const arch = ARCHETYPE[f.conf];
+  return `<div class="forge">
+    <div class="filters">
+      <div class="frow"><span class="lbl">Dual</span>${DUAL_ELS.map(confBtn).join("")}</div>
+      <div class="frow"><span class="lbl">Triple</span>${TRIPLE_ELS.map(confBtn).join("")}</div>
+      <div class="frow"><span class="lbl">Type</span>${["creature","spell","aura","reaction"].map(t=>opt("type",t,t[0].toUpperCase()+t.slice(1))).join("")}</div>
+      <div class="frow"><span class="lbl">Rarity</span>${opt("r","all","All")}${["c","u","r"].map(r=>opt("r",r,RARITY[r])).join("")}</div>
+      <div class="frow"><label class="lbl" for="forgeq">Search</label><input id="forgeq" type="search" value="${esc(f.q)}" placeholder="Name or rules text"></div>
+    </div>
+    <p class="muted"><b class="el-${f.conf}" style="color:var(--el)">${ELS[f.conf]}</b> (${names.join(" + ")}): ${esc(EL_STYLE[f.conf])}${arch ? ` Its special cards push <b>${esc(arch[0])}</b>: ${esc(arch[1])}` : ""}</p>
+    <div class="forge-result">${result}</div>
+    <div class="forge-cols n${els.length}">
+      ${els.map(e=>`<div><span class="lbl el-${e}" style="color:var(--el)">${ELS[e]} cards</span><div class="flist">${pool(e).map(d=>row(d,e)).join("")}</div></div>`).join("")}
+    </div>
+    <span class="lbl">Special recipes (${specials.length}) · tap one to load its ingredients</span>
+    <div class="cards">${specials.map(d=>cardHTML(d,{from:true, attr:`data-recipe="${d.id}"`})).join("")}</div>
+    <span class="lbl">${ELS[f.conf]} Manifests (${Object.values(LIB).filter(d=>d.el===f.conf && d.manifest).length}, cast with ${ELS[f.conf]} charge; ✦ special ones push ${arch ? esc(arch[0]) : "its style"})</span>
+    <div class="cards">${Object.values(LIB).filter(d=>d.el===f.conf && d.manifest).sort((a,b)=>(!!b.special-!!a.special) || rOrd[a.r]-rOrd[b.r] || sumObj(a.mcost)-sumObj(b.mcost)).map(d=>cardHTML(d)).join("")}</div>
+  </div>`;
+}
+
+/* ---------------- Win rates tab ----------------
+   Every deck against every other deck (WINRATES, from simulation). Two views: element vs element (all of an element's
+   decks pooled) and deck vs deck. Rows are the deck or element whose win rate is shown. */
+const WR_SHORT = { starter:"S", common:"C", uncommon:"U", rare:"R", special:"A" };
+function wrDecks(){
+  const f = setup.wr, grpOf = el => BASE_ELS.includes(el) ? "mono" : CONFLUENCE[el].length===2 ? "dual" : "tri";
+  const order = [...BASE_ELS, ...DUAL_ELS, ...TRIPLE_ELS], tOrd = { starter:0, common:1, uncommon:2, rare:3, special:4 };
+  return Object.values(DECK_BY_ID).filter(d => (f.group==="all" || grpOf(d.el)===f.group) && (f.tier==="all" || d.tier===f.tier))
+    .sort((a,b)=> order.indexOf(a.el)-order.indexOf(b.el) || tOrd[a.tier]-tOrd[b.tier] || a.id.localeCompare(b.id));
+}
+const wrSet = () => WINRATES[setup.wr.lv] || WINRATES[Object.keys(WINRATES)[0]];
+function wrPair(a, b){            // [wins for a, games]
+  if (a===b) return null;
+  const R = wrSet().r, x = R[a+"|"+b]; if (x) return x;
+  const y = R[b+"|"+a]; return y ? [y[1]-y[0], y[1]] : null;
+}
+function wrCell(w, n, extra){
+  if (!n) return `<td class="wr-na">–</td>`;
+  const p = 100*w/n, d = Math.max(-1, Math.min(1, (p-50)/35));
+  const bg = d>=0 ? `color-mix(in srgb, var(--good) ${Math.round(d*70)}%, transparent)` : `color-mix(in srgb, var(--bad) ${Math.round(-d*70)}%, transparent)`;
+  return `<td style="background:${bg}" title="${extra} · ${p.toFixed(0)}% of ${n} games">${Math.round(p)}</td>`;
+}
+function winratesHTML(){
+  const f = setup.wr; let decks = wrDecks();
+  const overall = id => { let w=0, n=0; for (const b of decks){ const x = wrPair(id, b.id); if (x){ w+=x[0]; n+=x[1]; } } return n ? w/n : 0; };
+  if (f.sort==="wr" && f.view==="deck") decks = [...decks].sort((a,b)=>overall(b.id)-overall(a.id));
+  const opt = (key, val, label)=>`<button class="fbtn ${f[key]===val?"on":""}" data-wr="${key}:${val}">${label}</button>`;
+  const short = d => `${esc(ELS[d.el])} ${WR_SHORT[d.tier]}${(DECKS[d.el]||[]).filter(x=>x.tier===d.tier).length>1 ? (DECKS[d.el].filter(x=>x.tier===d.tier).indexOf(d)+1) : ""}`;
+  const head = `<div class="filters">
+    <div class="frow"><span class="lbl">AI level</span>${Object.keys(WINRATES).map(l=>opt("lv",l,`Level ${l} ${AI_LEVELS[l].name}`)).join("")}</div>
+    <div class="frow"><span class="lbl">View</span>${opt("view","el","Element vs element")}${opt("view","deck","Deck vs deck")}</div>
+    <div class="frow"><span class="lbl">Decks</span>${opt("group","all","All")}${opt("group","mono","Mono")}${opt("group","dual","Dual")}${opt("group","tri","Triple")}</div>
+    <div class="frow"><span class="lbl">Order</span>${opt("sort","el","By element and rarity")}${opt("sort","wr","Strongest first")}</div>
+    <div class="frow"><span class="lbl">Rarity</span>${opt("tier","all","All")}${["starter","common","uncommon","rare","special"].map(t=>opt("tier",t,TIER_NAME[t])).join("")}</div>
+    <p class="muted" style="margin:0">Each number is the <b>row's</b> win % against the column, from ${wrSet().meta.games} games per pairing (seats alternated) with both sides on AI level ${wrSet().meta.level}, starting life by element. At ${wrSet().meta.games} games a single cell can be off by about ${Math.round(100/Math.sqrt(wrSet().meta.games)/2)} points; pooled cells and "All" are steadier. Green means the row wins more, red less. Hover a cell for the exact games. "All" is the row's win % against every deck in the current filter.</p>
+  </div>`;
+  let table;
+  if (f.view==="el"){
+    let els = [...new Set(decks.map(d=>d.el))];
+    const byEl = el => decks.filter(d=>d.el===el);
+    const agg = (A, B) => { let w=0, n=0; for (const a of A) for (const b of B){ const x = wrPair(a.id, b.id); if (x){ w+=x[0]; n+=x[1]; } } return [w,n]; };
+    if (f.sort==="wr"){ const v = e => { const r = agg(byEl(e), decks); return r[1] ? r[0]/r[1] : 0; }; els = [...els].sort((a,b)=>v(b)-v(a)); }
+    const rows = els.map(e => { const A = byEl(e); const all = agg(A, decks);
+      return `<tr><th class="wr-row el-${e}" scope="row"><button class="wr-link" data-wr="focus:${e}"><b>${esc(ELS[e])}</b></button><span class="muted"> · ${A.length} deck${A.length>1?"s":""} · ♥ ${EL_LIFE[e]||15}</span></th>${wrCell(all[0], all[1], ELS[e]+" vs all")}${els.map(c => { const r = agg(A, byEl(c)); return wrCell(r[0], r[1], ELS[e]+" vs "+ELS[c]); }).join("")}</tr>`; }).join("");
+    table = `<table class="wr"><thead><tr><th class="wr-corner">Row wins vs →</th><th>All</th>${els.map(e=>`<th class="el-${e}"><span class="wr-col">${esc(ELS[e])}</span></th>`).join("")}</tr></thead><tbody>${rows}</tbody></table>`;
+  } else {
+    const rows = decks.map(a => { let w=0, n=0; for (const b of decks){ const x = wrPair(a.id, b.id); if (x){ w+=x[0]; n+=x[1]; } }
+      return `<tr><th class="wr-row el-${a.el}" scope="row"><b>${esc(a.name)}</b><span class="muted"> · ${short(a)} · ♥ ${deckLife(a.id)}</span></th>${wrCell(w, n, a.name+" vs all")}${decks.map(b => { const x = wrPair(a.id, b.id); return x ? wrCell(x[0], x[1], a.name+" vs "+b.name) : a.id===b.id ? `<td class="wr-self" title="Same deck">—</td>` : `<td class="wr-na">?</td>`; }).join("")}</tr>`; }).join("");
+    table = `<table class="wr"><thead><tr><th class="wr-corner">Row wins vs →</th><th>All</th>${decks.map(d=>`<th class="el-${d.el}" title="${esc(d.name)}"><span class="wr-col">${short(d)}</span></th>`).join("")}</tr></thead><tbody>${rows}</tbody></table>`;
+  }
+  let focus = "";
+  if (f.view==="el" && f.focus){
+    const A = Object.values(DECK_BY_ID).filter(d=>d.el===f.focus).sort((x,y)=>["starter","common","uncommon","rare","special"].indexOf(x.tier)-["starter","common","uncommon","rare","special"].indexOf(y.tier));
+    const rows = A.map(a => { let w=0, n=0; for (const b of decks){ const x = wrPair(a.id, b.id); if (x){ w+=x[0]; n+=x[1]; } }
+      return `<tr><th class="wr-row el-${a.el}" scope="row"><b>${esc(a.name)}</b><span class="muted"> · ${TIER_NAME[a.tier]}</span></th>${wrCell(w, n, a.name+" vs all")}${[...new Set(decks.map(d=>d.el))].map(c => { let w2=0, n2=0; for (const b of decks.filter(d=>d.el===c)){ const x = wrPair(a.id, b.id); if (x){ w2+=x[0]; n2+=x[1]; } } return wrCell(w2, n2, a.name+" vs "+ELS[c]); }).join("")}</tr>`; }).join("");
+    focus = `<div class="wr-focus"><div class="row"><span class="lbl">${esc(ELS[f.focus])} decks, one by one</span><button class="fbtn" data-wr="focus:">Close</button></div>
+      <div class="wr-scroll"><table class="wr"><thead><tr><th class="wr-corner">Row wins vs →</th><th>All</th>${[...new Set(decks.map(d=>d.el))].map(e=>`<th class="el-${e}"><span class="wr-col">${esc(ELS[e])}</span></th>`).join("")}</tr></thead><tbody>${rows}</tbody></table></div></div>`;
+  }
+  return `${head}${focus}<div class="wr-scroll">${table}</div>`;
+}
+function renderSetup(){
+  const tab = setup.tab;
+  const tabs = `<div class="tabs" role="tablist"><button class="tab ${tab==="play"?"on":""}" data-tab="play" role="tab">Play a fight</button><button class="tab ${tab==="lib"?"on":""}" data-tab="lib" role="tab">Card library</button><button class="tab ${tab==="forge"?"on":""}" data-tab="forge" role="tab">Fusion Forge</button><button class="tab ${tab==="wr"?"on":""}" data-tab="wr" role="tab">Win rates</button></div>`;
+  let body;
+  if (tab==="forge") body = forgeHTML();
+  else if (tab==="wr") body = winratesHTML();
+  else if (tab==="lib"){
+    const f = setup.lib;
+    const opt = (key, val, label)=>`<button class="fbtn ${f[key]===val?"on":""}" data-lib="${key}:${val}">${label}</button>`;
+    body = `<div class="filters">
+      <div class="frow"><span class="lbl">Element</span>${opt("el","all","All")}${BASE_ELS.map(e=>opt("el",e,ELS[e])).join("")}</div>
+      <div class="frow"><span class="lbl">Dual</span>${DUAL_ELS.map(e=>opt("el",e,ELS[e])).join("")}</div>
+      <div class="frow"><span class="lbl">Triple</span>${TRIPLE_ELS.map(e=>opt("el",e,ELS[e])).join("")}</div>
+      <div class="frow"><span class="lbl">Kind</span>${opt("kind","all","All")}${opt("kind","base","Base cards")}${opt("kind","fused","Fusions")}${opt("kind","special","Special")}${opt("kind","recipe","Older recipes")}</div>
+      <div class="frow"><span class="lbl">Rarity</span>${opt("r","all","All")}${["s","c","u","r"].map(r=>opt("r",r,RARITY[r])).join("")}</div>
+      <div class="frow"><span class="lbl">Type</span>${opt("type","all","All")}${["creature","spell","aura","reaction","manifest"].map(t=>opt("type",t,t[0].toUpperCase()+t.slice(1))).join("")}</div>
+      <div class="frow"><label class="lbl" for="libq">Search</label><input id="libq" type="search" value="${esc(f.q)}" placeholder="Name or rules text, e.g. Drain"></div>
+    </div><div id="libgrid">${libGridHTML()}</div>`;
+  } else {
+    const d = DECK_BY_ID[setup.view];
+    body = `<div class="picks">
+      <div class="pick"><span class="lbl">Your deck</span>${deckPickHTML("my")}</div>
+      <div class="pick"><span class="lbl">Enemy deck</span>${deckPickHTML("enemy")}
+        <div class="levels"><span class="lbl">Enemy AI</span><div class="lvrow">${[1,2,3,4,5].map(n=>`<button class="lvbtn ${setup.level===n?"on":""}" data-level="${n}"><b>${n}</b><span>${AI_LEVELS[n].name}</span></button>`).join("")}</div><p class="muted lvdesc">${esc(AI_LEVELS[setup.level].desc)}</p></div>
+        <div class="row"><span class="lbl">Enemy life</span>
+          <button class="btn ${setup.life===15?"primary":""}" data-life="15">Full: ${deckLife(setup.enemy)} (mirror match)</button>
+          <button class="btn ${setup.life===10?"primary":""}" data-life="10">${deckLife(setup.enemy)-5} (normal encounter)</button></div></div>
+    </div>
+    <div class="row"><button class="btn primary" data-btn="start" style="font-size:16px;padding:10px 22px">Start fight: ${esc(DECK_BY_ID[setup.my].name)} (♥ ${deckLife(setup.my)}) vs. ${esc(DECK_BY_ID[setup.enemy].name)} (♥ ${deckLife(setup.enemy) + (setup.life - 15)})</button></div>
+    <div class="decklist">
+      <div class="row"><span class="lbl">Decklist</span><b class="el-${d.el}" style="color:var(--el)">${esc(d.name)}</b><span class="tier t-${d.tier}">${TIER_NAME[d.tier]}</span><span class="muted">Starting life ${deckLife(d.id)}. ${esc(d.desc)}</span></div>
+      <span class="lbl">Main deck (two copies of each)</span><div class="cards">${d.main.map(id=>cardHTML(LIB[id],{x2:true, from:true})).join("")}</div>
+      <span class="lbl">Manifest deck</span><div class="cards">${d.manifests.map(id=>cardHTML(LIB[id])).join("")}</div>
+    </div>`;
+  }
+  return `<div class="setup">
+    <header><h1 style="font-size:30px">Elementals Unbound</h1><p>Playtest build: 5 base elements, 10 dual confluences and 10 triple confluences. Every element has 100 basic cards and 40 Manifests. Base elements have Starter, Common, Uncommon and Rare decks; each confluence has Common, Uncommon and Rare fusion decks plus an Archetype deck built from its special cards. Try the Fusion Forge to fuse two elements into a dual card, or three into a triple card.</p></header>
+    ${tabs}${body}
+    ${rulesHTML()}
+  </div>`;
+}
+function render(){
+  if (HEADLESS || (g && g.sim)) return;
+  const app = document.getElementById("app");
+  const scrollLog = app.querySelector(".log ol")?.scrollTop || 0;
+  const open = app.querySelector("details.rules")?.open;
+  app.innerHTML = (!g || g.screen==="setup") ? renderSetup() : renderGame();
+  if (open) app.querySelector("details.rules").open = true;
+  const ol = app.querySelector(".log ol"); if (ol) ol.scrollTop = scrollLog;
+  if (FX.q.length) requestAnimationFrame(fxPlay);
+}
+
+function onClick(e){
+  const el = e.target.closest("[data-logcard],[data-forge],[data-forgef],[data-recipe],[data-btn],[data-hand],[data-man],[data-cr],[data-pl],[data-tab],[data-pickel],[data-pickdeck],[data-lib],[data-life],[data-level],[data-aura],[data-emani],[data-wr]");
+  if (!el) return;
+  inspectFrom(el);
+  const ds = el.dataset;
+  if (ds.tab){ setup.tab=ds.tab; render(); return; }
+  if (ds.wr!=null){ const i = ds.wr.indexOf(":"), k = ds.wr.slice(0,i), v = ds.wr.slice(i+1); setup.wr[k] = v || null; if (k==="focus" && v) setup.wr.view = "el"; render(); return; }
+  if (ds.forge){ const i=ds.forge.indexOf(":"), e=ds.forge.slice(0,i), id=ds.forge.slice(i+1); const f=setup.forge; f.pick[e] = f.pick[e]===id ? null : id; render(); return; }
+  if (ds.forgef){ const [k,v]=ds.forgef.split(":"); const f=setup.forge; f[k]=v; if (k==="type" || k==="conf") f.pick={}; render(); return; }
+  if (ds.recipe){ const d=LIB[ds.recipe], ps=parentsOf(d); const f=setup.forge; f.conf=d.el; f.type=ps[0].type; f.r="all"; f.q=""; f.pick={}; for (const c of ps) f.pick[c.el]=c.id; setup.tab="forge"; render(); window.scrollTo({top:0,behavior:"smooth"}); return; }
+  if (ds.pickel){ const [side,e]=ds.pickel.split(":"); setup[side==="my"?"myEl":"enemyEl"]=e; setup[side]=DECKS[e][0].id; setup.view=setup[side]; render(); return; }
+  if (ds.pickdeck){ const [side,id]=ds.pickdeck.split(":"); setup[side]=id; setup.view=id; render(); return; }
+  if (ds.lib){ const [k,v]=ds.lib.split(":"); if (k==="more") setup.lib.limit += 120; else { setup.lib[k]=v; setup.lib.limit=120; } render(); return; }
+  if (ds.life){ setup.life=+ds.life; render(); return; }
+  if (ds.level){ setup.level=+ds.level; render(); return; }
+  if (ds.btn==="start" || ds.btn==="again"){ const c = g&&g.cfg ? g.cfg : null; if(ds.btn==="start" || !c) newGame(setup.my, setup.enemy, setup.life); else newGame(c.myDeck, c.enemyDeck, c.enemyLife); return; }
+  if (ds.btn==="decks"){ if(g) g.id = Math.random(); g = null; render(); return; }
+  if (!g) return;
+  if (ds.btn==="close"){ g.closed=true; render(); return; }
+  const ui = g.ui, me = g.P[0];
+  switch (ui.mode){
+    case "main":
+      if (ds.hand!=null){ const d = me.hand[+ds.hand]; if (d && canPlayNow(me, d, "main")) finishUI({hand:+ds.hand}); else if (d){ g.notice = `${d.name}: ${whyNotPlayable(me, d, "main")||"can't be played right now."}`; render(); } }
+      else if (ds.man!=null){ const m = me.manifests[+ds.man]; if (m && canCastManifest(me, m)) finishUI({man:+ds.man}); else if (m){ g.notice = `${m.name}: ${whyNotPlayable(me, m, "main")||"can't be cast right now."}`; render(); } }
+      else if (ds.btn==="next") finishUI("next");
+      break;
+    case "react":
+      if (ds.hand!=null){ if (canPlayNow(me, me.hand[+ds.hand], "instant")) finishUI(+ds.hand); }
+      else if (ds.btn==="done") finishUI("done");
+      break;
+    case "target": {
+      if (ds.btn==="cancel") return finishUI("cancel");
+      if (ds.btn==="skip") return finishUI("skip");
+      let t = null;
+      if (ds.cr!=null) t = ui.valid.find(x=>x.kind==="creature" && x.c.uid===+ds.cr);
+      else if (ds.pl!=null) t = ui.valid.find(x=>x.kind==="player" && x.p.i===+ds.pl);
+      if (t) finishUI(t);
+      break;
+    }
+    case "attack":
+      if (ds.cr!=null){ const c = me.board.find(x=>x.uid===+ds.cr); if (c && canAttack(c)){ ui.sel.has(c.uid)?ui.sel.delete(c.uid):ui.sel.add(c.uid); render(); } }
+      else if (ds.btn==="attack") finishUI([...ui.sel]);
+      else if (ds.btn==="skip") finishUI([]);
+      break;
+    case "block":
+      if (ds.cr!=null){
+        const uid = +ds.cr;
+        const enemyAtt = g.P[1].board.find(x=>x.uid===uid && x.attacking);
+        if (enemyAtt){ ui.sel = uid; render(); break; }
+        const mine = me.board.find(x=>x.uid===uid);
+        if (mine){
+          if (ui.assign.has(uid)) ui.assign.delete(uid);
+          else if (ui.sel){ const a = g.P[1].board.find(x=>x.uid===ui.sel); if (a && canBlock(mine,a)) ui.assign.set(uid, ui.sel); }
+          render();
+        }
+      } else if (ds.btn==="confirm") finishUI(ui.assign);
+      break;
+    case "confirm":
+      if (ds.btn==="yes") finishUI(true); else if (ds.btn==="no") finishUI(false);
+      break;
+    case "respond":
+      if (ds.btn==="pass") finishUI("pass");
+      else if (ds.btn && ds.btn.startsWith("opt-")) finishUI(+ds.btn.slice(4));
+      break;
+  }
+}
+if (!HEADLESS){
+  document.addEventListener("click", onClick);
+  document.addEventListener("input", e=>{ if (e.target.id==="forgeq"){ setup.forge.q = e.target.value; render(); const i=document.getElementById("forgeq"); if(i){ i.focus(); i.setSelectionRange(i.value.length,i.value.length);} return; }
+    if (e.target.id==="libq"){ setup.lib.q = e.target.value; const box = document.getElementById("libgrid"); if (box) box.innerHTML = libGridHTML(); } });
+  const hov = e=>inspectFrom(e.target.closest && e.target.closest("[data-cr],[data-hand],[data-man],[data-aura],[data-emani],[data-logcard]"));
+  document.addEventListener("mouseover", hov);
+  document.addEventListener("focusin", hov);
+  // Keyword tooltips: hover or focus a marked term to see what it does; on touch screens, tap it.
+  const tip = document.createElement("div"); tip.id = "kwtip"; tip.hidden = true; tip.setAttribute("role","tooltip"); document.body.appendChild(tip);
+  const TIP_NAME = { lastgasp:"Last Gasp", noblock:"Can't block", arrived:"Just arrived", steal:"Take control", life:"Starting life" };
+  let tipFor = null, tipAt = 0, lastPointer = "mouse";
+  const showTip = el => {
+    const k = el.dataset.tip, txt = termHelp(k); if (!txt) return;
+    if (tipFor!==el) tipAt = Date.now();
+    tip.innerHTML = `<b>${esc(TIP_NAME[k] || (KW_NAMES[k] || k[0].toUpperCase()+k.slice(1)))}</b>${esc(txt)}`; tip.hidden = false; tipFor = el;
+    const r = el.getBoundingClientRect(), w = tip.offsetWidth, h = tip.offsetHeight;
+    const x = Math.max(8, Math.min(window.innerWidth - w - 8, r.left + r.width/2 - w/2));
+    const y = r.top - h - 8 < 8 ? r.bottom + 8 : r.top - h - 8;
+    tip.style.left = x+"px"; tip.style.top = y+"px";
+  };
+  const hideTip = () => { tip.hidden = true; tipFor = null; };
+  document.addEventListener("pointerdown", e=>{ lastPointer = e.pointerType || "mouse"; }, true);
+  document.addEventListener("mouseover", e=>{ const t = e.target.closest && e.target.closest(".kwt"); if (t) showTip(t); else if (tipFor && lastPointer==="mouse") hideTip(); });
+  document.addEventListener("focusin", e=>{ const t = e.target.closest && e.target.closest(".kwt"); if (t) showTip(t); });
+  document.addEventListener("focusout", e=>{ if (e.target===tipFor) hideTip(); });
+  // On touch, tapping a term shows its help instead of playing or selecting the card it sits on.
+  document.addEventListener("click", e=>{ const t = e.target.closest && e.target.closest(".kwt");
+    if (t && lastPointer!=="mouse"){ e.preventDefault(); e.stopPropagation(); if (tipFor===t && Date.now()-tipAt > 500) hideTip(); else showTip(t); }
+    else if (!t && lastPointer!=="mouse") hideTip(); }, true);
+  window.addEventListener("scroll", hideTip, true);
+  document.addEventListener("keydown", e=>{ if((e.key==="Enter"||e.key===" ") && e.target.matches('[role="button"]')){ e.preventDefault(); e.target.click(); } });
+  render();
+} else {
+  globalThis.__sim = { newGame, get g(){ return g; }, LIB, DECKS };
+}
+</script>
