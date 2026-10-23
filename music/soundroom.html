@@ -1,0 +1,208 @@
+<title>Elementals Sound Room</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a listening console. One wide strip for the main theme, then one strip per element, each with a piano roll of the motif in its own mode. */
+:root {
+  --bg: #eef0f4; --panel: #ffffff; --ink: #1a1f2b; --muted: #5d6576; --line: #d5d9e2; --roll: #f4f6f9;
+  --accent: #3b4fd8;
+  --fire: #d1462a; --water: #1f7fb0; --earth: #7a6a2c; --wind: #2a9a7c; --lightning: #8a55d6; --main: #3b4fd8;
+  --display: "Chakra Petch", "Trebuchet MS", system-ui, sans-serif;
+  --body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #12151d; --panel: #1a1e29; --ink: #e8eaf0; --muted: #9aa2b4; --line: #2b3140; --roll: #141822;
+  --accent: #8d9cff; --fire: #ff7a5c; --water: #5cb8e8; --earth: #c9b26a; --wind: #5fd3b0; --lightning: #b996ff; --main: #8d9cff;
+  color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #12151d; --panel: #1a1e29; --ink: #e8eaf0; --muted: #9aa2b4; --line: #2b3140; --roll: #141822;
+  --accent: #8d9cff; --fire: #ff7a5c; --water: #5cb8e8; --earth: #c9b26a; --wind: #5fd3b0; --lightning: #b996ff; --main: #8d9cff;
+  color-scheme: dark }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.5; }
+.wrap { max-width: 1040px; margin: 0 auto; padding-block: 28px 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 28px; }
+header { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 16px; }
+h1 { font-family: var(--display); font-weight: 700; font-size: clamp(30px, 5vw, 44px); line-height: 1; margin: 0; letter-spacing: .01em; text-wrap: balance; }
+.sub { color: var(--muted); margin: 8px 0 0; max-width: 60ch; }
+.draft { font-family: var(--mono); font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--accent);
+  border: 1px solid var(--accent); border-radius: 3px; padding: 2px 8px; display: inline-block; margin-bottom: 10px; }
+.controls { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; font-size: 14px; color: var(--muted); }
+.controls label { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+input[type=range] { width: 110px; accent-color: var(--accent); }
+input[type=checkbox] { accent-color: var(--accent); width: 16px; height: 16px; }
+.strips { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+.strip { --c: var(--main); background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 16px; display: grid; gap: 12px; min-width: 0; }
+.strip.wide { grid-column: 1 / -1; }
+.strip.playing { border-color: var(--c); box-shadow: 0 0 0 1px var(--c) inset; }
+.top { display: flex; gap: 14px; align-items: center; }
+.play { flex: none; width: 46px; height: 46px; border-radius: 50%; border: 2px solid var(--c); background: transparent; color: var(--c);
+  cursor: pointer; display: grid; place-items: center; transition: background .15s, color .15s; }
+.play:hover, .strip.playing .play { background: var(--c); color: var(--panel); }
+.play:focus-visible { outline: 3px solid var(--c); outline-offset: 3px; }
+.play svg { width: 16px; height: 16px; fill: currentColor; }
+.name { font-family: var(--display); font-weight: 700; font-size: 22px; line-height: 1.1; color: var(--c); margin: 0; }
+.meta { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-top: 3px; }
+canvas { width: 100%; height: 84px; display: block; background: var(--roll); border-radius: 4px; }
+.wide canvas { height: 120px; }
+.notes { font-family: var(--mono); font-size: 12.5px; color: var(--ink); overflow-x: auto; white-space: nowrap; }
+.mood { color: var(--muted); font-size: 14px; margin: 0; }
+section h2 { font-family: var(--display); font-weight: 500; font-size: 20px; margin: 0 0 10px; }
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 28px; }
+.cols p, .cols li { max-width: 62ch; }
+ol { padding-left: 20px; margin: 0; display: grid; gap: 8px; }
+table { border-collapse: collapse; font-size: 14px; width: 100%; }
+td, th { text-align: left; padding: 6px 10px 6px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-weight: 600; color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+.tbl { overflow-x: auto; }
+.mono { font-family: var(--mono); font-size: 12.5px; }
+footer { color: var(--muted); font-size: 13px; }
+footer a { color: var(--accent); }
+@media (prefers-reduced-motion: reduce) { .play { transition: none; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <span class="draft">Draft palette · v0.1</span>
+      <h1>Sound Room</h1>
+      <p class="sub">Elementals Unbound's music, as it's written. Each strip plays the main motif in that element's sound. Press play; sound starts after your first tap.</p>
+    </div>
+    <div class="controls">
+      <label for="loop"><input type="checkbox" id="loop"> Loop</label>
+      <label for="vol">Volume <input type="range" id="vol" min="0" max="1" step="0.01" value="0.7"></label>
+    </div>
+  </header>
+
+  <div class="strips" id="strips"></div>
+
+  <div class="cols">
+    <section>
+      <h2>The motif: "Unbound"</h2>
+      <p>Nine notes over two bars: an open fifth, a turn around the fourth, then a leap to the octave. It's written as scale degrees, so every element plays the same shape in its own mode. The middle notes are where the modes differ most, which is why Fire and Wind sound so unlike each other.</p>
+      <div class="tbl"><table>
+        <thead><tr><th>Degree</th><td class="mono">1</td><td class="mono">5</td><td class="mono">4</td><td class="mono">3</td><td class="mono">4</td><td class="mono">5</td><td class="mono">6</td><td class="mono">5</td><td class="mono">8</td></tr></thead>
+        <tbody><tr><th>Beats</th><td class="mono">1</td><td class="mono">1</td><td class="mono">½</td><td class="mono">½</td><td class="mono">1</td><td class="mono">½</td><td class="mono">½</td><td class="mono">1</td><td class="mono">2</td></tr></tbody>
+      </table></div>
+    </section>
+    <section>
+      <h2>Questions for the designer</h2>
+      <ol>
+        <li><b>Genre.</b> Fantasy-orchestral feel, chiptune, synthwave, folk or something else? A game or two whose soundtrack you love would help most.</li>
+        <li><b>Retro or modern.</b> Strict 8/16-bit sound chip limits, or modern synths with reverb and wide stereo?</li>
+        <li><b>Instruments.</b> Any you want front and centre (strings, piano, guitar, drums)? Anything you don't want?</li>
+        <li><b>The motif.</b> Does "Unbound" feel like the game's theme? Keep, tweak, or try another?</li>
+      </ol>
+    </section>
+  </div>
+
+  <footer>Source: <span class="mono">music/palette.md</span>, <span class="mono">palette.js</span> and <span class="mono">synth.js</span> in <a href="https://github.com/Kaiandmax/elementals-unbound/tree/main/music" target="_blank" rel="noopener">the repository</a>. Synthesized live in your browser with Web Audio. Answer on the Studio Board or in the Music chat.</footer>
+</div>
+
+<script src="palette.js"></script>
+<script src="synth.js"></script>
+<script>
+(function () {
+  const { MODES, MOTIF, PALETTE } = EU_PALETTE;
+  const NAMES = "C C# D Eb E F F# G Ab A Bb B".split(" ");
+  const MODE_LABEL = { dorian: "Dorian", aeolian: "Aeolian", phrygdom: "Phrygian dominant", lydian: "Lydian", mixolydian: "Mixolydian" };
+  const MOODS = {
+    main: "Brass lead over a soft pad. The version every region theme quotes.",
+    fire: "Resonant saw lead, driving 3+3+2 kick, 8th-note power chords, a tom fill. Haste and burn.",
+    water: "FM bell over glassy triplet arpeggios and a long echo. Draw, freeze, patience.",
+    earth: "Low square lead on a root-and-fifth drone, half-time kick and toms. Walls and giants.",
+    wind: "Breathy flute with vibrato, triplet shaker, gusts of noise. The raised 4th keeps it airborne.",
+    lightning: "Detuned pulse lead, 16th arpeggios, a tritone stab every bar. Chain spells, fast.",
+  };
+  const PLAY = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 1.5v13l11-6.5z"/></svg>';
+  const STOP = '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.5" y="2.5" width="11" height="11" rx="1"/></svg>';
+
+  function motifNotes(key) {
+    const e = PALETTE[key], s = MODES[e.mode], t = EUSynth.midiOf(e.tonic) + 12;
+    let beat = 0;
+    return MOTIF.map(([d, b]) => { const i = d - 1, m = t + s[i % 7] + 12 * Math.floor(i / 7);
+      const n = { m, start: beat, len: b, label: NAMES[m % 12] + (Math.floor(m / 12) - 1) }; beat += b; return n; });
+  }
+
+  const strips = document.getElementById("strips"), cards = {};
+  Object.keys(PALETTE).forEach((key) => {
+    const e = PALETTE[key], notes = motifNotes(key), el = document.createElement("article");
+    el.className = "strip"; el.style.setProperty("--c", `var(--${key})`);
+    const tonic = e.tonic.replace(/\d/, "");
+    el.innerHTML = `<div class="top"><button class="play" id="play-${key}" aria-label="Play ${e.name}">${PLAY}</button>
+      <div><h3 class="name">${e.name}</h3><div class="meta">${tonic} ${MODE_LABEL[e.mode]} · ${e.bpm} BPM</div></div></div>
+      <canvas aria-hidden="true"></canvas>
+      <div class="notes">${notes.map((n) => n.label).join("  ")}</div>
+      <p class="mood">${MOODS[key]}</p>`;
+    strips.appendChild(el);
+    cards[key] = { el, notes, canvas: el.querySelector("canvas"), btn: el.querySelector("button") };
+    cards[key].btn.addEventListener("click", () => (now && now.key === key ? stop() : play(key)));
+  });
+
+  function draw(key, beatPos) {
+    const { canvas, notes } = cards[key], dpr = window.devicePixelRatio || 1, w = canvas.clientWidth, h = canvas.clientHeight;
+    if (!w) return;
+    if (canvas.width !== Math.round(w * dpr)) { canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr); }
+    const g = canvas.getContext("2d"); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, w, h);
+    const cs = getComputedStyle(cards[key].el), c = cs.getPropertyValue("--c").trim() || "#888", line = cs.getPropertyValue("--line").trim();
+    const lo = Math.min(...notes.map((n) => n.m)) - 1, hi = Math.max(...notes.map((n) => n.m)) + 1, total = 8, pad = 10;
+    const x = (b) => pad + (b / total) * (w - 2 * pad), y = (m) => pad + (1 - (m - lo) / (hi - lo)) * (h - 2 * pad);
+    g.strokeStyle = line; g.lineWidth = 1;
+    for (let b = 0; b <= total; b++) { g.globalAlpha = b % 4 ? .5 : 1; g.beginPath(); g.moveTo(x(b) + .5, pad / 2); g.lineTo(x(b) + .5, h - pad / 2); g.stroke(); }
+    g.globalAlpha = 1;
+    const bh = Math.max(5, (h - 2 * pad) / (hi - lo) * .8);
+    notes.forEach((n) => { const on = beatPos != null && beatPos >= n.start && beatPos < n.start + n.len;
+      g.fillStyle = c; g.globalAlpha = beatPos == null ? .85 : on ? 1 : .35;
+      const rx = x(n.start) + 1, rw = x(n.start + n.len) - x(n.start) - 3;
+      g.beginPath(); g.roundRect ? g.roundRect(rx, y(n.m) - bh / 2, rw, bh, 2) : g.rect(rx, y(n.m) - bh / 2, rw, bh); g.fill(); });
+    g.globalAlpha = 1;
+    if (beatPos != null && beatPos < total) { g.fillStyle = c; g.fillRect(x(beatPos), 0, 2, h); }
+  }
+  const drawAll = () => Object.keys(cards).forEach((k) => draw(k, now && now.key === k ? now.beatPos : null));
+
+  let ac = null, vol = null, now = null;
+  const volEl = document.getElementById("vol"), loopEl = document.getElementById("loop");
+  try { const v = localStorage.getItem("sr-vol"); if (v) volEl.value = v; loopEl.checked = localStorage.getItem("sr-loop") === "1"; } catch (e) {}
+  volEl.addEventListener("input", () => { if (vol) vol.gain.value = +volEl.value; try { localStorage.setItem("sr-vol", volEl.value); } catch (e) {} });
+  loopEl.addEventListener("change", () => { try { localStorage.setItem("sr-loop", loopEl.checked ? "1" : "0"); } catch (e) {} });
+
+  function play(key) {
+    stop();
+    if (!ac) { ac = new (window.AudioContext || window.webkitAudioContext)(); vol = ac.createGain(); vol.connect(ac.destination); }
+    ac.resume(); vol.gain.value = +volEl.value;
+    const bus = ac.createGain(); bus.connect(vol);
+    const t0 = ac.currentTime + .08, len = EUSynth.sketch(ac, bus, key, t0);
+    now = { key, bus, t0, len, beat: 60 / PALETTE[key].bpm, beatPos: 0, next: null };
+    cards[key].el.classList.add("playing"); cards[key].btn.innerHTML = STOP; cards[key].btn.setAttribute("aria-label", "Stop " + PALETTE[key].name);
+    queueNext(); requestAnimationFrame(tick);
+  }
+  function queueNext() { // schedule the next statement slightly ahead when looping
+    const n = now; n.next = setTimeout(() => {
+      if (now !== n) return;
+      if (loopEl.checked) { const t = n.t0 + n.len; EUSynth.sketch(ac, n.bus, n.key, t); n.t0 = t; queueNext(); }
+      else n.next = setTimeout(() => { if (now === n) stop(); }, (n.t0 + n.len - ac.currentTime + 2.5) * 1000);
+    }, Math.max(0, (n.t0 + n.len - ac.currentTime - .4) * 1000));
+  }
+  function stop() {
+    if (!now) return;
+    const n = now; now = null; clearTimeout(n.next);
+    n.bus.gain.setTargetAtTime(0, ac.currentTime, .03); setTimeout(() => n.bus.disconnect(), 300);
+    cards[n.key].el.classList.remove("playing"); cards[n.key].btn.innerHTML = PLAY; cards[n.key].btn.setAttribute("aria-label", "Play " + PALETTE[n.key].name);
+    draw(n.key, null);
+  }
+  function tick() {
+    if (!now) return;
+    const elapsed = ac.currentTime - now.t0, beats = elapsed / now.beat;
+    now.beatPos = elapsed < 0 ? null : beats % 8; // the motif repeats every 8 beats
+    draw(now.key, now.beatPos); requestAnimationFrame(tick);
+  }
+
+  drawAll();
+  window.addEventListener("resize", drawAll);
+  if (window.matchMedia) matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", drawAll);
+  new MutationObserver(drawAll).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  if (document.fonts) document.fonts.ready.then(drawAll);
+})();
+</script>
