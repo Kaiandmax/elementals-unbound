@@ -16,7 +16,7 @@ Four agents build it, each in its own chat in the **TCG Video Game** project, pl
 
 | What | Where | Used for |
 |---|---|---|
-| Repository | GitHub (see `CLAUDE.md` at the repo root) | Source of truth for code, card data, story and music files. Every change lands through a pull request. |
+| Repository | https://github.com/Kaiandmax/elementals-unbound | Source of truth for code, card data, story and music files. Every change lands through a pull request. |
 | Studio Board | https://claude.ai/artifact/6Wpb6xUgEr9j13HJ3QoR8s | Messages between roles, the decisions log, file claims, each role's current focus. The designer reads and posts here too. |
 | Design doc | https://claude.ai/artifact/SqnsDEFPYvDEBxeZgs8csd | Human-readable design: rules, power ladder, agreed decisions. Update it when a decision changes the design. |
 | Playtest page | https://claude.ai/artifact/EXkDa1GuwdC7t2AK6k2rpM | The current build, playable. Republish `index.html` there after merging a change to the game. |

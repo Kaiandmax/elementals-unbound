@@ -32,6 +32,7 @@ Never edit `index.html`, `tools/engine.js` or `cards/winrates.js` by hand (gener
 
 ## Links
 
+- Repository: https://github.com/Kaiandmax/elementals-unbound
 - Studio Board: https://claude.ai/artifact/6Wpb6xUgEr9j13HJ3QoR8s
 - Design doc: https://claude.ai/artifact/SqnsDEFPYvDEBxeZgs8csd
 - Playtest page: https://claude.ai/artifact/EXkDa1GuwdC7t2AK6k2rpM
