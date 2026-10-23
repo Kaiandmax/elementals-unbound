@@ -19,7 +19,48 @@ Status: **first draft**. The designer chose the direction on 2026-10-23 (see *Fi
 
 Hopeful, but it costs something. The world is beautiful and busy: market towns, river barges, sky-ports, mountain holds. It also lives with monsters the way coastal towns live with storms. Adventurers are working professionals, not chosen ones. The early game is about small jobs done well: a wolf-thing in the orchard, a flooded mill, a missing courier. The danger is real from the first act, and it climbs with the hero's rank. Humor comes from the people. Weight comes from what the hero chooses to protect. Nobody is evil for its own sake. The final antagonist believes they are saving the world.
 
-Touchstones: *Frieren* and *Monster Hunter* for the working-adventurer feel, *Final Fantasy XII* and *Fire Emblem* for nations scheming over a crisis, and *Delicious in Dungeon* for dungeons that feel like real places.
+Touchstones: **classic BioWare above all** (*Jade Empire*, *Knights of the Old Republic* I and II, *Dragon Age: Origins*, the *Mass Effect* trilogy; designer's favorites, see the next section). Also *Frieren* and *Monster Hunter* for the working-adventurer feel, *Final Fantasy XII* for nations scheming over a crisis, and *Delicious in Dungeon* for dungeons that feel like real places.
+
+## Writing style: the BioWare model (designer, 2026-10-23)
+
+The designer's favorite RPGs are *Jade Empire*, *KOTOR* 1 and 2, *Dragon Age: Origins* and the *Mass Effect* trilogy. We take their **craft**, never their plots, characters or lines. This is how every story file is written.
+
+**The hero is a Shepard.** Wren has a fixed name, history and face (the player picks the gender), like Commander Shepard or the Warden. The player decides **how** Wren answers: kind or blunt, by the book or ruthless, joking or grave. Every main conversation offers 2–4 replies that carry real attitude, not three ways of saying yes. Wren's written voice (earnest, quick) shows in the lines themselves, so every option still sounds like Wren.
+
+**Two ways to hold the line.** A philosophy axis in the spirit of the Open Palm and Closed Fist, or Paragon and Renegade, built on this game's own question: *who do you protect, and what will you spend to do it?*
+
+- **Shield:** protect the people in front of you, keep your word, take the harder road so nobody gets left behind.
+- **Edge:** finish the hunt, spend what has to be spent, and let results answer for you.
+
+Both are heroic, both are tracked separately (as in *Mass Effect*), and both open their own options. Seraphine is Edge carried to its end, which makes the final confrontation personal for an Edge player and an argument for a Shield player. Neither path turns Wren into her. The axis shows up in replies, in how contracts are resolved, and in the ending.
+
+**Companions have opinions and argue.** As in *Dragon Age: Origins*:
+
+- Each companion has values that a choice can please or offend, and **approval** moves visibly ("Brann approves").
+- They argue with Wren and with each other: banter while walking, camp conversations, and lines reacting to your choices on the spot.
+- High approval opens personal talks, loyalty quests and romance. Low approval leads to confrontation, and a companion can leave the party (Pell might go home to the Dominion). Nobody is a yes-man.
+
+**Loyalty quests matter at the end** (from *Mass Effect 2*). Each companion's loyalty quest resolves their arc. The final vault is a *Suicide Mission*-style hunt. Companions hold the side fights (see *Companions in battle*), and who you send where, together with whether they're loyal, decides who comes home. Dove's death in Act III is fixed. After that, deaths depend on the player.
+
+**Gather the hunters** (from *Dragon Age: Origins*' treaties and *Mass Effect 3*'s war assets). Act V calls on everyone Wren helped: branch halls, nations, rival hunters, even bound great wilds. The Covenant who answer are the ones Wren earned across the game, and they change the final battle.
+
+**A mentor who questions the creed** (from *KOTOR 2*'s Kreia). Corvane Ashe retires from the Seven in Act III and becomes Wren's teacher. He's bitter, brilliant and honest, and he pulls apart the Covenant's ideals in every conversation: "Rank is a leash the nations let us hold." He's right often enough to sting. He doesn't betray Wren. His role is to make Wren's own answer to Seraphine earned, not borrowed.
+
+**The betrayal is planted, then paid off** (as *Jade Empire* did with its master). Seraphine is warm and helpful in every scene before the reveal. Plant clues a second playthrough will catch: towns she "couldn't reach in time", records Isa can't find, Halden's silences. The reveal should make the player re-read the whole game.
+
+**Planets, in our terms** (from *KOTOR* and *Mass Effect*). Act II opens up: the party can visit the League, Holdfast and Skyreach **in any order**. Each is a self-contained story with a moral knot at its center, its own vault, and a decision the world remembers.
+
+**Choices come back.** A *Wrex on Virmire*-level decision in each act, plus small ones (spare a poacher, report a branch master, free a bound wild). They return acts later as allies, enemies, letters and changed towns. Story keeps a ledger of every flag and where it pays off.
+
+**Lore the player can dig into.** A codex (the Covenant's bestiary, binder histories, nation dossiers), written in-world and unlocked by contracts, bindings and conversations. Every wild you bind gets an entry.
+
+**How it reads:**
+
+- **Distinct voices.** You should be able to tell who's speaking with the name hidden.
+- **Short lines.** Two sentences per line at most.
+- **Humor even in bad times.**
+- **No villain monologues.** Antagonists explain themselves like people.
+- **Every conversation ends** with Wren learning something, choosing something, or changing a relationship.
 
 ## The world: Aster
 
@@ -102,7 +143,7 @@ For most of the game these are figures far above the hero: names on posters, a c
 3. **Ysil of the White Reach** — Ice binder, called the Frost Empress. Cold, exact, unswayed by any crown. The hero's hardest test and finally a true ally.
 4. **Aeris Calloway** — Tempest binder, Windlord. Brash and charming, and he owes favors to the Skyreach princes. A grey figure: torn between his oath and his homeland.
 5. **Neris Saltwind** — Hurricane binder, Tide Sovereign of the League. Her loyalty is bought by her city. She sides with Seraphine.
-6. **Corvane Ashe** — Ash binder. Quiet and haunted, he fought in the last border war. Retires mid-game, opening the seat the hero later fills.
+6. **Corvane Ashe** — Ash binder. Quiet and haunted, he fought in the last border war. Retires in Act III, opening the seat the hero later fills, and becomes Wren's mentor: the one who questions every ideal (see *Writing style*).
 7. **Halden Mirr** — Quicksilver binder, the Covenant's spymaster. Knows more than he says; he is the one who tells the hero the truth.
 
 ### The party (proposed)
@@ -148,7 +189,9 @@ Confluence regions sit where two nations' leylines cross (Steam springs on the L
 
 ## The hero
 
-**Wren Calder**, 18 (proposed name). The player picks Wren's gender at the start; everything else about Wren is fixed.
+**Wren Calder**, 18 (proposed name). The player picks Wren's gender at the start. Wren's history and voice are fixed, and the player shapes Wren's attitude through dialogue choices and the Shield/Edge axis, as with Shepard.
+
+**Cold open:** a playable flashback to the night of the fire, eight-year-old Wren in the burning Ford, ending as Seraphine walks out of the smoke. It runs five minutes before the title card. The player will remember it when she turns.
 
 - **Origin:** a miller's child from **Brindle Ford** in the Hearthvale. At eight, Wren watched a crowned Fire wild burn half the Ford until Seraphine Vael walked in and ended it in one call. Wren has wanted to be her ever since.
 - **Start:** a fresh Tin-rank binder with one secondhand starter deck and more nerve than skill. Not special. No destiny, no hidden bloodline. Wren rises by working.
@@ -172,10 +215,10 @@ A prologue and five acts. The **main story runs about 30 hours**, and contracts,
 |---|---|---|---|---|---|
 | **Prologue: The Ford** | Tin | Brindle Ford, the Millrace Road | Wild sightings in the Hearthvale double. Nobody important notices. | Licence, a borrowed deck, Mads, the first binding, the chained chest. Ends on a Copper-rank wild at the mill. | 1–2 h / 2 h |
 | **I: Notice Boards** | Copper → Iron | The Hearthvale and its border towns | Pyrrhen "relief columns" start crossing the border. An Exalted (Aeris) passes through a town, there and gone. | Meets Brann and Dove, then rival Pell. Village contracts, the first small rift. Ends at the Weir Vault (first loot card) and a Steel-rank guardian. | 4–5 h / 7 h |
-| **II: The Wider World** | Iron → Steel | Tidewater League, Holdfast, Skyreach | The League sells protection, Holdfast seals its gates, the Skyreach princes bid for champions. The Hollow breaks its first vault. | The crew becomes a party: Isa, Kes, Tamsin, and Pell joins. A vault in each nation. Ends with the surge at Brindle Ford: Mads dies, and Wren chooses to stay and hold the line. | 7–8 h / 12 h |
+| **II: The Wider World** | Iron → Steel | Tidewater League, Holdfast, Skyreach | The League sells protection, Holdfast seals its gates, the Skyreach princes bid for champions. The Hollow breaks its first vault. | The crew becomes a party: Isa, Kes, Tamsin, and Pell joins. The three nations can be visited in any order, each with a vault and a decision the world remembers. Ends with the surge at Brindle Ford: Mads dies, and Wren chooses to stay and hold the line. | 7–8 h / 12 h |
 | **III: Fire on the Border** | Silver → Gold | Confluence borderlands; the Pyrrhen Dominion | Vexis marches. War between the Dominion and the League. Corvane Ashe retires. The Seven split over whether to intervene. | Forge licence and the first braid. Fights in the war as a Covenant neutral, protecting civilians on both sides. Pell's choice. Dove dies holding a rift. Ends on a crowned wild that both armies woke. | 8–9 h / 13 h |
 | **IV: Crowns** | Adamant | Stormcourt of Vol; the Primordial vaults | Rift-surges everywhere. The Stormcourt tries to unbind Vol. The nations hand their vaults to Seraphine "for safety". | Fights beside the Exalted as a peer. Triple braids. Tamsin's god, Kes's crown. Halden Mirr tells Wren the truth about Seraphine. | 6–7 h / 10 h |
-| **V: The Seventh Seat** | Exalted | Highcourt, the Covenant's council hall, the last vault | Seraphine gathers the Primordials. Neris sides with her. The council breaks. | Wren takes Corvane's empty seat. The party gathers every hunter Seraphine overlooked. The Founding Circle's way of sealing, through Isa. The Primordial bosses, then Seraphine. | 4–5 h / 6 h |
+| **V: The Seventh Seat** | Exalted | Highcourt, the Covenant's council hall, the last vault | Seraphine gathers the Primordials. Neris sides with her. The council breaks. | Wren takes Corvane's empty seat. Gather the hunters: everyone Wren helped answers, or doesn't. The final vault is a hunt where who holds which side fight, and their loyalty, decides who comes home. The Founding Circle's way of sealing, through Isa. The Primordial bosses, then Seraphine. | 4–5 h / 6 h |
 
 **JRPG pacing rules for the outline:**
 
@@ -227,7 +270,7 @@ These are the world facts other roles build on. Each will be logged as a board d
 Some romance options, optional and built from camp scenes and loyalty quests. Proposal:
 
 - **Who can be romanced:** Pell, Isa, Kes and Tamsin. Brann is married to Dove, so his bond is friendship and, after Act III, grief.
-- **How it works:** affinity grows through camp-scene choices and loyalty quests. In Act III Wren can commit to one of them, or to none. A committed romance changes camp scenes, at least one key scene per act from then on, and the ending.
+- **How it works:** approval grows through camp conversations, choices and loyalty quests, as with *Dragon Age: Origins*' camp romances. In Act III Wren can commit to one of them, or to none. A committed romance changes camp scenes, at least one key scene per act from then on, and the ending.
 - **What it adds to the story:** each romance raises the stakes in that companion's arc. Pell's choice between his family and his oath, Isa exposing her family, Kes reclaiming his crown, Tamsin facing her god: in each case Wren has a personal reason to stand by them.
 - **Tone:** sincere and slow-burning, in keeping with the game's earnest tone. Nothing explicit.
 - **Wren's gender (designer, 2026-10-23): the player picks at the start.** Same character, voice and story; the choice sets the portrait, the sprite and the pronouns. All four romances are open whichever the player picks. Dialogue that names Wren's gender uses a pronoun token for Game Dev to fill in.
