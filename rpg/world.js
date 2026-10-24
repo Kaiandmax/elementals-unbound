@@ -105,23 +105,35 @@ function rpgDropOdds(deckId, owned){
   const w = d => RPG_DROPS.weights[d.r] ?? 1, tot = pool.reduce((a,d)=>a+w(d),0);
   return tot > 0 ? pool.map(d=>({ id:d.id, r:d.r, p:w(d)/tot })) : [];
 }
-function rpgRollDrop(b){
-  if (Math.random() >= (RPG_DROPS.chance[b.kind] ?? 0)) return null;
-  const odds = rpgDropOdds(b.deck, RPG.save.collection); let r = Math.random();
-  for (const o of odds){ r -= o.p; if (r < 0) return o.id; }
-  return odds.length ? odds[odds.length-1].id : null;
+// Rolls a won duel's rewards: 1-2 different basic cards from the deck (by rarity weight) and essence for confluence decks.
+function rpgRollDrops(deckId, kind, owned){
+  const [lo, hi] = RPG_DROPS.cards[kind] || [1,1], n = lo + Math.floor(Math.random() * (hi - lo + 1));
+  const got = [];
+  for (let i = 0; i < n; i++){
+    const odds = rpgDropOdds(deckId, [...(owned||[]), ...got]).filter(o=>!got.includes(o.id)); if (!odds.length) break;
+    let r = Math.random(), pick = odds[odds.length-1].id;
+    const tot = odds.reduce((a,o)=>a+o.p,0); r *= tot;
+    for (const o of odds){ r -= o.p; if (r < 0){ pick = o.id; break; } }
+    got.push(pick);
+  }
+  const dk = DECK_BY_ID[deckId], parts = dk && CONFLUENCE[dk.el];
+  const essence = parts ? { el:dk.el, n: RPG_DROPS.essence[parts.length===3 ? "triple" : "dual"] || 0 } : null;
+  return { cards:got, essence: essence && essence.n > 0 ? essence : null };
 }
 // Called once when a duel launched from the overworld ends in a win: rolls the drop and banks it right away.
 function rpgSettle(){
   const b = RPG.battle; if (!b || b.settled || !g || !g.over) return; b.settled = true;
   if (g.over!=="you") return;
-  b.drop = rpgRollDrop(b);
-  if (b.drop){ RPG.save.collection.push(b.drop); rpgStore(); }
+  const s = RPG.save; b.loot = rpgRollDrops(b.deck, b.kind, s.collection);
+  s.collection.push(...b.loot.cards);
+  if (b.loot.essence){ s.essence = s.essence || {}; s.essence[b.loot.essence.el] = (s.essence[b.loot.essence.el]||0) + b.loot.essence.n; }
+  rpgStore();
 }
 function rpgDropHTML(){
   const b = RPG.battle; if (!b || g.over!=="you") return "";
-  if (!b.drop) return `<p class="muted">No card this time. Every card in an enemy's deck can drop except its Manifests; rarer cards drop less often.</p>`;
-  return `<div class="rpg-drop"><span class="lbl">Card won</span>${cardHTML(LIB[b.drop])}<span class="muted">${esc(LIB[b.drop].name)} is now in your collection.</span></div>`;
+  const L = b.loot || { cards:[] }, ess = L.essence ? `<span class="rpg-ess el-${L.essence.el}">+${L.essence.n} ${esc(ELS[L.essence.el])} essence</span>` : "";
+  if (!L.cards.length) return `<p class="muted">You already own every card this enemy's deck can drop.</p>${ess}`;
+  return `<div class="rpg-drop"><span class="lbl">${L.cards.length > 1 ? "Cards won" : "Card won"}</span><div class="rpg-drop-cards">${L.cards.map(id=>cardHTML(LIB[id])).join("")}</div>${ess}<span class="muted">Added to your collection.</span></div>`;
 }
 function rpgEndBattle(fled){
   const b = RPG.battle, res = fled ? "fled" : (g && g.over), s = RPG.save;
@@ -256,7 +268,7 @@ function renderWorld(){
   }
   const m = rpgMap(), dk = DECK_BY_ID[s.deck];
   return `<div class="rpg">
-    <div class="top"><h1>${esc(m.name)}</h1><div class="row"><span class="muted">Deck: ${esc(dk ? dk.name : s.deck)} · ${s.collection.length} found · ${s.wins} wins</span>
+    <div class="top"><h1>${esc(m.name)}</h1><div class="row"><span class="muted">Deck: ${esc(dk ? dk.name : s.deck)} · ${s.collection.length} found · ${s.wins} wins${Object.entries(s.essence||{}).filter(([,n])=>n>0).map(([e,n])=>` · ${n} ${esc(ELS[e])} essence`).join("")}</span>
       <button class="btn" data-btn="rpg-export">Save to file</button><label class="btn rpg-file">Load file<input type="file" accept=".json,application/json" data-rpgimport hidden></label>
       <button class="btn" data-btn="rpg-new">${RPG.eraseArm ? "Click again to erase" : "New adventure"}</button><button class="btn" data-btn="rpg-quit">Playtest menu</button></div></div>
     <div class="rpg-stage"><canvas id="rpgc" width="${RPG_VW*RPG_T}" height="${RPG_VH*RPG_T}" aria-label="Overworld map. Arrow keys or WASD to walk, Enter or Space to talk."></canvas><div id="rpgui"></div></div>

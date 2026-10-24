@@ -33,6 +33,14 @@ let bad = 0;
     if (o.some(x => S.LIB[x.id].manifest)) err("drops", `${dk.id} can drop a Manifest`);
     for (const a of o) for (const b of o) if (RANK[a.r] > RANK[b.r] && a.p > b.p) err("drops", `${dk.id}: ${a.id} (${a.r}) likelier than ${b.id} (${b.r})`); }
   { const mix = S.rpgDropOdds("fire_starter", []); if (!mix.length) err("drops", "fire_starter has no drops"); }
+  // Rolled rewards: card count within the configured range, all different, no Manifests, essence only from confluence decks.
+  for (const dk of decks.filter((d, i) => i % 7 === 0)) for (const kind of Object.keys(S.RPG_DROPS.cards)) for (let t = 0; t < 30; t++) {
+    const [lo, hi] = S.RPG_DROPS.cards[kind], r = S.rpgRollDrops(dk.id, kind, []);
+    if (r.cards.length < Math.min(lo, S.rpgDropOdds(dk.id, []).length) || r.cards.length > hi) err("drops", `${dk.id} ${kind}: rolled ${r.cards.length} cards`);
+    if (new Set(r.cards).size !== r.cards.length) err("drops", `${dk.id}: duplicate card in one win`);
+    if (r.cards.some(id => S.LIB[id].manifest)) err("drops", `${dk.id}: rolled a Manifest`);
+    if (!!r.essence !== !!S.CONFLUENCE[dk.el]) err("drops", `${dk.id}: essence ${r.essence ? "from a mono deck" : "missing"}`);
+  }
 }
 for (const d of decks) if (!d.main || !d.main.length || !d.manifests || !d.manifests.length) { console.error("empty deck", d.id); bad++; }
 (async () => {
