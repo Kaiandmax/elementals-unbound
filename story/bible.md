@@ -217,7 +217,7 @@ A prologue and five acts. The **main story runs about 30 hours**, and contracts,
 - **Every region is a place, not a level.** It has a town with a branch hall and its own notice board, people who remember you, local politics, a vault with a sealed great wild and its history, and a reason to come back later.
 - **Return to Brindle Ford in every act.** Show it changing with the war and the Unbinding, and show Tilly growing up. Home is how the player measures how far they've come.
 - **The world moves without you.** Each act opens with news of what happened while you were busy (a broadsheet, a branch-hall rumour, a refugee column). Exalted are seen doing things far beyond you, and you arrive after the fact.
-- **Companion chapters.** Each companion gets a chapter in their home region and an optional loyalty quest that ends on a boss and a personal loot card.
+- **Companion chapters.** Each companion gets a written chapter in their home region on the main path, ending on a boss and a personal loot card.
 - **Camp scenes.** Short party conversations at rest points after big beats. This is where most of the character build-up lives.
 - **Side contracts** on every notice board, ranked like the wilds they name. They're the main source of the extra 20 hours, and many of them pay off in later acts.
 

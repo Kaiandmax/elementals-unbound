@@ -310,6 +310,48 @@ Object.assign(RPG_TEXT, {
     "Wren: None of my deck works like that. Not yet."
   ],
 
+  /* ---------- Boss crowns and phase barks (design/bosses.md; shown at fight start, on each phase break, side-fight end) ---------- */
+  a1_gullet_crown: [
+    "GULLET, THE MILLRACE LURKER. Copper rank. Rule it breaks: LURKER.",
+    "It strikes from under the sluice. Its creatures can't be attacked or targeted on the turn they arrive."
+  ],
+  a1_gullet_break1: [
+    "Gullet sinks into the race. The water goes still.",
+    "Wren: Not done, are you. Come on up, then."
+  ],
+  a1_mother_crown: [
+    "THE CINDER MOTHER. Iron rank, crowned with rift-glass. Rule it breaks: BROOD.",
+    "While the brood lives, she births an Ember Spark at the start of every turn. Brann and Dove are holding it."
+  ],
+  a1_mother_break1: [
+    "The Mother shrieks. The rift behind her flares orange.",
+    "Dove: She's drawing on the rift! Keep at her, Calder!"
+  ],
+  a1_mother_break2: [
+    "Her wings are tattered, her kiln-heart burning white.",
+    "Brann: Last legs! Hers, not mine. Mine are fine. Mostly."
+  ],
+  a1_mother_brood_held: [
+    "Brann: Brood's down! We've got them!",
+    "Dove: No more sparks. She's all yours."
+  ],
+  a1_warden_crown: [
+    "THE SLUICEWARDEN. Steel rank, built by Edda Calder. Rule it breaks: SEALWORK.",
+    "Edda built it to hold forever. Each time it breaks, it rebuilds its strongest stone."
+  ],
+  a1_warden_break1: [
+    "Stone cracks. Water rushes into the cracks and sets them whole again.",
+    "Wren: It's fixing itself. Of course it is. Edda thought of everything."
+  ],
+  a1_warden_break2: [
+    "The Calder mark on its chest glows. It plants its feet before the pool.",
+    "Pell: Brood's thinning back here! Finish the rock, Calder!"
+  ],
+  a1_warden_brood_held: [
+    "Brann: Serpent-brood's scattered! Pell, you can stop shouting now.",
+    "Pell: I'm not shouting, I'm COMMANDING."
+  ],
+
   /* ---------- 9. The Lantern ---------- */
   a1_seraphine: [
     "Outside, the Millrace Road is quiet. Too quiet. The wilds that poured from the Vault are gone, every one.",
