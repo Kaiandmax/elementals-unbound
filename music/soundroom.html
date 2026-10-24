@@ -82,7 +82,7 @@ footer a { color: var(--accent); }
 <div class="wrap">
   <header>
     <div>
-      <span class="tag" id="tag">Soundtrack v0.5</span>
+      <span class="tag" id="tag">Soundtrack v0.6</span>
       <h1>Sound Room</h1>
       <p class="sub">Every piece of Elementals Unbound's music so far: themes for all 25 elements, a backing track for each zone, the important battles, story scenes and the short stingers, including everything the Act I demo needs. Retro handheld-RPG writing, played fuller. Pick anything to hear it; tracks loop until you stop them.</p>
     </div>
@@ -140,6 +140,7 @@ footer a { color: var(--accent); }
 <script src="tracks/zones.js"></script>
 <script src="tracks/battles.js"></script>
 <script src="tracks/act1.js"></script>
+<script src="tracks/story.js"></script>
 <script src="levels.js"></script>
 <script src="player.js"></script>
 <script>
@@ -151,7 +152,7 @@ footer a { color: var(--accent); }
     ["element", "Element themes", "The title theme and the five elements. Each opens with the motif in its element's mode, then plays its own tune."],
     ["dual", "Dual confluences", "Ten themes braided from two elements each. The dots show the parents, lead first."],
     ["triple", "Triple confluences", "Ten themes braided from three elements: lead, harmony, rhythm."],
-    ["scene", "Scenes and characters", "Leitmotifs and story moments: Seraphine's theme, the cold open, the homecoming."],
+    ["scene", "Scenes and characters", "Leitmotifs and story moments: Seraphine's theme, the cold open, the homecoming, Mads's and Dove's deaths."],
     ["zone", "Zones", "Backing music for each place: home, the roads, each nation's seat, the war front, the vaults and camp, plus the Act I demo's places (tagged Act I)."],
     ["battle", "Important battles", "Layered battle music, including the Act I bosses. Use the intensity slider above to hear the parts build (element and confluence themes are layered too, so they can score a duel against that element)."],
     ["stinger", "Stingers", "One-shots over the music: victory, defeat, a card found, a promotion, battle moments (a Manifest called, a boss phase breaking, a crown naming its rule, companion side fights) and story cues."],
@@ -172,7 +173,7 @@ footer a { color: var(--accent); }
       b.style.setProperty("--c", EL.includes(t.id) ? `var(--${t.id})` : lead ? `var(--${lead})` : "var(--main)");
       const order = full.parents ? [full.sound, ...full.parents.filter((p) => p !== full.sound)] : [];
       const dots = order.length ? `<span class="dots">${order.map((p) => `<span class="dot" style="background:var(--${p})" title="${p}"></span>`).join("")}</span>` : "";
-      b.innerHTML = `<span class="ic">${PLAY}</span><span class="tx"><span class="nm">${t.name}</span><span class="mt">${dots}${keyOf(C)} · ${C.bpm}${C.once ? " · once" : ""}${full.act ? ` · <b>Act ${"I".repeat(full.act)}</b>` : ""}</span></span>`;
+      b.innerHTML = `<span class="ic">${PLAY}</span><span class="tx"><span class="nm">${t.name}</span><span class="mt">${dots}${keyOf(C)} · ${C.bpm}${C.once ? " · once" : ""}${full.act ? ` · <b>Act ${["", "I", "II", "III", "IV", "V"][full.act]}</b>` : ""}</span></span>`;
       b.setAttribute("aria-label", "Play " + t.name);
       b.addEventListener("click", () => toggle(t.id));
       grid.appendChild(b); rows[t.id] = b;
@@ -247,7 +248,7 @@ footer a { color: var(--accent); }
   document.querySelectorAll("input[name=finish]").forEach((r) => r.addEventListener("change", () => {
     const f = document.querySelector("input[name=finish]:checked").value; Music.setFinish(f);
     try { localStorage.setItem("sr-finish", f); } catch (e) {} }));
-  document.getElementById("tag").textContent = `Soundtrack v0.5 · ${EU_TRACKS.length} pieces`;
+  document.getElementById("tag").textContent = `Soundtrack v0.6 · ${EU_TRACKS.length} pieces`;
 
   select("main"); mark("main", false);
   window.addEventListener("resize", () => draw());

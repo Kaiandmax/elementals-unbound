@@ -1,4 +1,4 @@
-# Sound palette and soundtrack (v0.5)
+# Sound palette and soundtrack (v0.6)
 
 Status: **direction set, details still open.** On 2026-10-23 the designer chose *retro, in the style of the classic handheld monster-collecting RPGs (Pokemon)*, then asked for it *"a little less retro… similar vibe but less sounds like it's coming out of a gameboy."* Every tune here is original; only the style is borrowed.
 
@@ -74,7 +74,7 @@ In Enhanced, Main, Water, Earth and Wind add a soft chord pad; Fire and Lightnin
 
 Card-game ties (from the card files): Fire is haste and burn, so it is the fastest steady beat; Water is draw, freeze and big blockers, so it is the slowest and most sustained; Earth is walls and ramp into giants, so it sits lowest and heaviest; Wind is fliers and bounce, so it floats in triplets with the bright raised 4th; Lightning is chain spells and thresholds, so it is the busiest rhythm with a stab that "discharges" every bar.
 
-## The soundtrack (v0.5, 67 pieces)
+## The soundtrack (v0.6, 76 pieces)
 
 The designer asked (2026-10-24) for a theme for every element including duals and triples, backing music for each zone, and music for the important battles. Track list and format: `tracks/README.md`.
 
@@ -133,7 +133,17 @@ From Story's Act I demo script (`story/demo/act1.md`) and TCG Design's battle mo
 - **Stingers:** `sting-exalted`, `sting-pyrrhen`, `sting-slackwater` (the demo's great find), `sting-hollow` (the motif with notes missing), and battle moments `sting-manifest`, `sting-phase`, `sting-crown`, `sting-crew-win`, `sting-crew-lose`.
 - **Intensity** (TCG Design): 1 - lower life / its starting life; +0.15 the turn a Manifest is cast; 1.0 when lethal is on board; boss phase floors 0.2 / 0.5 / 0.8.
 - `battle-crowned` is now element-neutral (bosses without their own theme).
-- Waiting on Story's outline: Mads's death, Dove's death, the council hall, companion loyalty themes.
+
+### Acts II-V cues (v0.6, 9 more)
+
+From Story's outline (`story/outline.md`). Each is a variation on a theme the player already knows, so the big moments land on familiar tunes:
+
+- `mads` (II-4): Brindle Ford's tune in minor, then the motif climbing once and stopping short.
+- `dove` (III-4): Wind's soaring tune slowed into Dorian, echoing.
+- `thunderhold-cathedral` (IV-1): Thunderhold's chant as a slow hymn.
+- `council-hall` (V-1): the motif, stately; then Seraphine's leitmotif in Dorian.
+- `founding-vault` (V-3): home's tune sunk into Phrygian.
+- `battle-tournament` (II-3): Highcourt's tune as a fanfare. `battle-davor` (III-2, IV-4): the rival's swagger over Cindergate's march. `battle-kes` (IV-2): the rival in Wind's Lydian. `battle-vol` (IV-1, also Tamsin's fight): the Primordial's upside-down motif in Thunderhold's mode.
 
 ## Limits
 

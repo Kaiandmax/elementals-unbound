@@ -9,6 +9,7 @@ Every piece of music is a score in data, pushed onto `EU_TRACKS`. Load order is 
 | `zones.js` | Backing music for each zone |
 | `battles.js` | Important-battle themes (layered) and the stingers |
 | `act1.js` | Music for the Act I demo: its places, bosses, scenes and stingers |
+| `story.js` | Cues for Acts II-V from Story's outline (deaths, Highcourt tournament, Thunderhold cathedral and Vol, council hall, Founding Vault, loyalty fights) |
 
 ## Track ids
 
@@ -17,10 +18,10 @@ Every piece of music is a score in data, pushed onto `EU_TRACKS`. Load order is 
 | element | `main` `fire` `water` `earth` `wind` `lightning` |
 | dual | `volcano` `wildfire` `plasma` `steam` `swamp` `ice` `storm` `sand` `metal` `tempest` |
 | triple | `geyser` `mirage` `aurora` `ash` `forge` `solar` `glacier` `quicksilver` `hurricane` `glass` |
-| zone | `brindle-ford` `hearthvale-roads` `saltmere` `deepmoot` `highcourt` `thunderhold` `cindergate` `borderlands` `vault` `camp` `branch-hall` `hollins-cross` `greyapple-orchard` `weir-vault` |
-| scene | `seraphine` `cold-open` `homecoming` |
-| battle | `battle-wild` `battle-contract` `battle-rival` `battle-crowned` `battle-vexis` `battle-exalted` `battle-primordial` `battle-seraphine` `battle-gullet` `battle-cinder-mother` `battle-sluicewarden` |
-| stinger | `sting-victory` `sting-defeat` `sting-card` `sting-rankup` `sting-exalted` `sting-pyrrhen` `sting-slackwater` |
+| zone | `brindle-ford` `hearthvale-roads` `saltmere` `deepmoot` `highcourt` `thunderhold` `cindergate` `borderlands` `vault` `camp` `branch-hall` `hollins-cross` `greyapple-orchard` `weir-vault` `thunderhold-cathedral` `council-hall` `founding-vault` |
+| scene | `seraphine` `cold-open` `homecoming` `mads` `dove` |
+| battle | `battle-wild` `battle-contract` `battle-rival` `battle-crowned` `battle-vexis` `battle-exalted` `battle-primordial` `battle-seraphine` `battle-gullet` `battle-cinder-mother` `battle-sluicewarden` `battle-tournament` `battle-davor` `battle-kes` `battle-vol` |
+| stinger | `sting-victory` `sting-defeat` `sting-card` `sting-rankup` `sting-exalted` `sting-pyrrhen` `sting-slackwater` `sting-hollow` `sting-manifest` `sting-phase` `sting-crown` `sting-crew-win` `sting-crew-lose` |
 
 Element and confluence ids match the element keys used in `cards/` (`EL_LIFE`), so the game can pick a theme straight from a deck's element.
 
@@ -82,3 +83,16 @@ Suggested uses: zone tracks on entering a map; `battle-wild` for grass duels and
 | Seraphine at the gate (`a1_seraphine`) | `seraphine` |
 | Homecoming (`a1_homecoming`) | `homecoming` |
 | Ordinary wins / losses | `sting-victory` / `sting-defeat`; other chests `sting-card` |
+
+### Acts II-V cues (story/outline.md)
+
+| Outline beat | Track |
+|---|---|
+| II-3 Highcourt tournament duels | `battle-tournament` |
+| II-4 Mads dies at the mill gate | `mads` |
+| III-2, IV-4 Pell against Davor | `battle-davor` |
+| III-4 Dove holds the rift | `dove` |
+| IV-1 Thunderhold cathedral; Vol (with Ysil; Tamsin's fight) | `thunderhold-cathedral`; `battle-vol` |
+| IV-2 Kes reclaims his name | `battle-kes` |
+| V-1 The Covenant council hall (the Seraphine reveal is a conversation) | `council-hall` |
+| V-3 The Founding Vault | `founding-vault`; Primordial fights `battle-primordial`; final duel `battle-seraphine` |
