@@ -4,7 +4,7 @@ Owner: TCG Design. Status: **Options for the designer — nothing here is decide
 
 What already exists and these options build on:
 
-- The battle engine plays a deck as **10 different basic cards x 2 copies (20 cards)** plus a **Manifest deck: 5 (mono), 4 (dual) or 3 (triple)**. The balance sims and the 1-10 power ladder are all built on that shape.
+- The battle engine plays a deck as **10 different basic cards x 2 copies (20 cards)** plus a **Manifest deck of 4** (decided 2026-10-24, the same for mono, dual and triple decks; see "Manifest deck size" below). The balance sims and the 1-10 power ladder are all built on that shape.
 - A deck is one element. Two- and three-element decks are **confluence decks** made of fused cards from the Forge (fusing never uses up the cards).
 - The Adventure prototype lets you pick one of five Starter decks and puts chest cards into a `collection` list; there is no deck builder yet.
 - Story's draft: guild ranks map to the power ladder (Tin 1 ... Exalted 10); dual braiding (Forge) unlocks at Silver, triples at Adamant; dungeons ("Vaults") each hide a named great wild, and the first one on the map is the Weir Vault.
@@ -18,7 +18,7 @@ What already exists and these options build on:
 |---|---|
 | Starting deck | Pick one of the five Starter decks (as the prototype does today). |
 | Owning cards | **Finding a card binds it: you own it for good, no copies to collect.** Chests, trainers, quests and boss wins give cards; wild duels give a card now and then. |
-| Deck size and copies | 20 cards: 10 different basic cards x 2. Manifest deck: 5 / 4 / 3 by element count, chosen from Manifests you own. Loot cards are Manifests (one of each, by nature). |
+| Deck size and copies | 20 cards: 10 different basic cards x 2. Manifest deck: 4, chosen from Manifests you own. Loot cards are Manifests (one of each, by nature). |
 | Elements | One element per deck. The other four **Starter sets** unlock the first time you beat a wild of that element, so you can switch element as soon as a card tempts you. Dual fusions unlock at Silver rank, triples at Adamant (Story's ranks); you can fuse any cards you own. |
 | Rebuilding | Any time outside battle, free. Several saved decks. |
 
@@ -47,7 +47,7 @@ What already exists and these options build on:
 | Starting deck | A Starter deck. |
 | Owning cards | As A (bound). |
 | Deck size and copies | 20 cards, up to 2 copies; any mix of base elements. |
-| Elements | Mix any elements freely; each card gives its own element's charge and each Manifest costs its own element's charge. The Purity bonus (more Manifest slots for fewer elements) is what rewards staying narrow. Confluences become a bonus layer on top. |
+| Elements | Mix any elements freely; each card gives its own element's charge and each Manifest costs its own element's charge. (The Purity bonus this option leaned on was removed on 2026-10-24.) Confluences become a bonus layer on top. |
 | Rebuilding | Any time outside battle. |
 
 **Why:** the most freedom; a loot card from any element slots into any deck.
@@ -103,6 +103,47 @@ What already exists and these options build on:
 | 6+ | Confluences | One per confluence once the Forge opens, each pushing that confluence's archetype | Fused or archetype decks | That archetype |
 
 Each of 2-5 deliberately revives an element's signature mechanic, which `design/elements.md` found thin in the current pool.
+
+## Manifest deck size: 4 for every deck (decided 2026-10-24)
+
+The old 5 / 4 / 3 by element count (the Purity bonus) made mono decks keep up with duals and triples. The designer wants players to move through the elements as the journey goes, so every deck now carries **4 Manifests**.
+
+Why 4 (mono decks, AI level 3, 760 games per size):
+
+| Manifests per deck | Cast per player per battle | Each slot cast | Slots cast in under 10% of games | Casts going to the deck's favourite | Blowouts |
+|---|---|---|---|---|---|
+| 2 | 1.44 | 72% | 5% | 64% | 53% |
+| 3 | 1.66 | 55% | 13% | 53% | 57% |
+| 4 | 1.63 | 41% | 23% | 48% | 60% |
+| 5 | 1.58 | 32% | 31% | 47% | 63% |
+
+- Charge income, not slot count, caps how many Manifests land: about 1.5 per player per battle at any size from 3 to 5.
+- Extra slots only add situational answers ("a hat of solutions"): at 5, almost a third of slots are almost never cast and the winner has more ways to press a lead.
+- At 4, most casts still go to one or two Manifests that define the deck, and a fourth earns its place in longer boss fights.
+
+What a Manifest should be, now that there are only four (rules for the "fewer, stronger Manifests" pass):
+
+- **Mostly proactive:** creatures and auras that change how you play. At most one pure answer (removal, sweeper, mass bounce) per prebuilt deck.
+- **A plan, not a patch:** each rewards a kind of main-deck card (Reactions, tokens, Airborne, spells, Fortify...), so choosing it shapes the other 20.
+- **Costs:** 2-4 charge for the everyday ones; 5-6 for showpieces that pay off in boss fights.
+
+The first pass of the change (PR: tcg/four-manifests) cut one Manifest from each mono and Starter deck, mostly plain removal or a vanilla body, and gave triple decks back their fourth:
+
+| Deck | Cut | Deck | Cut |
+|---|---|---|---|
+| Fire Starter | Inferno Lord (6) | Water Starter | Maelstrom (6) |
+| Earth Starter | Titan of the Peaks (6) | Wind Starter | Gale Force |
+| Lightning Starter | Thunderstorm (6) | Ember Swarm | Molten Champion |
+| Pyromancer | Wrath of Cinders | Reckless Fury | Sunfire Lance |
+| Inferno Dragons | Starfall | Tidecaller | Hailstorm |
+| Frostbind | Mistwalker | Riptide | Drowning Depths |
+| Abyssal Leviathans | Ocean's Wrath | Stonewall | Earth Elemental |
+| Deep Roots | Landslide | Crystal Growth | Mountain King |
+| Titans | Mountain's Judgment | Featherflock | Thunderbird |
+| Zephyr Tricks | Skystrike Volley | Gale Riders | Gale Fortress |
+| Sky Sovereigns | Skyfall | Spark Storm | Thunderclap |
+| Static Charge | Thunder Golem | Overload | Lightning Lance |
+| Thunder Gods | Judgment Bolt | | |
 
 ## Not yet covered
 
