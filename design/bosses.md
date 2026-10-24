@@ -77,7 +77,7 @@ A crowned boss breaks exactly one rule and names it when the fight starts (Story
 
 | Crown | Rule it breaks | Feels like |
 |---|---|---|
-| **Lurker** | The boss's creatures can't be attacked or targeted on the turn they arrive | Ambush; rewards holding blockers |
+| **Lurker** | The boss's new creatures have Ward until the end of your next turn (attacks go at players in this engine, so Ward is the readable version) | Ambush; you can't remove its threats right away |
 | **Brood** | At the start of the boss's turn it summons a token while its brood lives (see side fights) | A clock to beat |
 | **Sealwork** | Phase breaks also restore the boss's best creature (it rebuilds) | A puzzle: kill the creature or the boss first? |
 | **Twin Call** | The boss may cast two Manifests in one turn | The big-moment boss |
