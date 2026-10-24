@@ -267,6 +267,7 @@ details.rules ul{margin:.5em 0 0;padding-left:1.2em;max-width:80ch;display:grid;
 .dpad [data-pad=up]{grid-area:u}.dpad [data-pad=down]{grid-area:d}.dpad [data-pad=left]{grid-area:l}.dpad [data-pad=right]{grid-area:r}
 .abtn{width:76px;height:76px;border-radius:50%;background:var(--brass);color:#1a1408;font-family:var(--f-display);font-weight:700;font-size:26px}
 .rpg-file{display:inline-block}
+.rpg-drop{display:grid;justify-items:center;gap:8px;text-align:center}
 .rpg-help{margin:0;font-size:13px}
 @media (pointer:coarse), (max-width:720px){.rpg-pad{display:flex}.rpg-help{display:none}}
 @media (prefers-reduced-motion:reduce){.rpg-reveal .rays,.rpg-reveal .rv-in,.rpg-dlg i{animation:none}}
@@ -1716,7 +1717,7 @@ function renderGame(){
     modal = `<div class="modal"><div class="box"><h2>Respond to ${esc(ui.card.name)}?</h2><p>${esc(ui.text)}</p><div class="cards">${cardHTML(ui.card)}</div><div class="row">${ui.options.map(i=>`<button class="btn primary" data-btn="opt-${i}">${me.hand[i].counter?"Counter with ":"Play "}${esc(me.hand[i].name)} (${costOf(me.hand[i],me)} Energy)</button>`).join("")}<button class="btn" data-btn="pass">Let it resolve</button></div></div></div>`;
   } else if (g.over){
     modal = `<div class="modal"><div class="box"><h2>${g.over==="you"?"Victory":g.over==="enemy"?"Defeat":"Draw"}</h2><p>${g.over==="you"?"The enemy is out of life.":"Your life reached 0."} The game lasted ${g.turnNo} turns.</p><div class="row"><button class="btn primary" data-btn="again">Play again</button><button class="btn" data-btn="decks">Change decks</button><button class="btn" data-btn="close">Look at the board</button></div></div></div>`;
-    if (RPG.battle) modal = `<div class="modal"><div class="box"><h2>${g.over==="you"?"Victory":g.over==="enemy"?"Defeat":"Draw"}</h2><p>${g.over==="you"?"The enemy is out of life.":"Your life reached 0."} The duel lasted ${g.turnNo} turns.</p><div class="row"><button class="btn primary" data-btn="rpg-return">Continue</button><button class="btn" data-btn="close">Look at the board</button></div></div></div>`;
+    if (RPG.battle){ rpgSettle(); modal = `<div class="modal"><div class="box"><h2>${g.over==="you"?"Victory":g.over==="enemy"?"Defeat":"Draw"}</h2><p>${g.over==="you"?"The enemy is out of life.":"Your life reached 0."} The duel lasted ${g.turnNo} turns.</p>${rpgDropHTML()}<div class="row"><button class="btn primary" data-btn="rpg-return">Continue</button><button class="btn" data-btn="close">Look at the board</button></div></div></div>`; }
     if (g.closed) modal = "";
   }
 

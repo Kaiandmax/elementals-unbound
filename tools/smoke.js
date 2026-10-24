@@ -26,6 +26,13 @@ let bad = 0;
   }
   for (const [id, t] of Object.entries(S.RPG_ENCOUNTERS)) for (const e of t.list) if (!S.DECK_BY_ID[e.deck]) err("encounters", `${id}: deck ${e.deck} missing`);
   for (const [id, t] of Object.entries(S.RPG_TRAINERS)) if (!S.DECK_BY_ID[t.deck]) err("trainers", `${id}: deck ${t.deck} missing`);
+  // Drops: odds sum to 1, never include a Manifest, and rarer cards are never likelier than commoner ones in the same deck.
+  const RANK = { s:0, c:0, u:1, r:2 };
+  for (const dk of decks) { const o = S.rpgDropOdds(dk.id, []); if (!o.length) continue; const sum = o.reduce((a, x) => a + x.p, 0);
+    if (Math.abs(sum - 1) > 1e-9) err("drops", `${dk.id} odds sum to ${sum}`);
+    if (o.some(x => S.LIB[x.id].manifest)) err("drops", `${dk.id} can drop a Manifest`);
+    for (const a of o) for (const b of o) if (RANK[a.r] > RANK[b.r] && a.p > b.p) err("drops", `${dk.id}: ${a.id} (${a.r}) likelier than ${b.id} (${b.r})`); }
+  { const mix = S.rpgDropOdds("fire_starter", []); if (!mix.length) err("drops", "fire_starter has no drops"); }
 }
 for (const d of decks) if (!d.main || !d.main.length || !d.manifests || !d.manifests.length) { console.error("empty deck", d.id); bad++; }
 (async () => {

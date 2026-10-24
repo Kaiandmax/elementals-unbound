@@ -19,6 +19,17 @@ const RPG_ENCOUNTERS = {
     { deck:"wind_flock",        level:2, lifeMod:-5, w:2 },
     { deck:"water_tide",        level:2, lifeMod:-5, w:2 } ] }
 };
+/* Card drops after a won duel (designer rule, 2026-10-24): the card comes from the enemy's own deck, picked with
+   weights by rarity, so a rare in a mostly-common deck is a long shot and an all-rare deck can only give rares.
+   Manifests never drop; they come from specific chests, contracts and story duels.
+     chance     chance of a drop per won duel, by kind of fight
+     weights    relative weight of each card in the deck by rarity (s starter, c common, u uncommon, r rare)
+     skipOwned  leave cards the player already owns out of the pool (pending the collection rules from TCG Design) */
+const RPG_DROPS = {
+  chance:  { wild:0.6, trainer:1 },
+  weights: { s:8, c:8, u:3, r:1 },
+  skipOwned: true
+};
 const RPG_TRAINERS = {
   route1_hiker: { deck:"earth_wall", level:3, lifeMod:0 }
 };

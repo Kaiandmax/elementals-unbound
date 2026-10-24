@@ -97,6 +97,32 @@ function rpgBattle(b){
   RPG.battle = b; cancelAnimationFrame(RPG.raf); RPG.raf = 0; RPG.fade = null;
   newGame(RPG.save.deck, b.deck, 15 + b.lifeMod, [3, b.level]);
 }
+/* ---- Card drops: a won duel may give one basic card from the enemy's deck, weighted by rarity ---- */
+function rpgDropOdds(deckId, owned){
+  const dk = DECK_BY_ID[deckId]; if (!dk) return [];
+  const have = new Set(RPG_DROPS.skipOwned ? (owned||[]) : []);
+  const pool = [...new Set(dk.main)].map(id=>LIB[id]).filter(d=>d && !d.manifest && d.r!=="t" && !have.has(d.id));
+  const w = d => RPG_DROPS.weights[d.r] ?? 1, tot = pool.reduce((a,d)=>a+w(d),0);
+  return tot > 0 ? pool.map(d=>({ id:d.id, r:d.r, p:w(d)/tot })) : [];
+}
+function rpgRollDrop(b){
+  if (Math.random() >= (RPG_DROPS.chance[b.kind] ?? 0)) return null;
+  const odds = rpgDropOdds(b.deck, RPG.save.collection); let r = Math.random();
+  for (const o of odds){ r -= o.p; if (r < 0) return o.id; }
+  return odds.length ? odds[odds.length-1].id : null;
+}
+// Called once when a duel launched from the overworld ends in a win: rolls the drop and banks it right away.
+function rpgSettle(){
+  const b = RPG.battle; if (!b || b.settled || !g || !g.over) return; b.settled = true;
+  if (g.over!=="you") return;
+  b.drop = rpgRollDrop(b);
+  if (b.drop){ RPG.save.collection.push(b.drop); rpgStore(); }
+}
+function rpgDropHTML(){
+  const b = RPG.battle; if (!b || g.over!=="you") return "";
+  if (!b.drop) return `<p class="muted">No card this time. Every card in an enemy's deck can drop except its Manifests; rarer cards drop less often.</p>`;
+  return `<div class="rpg-drop"><span class="lbl">Card won</span>${cardHTML(LIB[b.drop])}<span class="muted">${esc(LIB[b.drop].name)} is now in your collection.</span></div>`;
+}
 function rpgEndBattle(fled){
   const b = RPG.battle, res = fled ? "fled" : (g && g.over), s = RPG.save;
   if (g) g.id = Math.random(); g = null; RPG.battle = null; RPG.grace = b ? b.grace : 2; RPG.cam = null;
