@@ -1,4 +1,4 @@
-# Sound palette and soundtrack (v0.4)
+# Sound palette and soundtrack (v0.5)
 
 Status: **direction set, details still open.** On 2026-10-23 the designer chose *retro, in the style of the classic handheld monster-collecting RPGs (Pokemon)*, then asked for it *"a little less retro… similar vibe but less sounds like it's coming out of a gameboy."* Every tune here is original; only the style is borrowed.
 
@@ -74,7 +74,7 @@ In Enhanced, Main, Water, Earth and Wind add a soft chord pad; Fire and Lightnin
 
 Card-game ties (from the card files): Fire is haste and burn, so it is the fastest steady beat; Water is draw, freeze and big blockers, so it is the slowest and most sustained; Earth is walls and ramp into giants, so it sits lowest and heaviest; Wind is fliers and bounce, so it floats in triplets with the bright raised 4th; Lightning is chain spells and thresholds, so it is the busiest rhythm with a stab that "discharges" every bar.
 
-## The soundtrack (v0.4, 48 pieces)
+## The soundtrack (v0.5, 67 pieces)
 
 The designer asked (2026-10-24) for a theme for every element including duals and triples, backing music for each zone, and music for the important battles. Track list and format: `tracks/README.md`.
 
@@ -123,6 +123,18 @@ From Story's draft bible (PR #6, not merged), so names and moods may change:
 
 Layers (`Music.setIntensity`): below 1/3 drums, bass and pad; below 2/3 adds harmony; above adds the lead and extra percussion. Element and confluence themes are layered too, so the game can score a duel with the enemy's element theme. Stingers: victory, defeat, card found, promotion.
 
+### Act I demo, scenes and battle moments (v0.5, 19 more)
+
+From Story's Act I demo script (`story/demo/act1.md`) and TCG Design's battle moments; the full cue sheet is in `tracks/README.md`.
+
+- **Seraphine's leitmotif** (`seraphine`, "The Lantern"): E Lydian, written to be the most comforting music in the game; the only hint is one phrase ending held a beat too carefully on the raised fourth. It enters in the cold open (`cold-open`) and plays at the Weir Vault gate; her final duel (`battle-seraphine`) turns the same tune to harmonic minor before Wren's answer.
+- **Act I places:** `branch-hall`, `hollins-cross`, `greyapple-orchard`, `weir-vault`; **scene:** `homecoming` (Brindle Ford's tune slowed for dusk).
+- **Act I bosses:** `battle-gullet` (comic-scary: chromatic creep over an oom-pah), `battle-cinder-mother` (kiln drone), `battle-sluicewarden` (stone steps over running water; two phases).
+- **Stingers:** `sting-exalted`, `sting-pyrrhen`, `sting-slackwater` (the demo's great find), `sting-hollow` (the motif with notes missing), and battle moments `sting-manifest`, `sting-phase`, `sting-crown`, `sting-crew-win`, `sting-crew-lose`.
+- **Intensity** (TCG Design): 1 - lower life / its starting life; +0.15 the turn a Manifest is cast; 1.0 when lethal is on board; boss phase floors 0.2 / 0.5 / 0.8.
+- `battle-crowned` is now element-neutral (bosses without their own theme).
+- Waiting on Story's outline: Mads's death, Dove's death, the council hall, companion loyalty themes.
+
 ## Limits
 
 Everything is synthesized in the browser (Web Audio); nothing is sampled. The whole soundtrack is about 60 KB of code and data. Enhanced can move further from the handheld (real-instrument-like voices, more parts) or back toward it, a knob at a time. MIDI export is planned so a track can move into a DAW or to a human composer later.
@@ -132,7 +144,7 @@ Everything is synthesized in the browser (Web Audio); nothing is sampled. The wh
 - `node music/tools/lint.js` (no browser): every bar adds up to its meter, chord counts match, lead notes stay between C3 and E6, every track compiles.
 - `node music/tools/render-check.js` renders every track in both finishes in headless Chromium: peak, loudness, the loop seam (the jump from the last bar back to the first, compared with the track's other bar lines, for clicks or drop-outs), tails on stingers, and loudness at intensity 0 for layered tracks. `--levels` re-measures loudness and writes `levels.js` (trims to about -16 dBFS RMS, peaks held under -1.5 dBFS). Needs `NODE_PATH=$(npm root -g)` when Playwright is installed globally.
 
-Last run (v0.4, all 48 pieces × 2 finishes = 96 renders, 0 flagged):
+Last full run (v0.4, 48 pieces × 2 finishes = 96 renders, 0 flagged; v0.5's 19 new and changed pieces re-checked the same way, 0 flagged, -16.4 to -15.8 dBFS):
 
 | Measure | Result |
 |---|---|
