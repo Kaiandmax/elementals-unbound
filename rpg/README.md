@@ -17,6 +17,7 @@ Formats are documented at the top of each file. `node tools/smoke.js` checks the
 - Saves live in browser storage (`eu.save.v1`) and can be exported to / imported from a JSON file, so the game needs no server and can be wrapped as a desktop app later.
 - Controls: arrow keys / WASD, Enter / Space / Z; touch d-pad on phones; standard gamepads.
 - Losing a duel sends you to the map's `heal` point (or the town's).
+- Card drops (designer rule): a won duel may give one basic card from the enemy's own deck, weighted by rarity (`RPG_DROPS` in `encounters.js`), so an all-rare deck drops only rares. Manifests never drop; they come from specific chests, contracts and story duels. `rpgDropOdds(deckId, owned)` gives the exact odds, also from `tools/engine.js`.
 
 ## Next
 
