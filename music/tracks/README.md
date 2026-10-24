@@ -8,6 +8,7 @@ Every piece of music is a score in data, pushed onto `EU_TRACKS`. Load order is 
 | `confluences.js` | The 10 dual and 10 triple confluence themes, braided from the element themes by a rule (top of the file) |
 | `zones.js` | Backing music for each zone |
 | `battles.js` | Important-battle themes (layered) and the stingers |
+| `act1.js` | Music for the Act I demo: its places, bosses, scenes and stingers |
 
 ## Track ids
 
@@ -16,9 +17,10 @@ Every piece of music is a score in data, pushed onto `EU_TRACKS`. Load order is 
 | element | `main` `fire` `water` `earth` `wind` `lightning` |
 | dual | `volcano` `wildfire` `plasma` `steam` `swamp` `ice` `storm` `sand` `metal` `tempest` |
 | triple | `geyser` `mirage` `aurora` `ash` `forge` `solar` `glacier` `quicksilver` `hurricane` `glass` |
-| zone | `brindle-ford` `hearthvale-roads` `saltmere` `deepmoot` `highcourt` `thunderhold` `cindergate` `borderlands` `vault` `camp` |
-| battle | `battle-wild` `battle-contract` `battle-rival` `battle-crowned` `battle-vexis` `battle-exalted` `battle-primordial` `battle-seraphine` |
-| stinger | `sting-victory` `sting-defeat` `sting-card` `sting-rankup` |
+| zone | `brindle-ford` `hearthvale-roads` `saltmere` `deepmoot` `highcourt` `thunderhold` `cindergate` `borderlands` `vault` `camp` `branch-hall` `hollins-cross` `greyapple-orchard` `weir-vault` |
+| scene | `seraphine` `cold-open` `homecoming` |
+| battle | `battle-wild` `battle-contract` `battle-rival` `battle-crowned` `battle-vexis` `battle-exalted` `battle-primordial` `battle-seraphine` `battle-gullet` `battle-cinder-mother` `battle-sluicewarden` |
+| stinger | `sting-victory` `sting-defeat` `sting-card` `sting-rankup` `sting-exalted` `sting-pyrrhen` `sting-slackwater` |
 
 Element and confluence ids match the element keys used in `cards/` (`EL_LIFE`), so the game can pick a theme straight from a deck's element.
 
@@ -26,7 +28,7 @@ Element and confluence ids match the element keys used in `cards/` (`EL_LIFE`), 
 
 ```js
 T.push({
-  id: "fire", name: "Fire", group: "element",          // group: element | dual | triple | zone | battle | stinger
+  id: "fire", name: "Fire", group: "element",          // group: element | dual | triple | zone | scene | battle | stinger
   desc: "One line for the Sound Room.",
   sound: "fire",                                      // instrumentation from palette.js; any field below overrides it
   tonic: "E3", mode: "phrygdom", bpm: 152, meter: 4,  // modes in palette.js; meter 3 or 4
@@ -60,3 +62,23 @@ Music.setVolume(0.7); Music.setFinish("chip");
 ```
 
 Suggested uses: zone tracks on entering a map; `battle-wild` for grass duels and `battle-contract` for trainers and contract targets (or the enemy element's theme with `setIntensity` for a per-element battle); the named battles for those story fights; element and confluence themes in the deck builder, the Forge and card reveals.
+
+### Act I demo cue sheet (story/demo/act1.md)
+
+| Moment / map | Track |
+|---|---|
+| Cold open (`a1_intro`) | `cold-open` |
+| Brindle Ford, Calder Mill (`town`) | `brindle-ford` |
+| Branch halls (`hall_ford`, Hollin's Cross hall) | `branch-hall` |
+| The Millrace (`millrace`), Gullet duel | `battle-gullet` |
+| Promotions to Copper and Iron | `sting-rankup` |
+| Millrace Road (`route1`); Brann's duel | `hearthvale-roads`; `battle-contract` |
+| Hollin's Cross (`cross`) | `hollins-cross`; `sting-exalted` on `a1_cross_arrival`; `sting-pyrrhen` on `a1_davor` |
+| Pell's duel | `battle-rival` |
+| Greyapple Orchard (`orchard`); the Cinder Mother | `greyapple-orchard`; `battle-cinder-mother` |
+| Weir Vault gate and floors (`weir_gate`, `vault1`, `vault2`) | `weir-vault` |
+| The Sluicewarden (two phases) | `battle-sluicewarden`, `setIntensity(1)` when it rebuilds |
+| Slackwater's chest (`a1_slackwater_bind`) | `sting-slackwater` |
+| Seraphine at the gate (`a1_seraphine`) | `seraphine` |
+| Homecoming (`a1_homecoming`) | `homecoming` |
+| Ordinary wins / losses | `sting-victory` / `sting-defeat`; other chests `sting-card` |
