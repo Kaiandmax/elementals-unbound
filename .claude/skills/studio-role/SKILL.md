@@ -1,11 +1,11 @@
 ---
 name: studio-role
-description: Take on an Elementals Unbound studio role (balance, story, music or gamedev) in this repo, then check the Studio Board. Use when the designer says "you are the Balance agent", "act as Story", "/studio-role music", or "check the board".
+description: Take on an Elementals Unbound studio role (tcg, balance, story, music or gamedev) in this repo, then check the Studio Board. Use when the designer says "you are the Balance agent", "act as Story", "/studio-role music", or "check the board".
 ---
 
 # Take a studio role
 
-The argument (or the designer's message) names the role: `balance`, `story`, `music` or `gamedev`. If none is named and the chat hasn't been given one, ask which.
+The argument (or the designer's message) names the role: `tcg`, `balance`, `story`, `music` or `gamedev`. If none is named and the chat hasn't been given one, ask which.
 
 1. Read `studio/STUDIO.md` and `studio/roles/<role>.md` in full. They override habits from other projects.
 2. `git pull` on `main` so you start from the latest work.

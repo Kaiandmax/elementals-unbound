@@ -6,3 +6,4 @@ Owned by the Story agent (`studio/roles/story.md`). Start with `bible.md`, the S
 - `outline.md` — plot by act and region
 - `regions/`, `characters/` — one file each
 - `data/` — dialogue, quests and lore the game reads (format agreed with Game Dev)
+- `demo/act1.md` — the Act I playable demo: build spec for Game Dev (maps, beats, flags, fights); its words are in `data/act1.js`

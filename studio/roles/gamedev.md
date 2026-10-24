@@ -13,7 +13,8 @@
 
 ## Not yours
 
-- Card numbers, decks, loot and encounter tuning: Balance. Build the systems and data formats; leave the numbers to them.
+- Card game design (mechanics, deckbuilding and collection rules, loot and boss designs): TCG Design writes the specs; you implement them.
+- Card numbers, loot and encounter tuning: Balance. Build the systems and data formats; leave the numbers to them.
 - Words on screen (dialogue, quest text, names, flavor): Story supplies them in `story/data/`.
 - Music and sound content: Music supplies `music/player.js` and tracks; you wire them in.
 
@@ -51,6 +52,7 @@ If you change something the sims rely on (function names in the `__sim` handle, 
 
 ## Talk to
 
+- `tcg`: mechanic specs, the deckbuilder and collection rules, boss mechanics, rewards.
 - `balance`: engine or AI changes that affect results, new keywords, data formats for loot and encounters.
 - `story`: the dialogue/quest data format and what scenes need.
 - `music`: the player API and when music changes.

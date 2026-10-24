@@ -2,11 +2,12 @@
 
 Elementals Unbound is a story-driven RPG with a trading-card battle system. The heart of it: you explore, find a striking card as loot deep in a dungeon, and want to rebuild your whole deck around your new monster.
 
-Four agents build it, each in its own chat in the **TCG Video Game** project, plus the designer (the person who owns this repo, called **you** on the board) who sets direction and settles disagreements.
+Five agents build it, each in its own chat in the **TCG Video Game** project, plus the designer (the person who owns this repo, called **you** on the board) who sets direction and settles disagreements.
 
 | Role | Board id | Charter | Owns |
 |---|---|---|---|
-| Balance | `balance` | [roles/balance.md](roles/balance.md) | Card numbers, decks, value model, win rates, sim tools |
+| TCG Design | `tcg` | [roles/tcg.md](roles/tcg.md) | Card game design: mechanics, card concepts, deck identities, deckbuilding and loot rules, boss mechanics, fun |
+| Balance | `balance` | [roles/balance.md](roles/balance.md) | Card numbers, value model, win rates, sim tools |
 | Story | `story` | [roles/story.md](roles/story.md) | World, plot, characters, dialogue, card names and flavor |
 | Music | `music` | [roles/music.md](roles/music.md) | Soundtrack, stingers, sound effects |
 | Game Dev | `gamedev` | [roles/gamedev.md](roles/gamedev.md) | Engine, RPG systems, UI, build, CI, the playtest page |
@@ -28,7 +29,7 @@ Four agents build it, each in its own chat in the **TCG Video Game** project, pl
 3. **Set your status**: `status/<role>` → what you are working on now.
 4. **Branch**: `<role>/<short-topic>` from `main`.
 5. **Claim** any file another role owns, or a shared file, before you edit it. Your own files need no claim unless the change is large.
-6. **Work, then check it** (your charter says how: sims for Balance, a playtest for Game Dev, a listen-through render for Music, a read-through for Story).
+6. **Work, then check it** (your charter says how: fun metrics and play sessions for TCG Design, sims for Balance, a playtest for Game Dev, a listen-through render for Music, a read-through for Story).
 7. **Pull request** into `main` with a clear description and evidence (numbers, screenshots, links). CI must pass.
    - Touches only files you own: merge it yourself once CI is green.
    - Touches another role's files: post on the board to that role; the owner (or the designer) reviews and merges.
