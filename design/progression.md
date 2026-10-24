@@ -145,6 +145,46 @@ The first pass of the change (PR: tcg/four-manifests) cut one Manifest from each
 | Static Charge | Thunder Golem | Overload | Lightning Lance |
 | Thunder Gods | Judgment Bolt | | |
 
+## The Forge (spec, 2026-10-24)
+
+Designer decisions this builds on: the Forge is fueled by the **essence of the confluence being forged**, which only enemies of that confluence drop; forged cards **can't be rarer than the hunter rank allows** (d-1792823280932); each win against a dual or triple enemy gives about **one forge's worth** of essence (d-1792823762489). Goal: mono rares can't be turned into a rare triple deck the day triples unlock, and later monsters stay worth fighting.
+
+### What you can forge
+
+- Two base cards of the same type, one from each element of a dual confluence, make that confluence's card (the existing fusion rules). A dual card plus a base card of the missing element makes a triple card. Named recipes (special cards) work the same way.
+- You need to own the parts. Forging **doesn't use them up**, matching "bound cards": you keep them, and the forged card joins your collection.
+- Manifests can't be forged (they never fuse), so they stay the hand-placed treasures.
+- The forged card's rarity is the fusion's own (the average of its parts, rounded down).
+
+### Rank cap
+
+| Hunter rank | Ladder steps | Forge |
+|---|---|---|
+| Tin to Steel | 1-4 | Closed |
+| Silver | 5-6 | Dual, Common and Uncommon |
+| Gold | 7 | Dual, any rarity |
+| Adamant | 8-9 | Also triple, Common and Uncommon |
+| Exalted | 10 | Anything |
+
+Same-rarity cards can still **drop** from enemies above the cap (a rare from a strong enemy is a real prize); the cap only limits what the Forge makes.
+
+### Essence
+
+One kind per confluence (20 kinds), shown as "Volcano essence". Costs and drops use the same scale, so one win pays for about one forge of that enemy's rarity:
+
+| | Common | Uncommon | Rare |
+|---|---|---|---|
+| Forge a dual card | 2 | 3 | 5 |
+| Forge a triple card | 3 | 5 | 8 |
+| A win against a dual deck of that rarity | 2 | 3 | 5 |
+| A win against a triple deck of that rarity | 3 | 5 | 8 |
+
+- Boss monsters of a confluence give 3x their deck's amount.
+- A triple enemy gives only its triple's essence. Duals and triples stay separate economies, so triple cards come from fighting triple enemies.
+- Archetype (special-card) enemy decks count as rare.
+
+Game Dev: `RPG_DROPS.essence` becomes a table by element count and rarity (`{ dual:{c:2,u:3,r:5}, triple:{c:3,u:5,r:8}, bossMult:3 }`), and the Forge needs the cost table, the rank cap and a "you need N essence" line. Balance: tune the amounts against the 80-100 hour collection target.
+
 ## Not yet covered
 
-Shops and currencies, trading, card upgrades, enemy decks per region and what each teaches, boss mechanics. These come after the designer picks a rule set.
+Shops and other currencies, trading, card upgrades, enemy decks per region and what each teaches, boss mechanics. These come after the designer picks a rule set.
