@@ -13,7 +13,7 @@
 
 ## Not yours
 
-- What a card does or costs: Balance. If a name or story beat needs a card to do something, ask `balance`.
+- What a card does: TCG Design. What it costs: Balance. If a story beat needs a card or boss to work a certain way, ask `tcg`; TCG Design will also send you card concepts and bosses that need names and legends.
 - How scenes, dialogue and quests are shown or triggered in the game: Game Dev. You supply the content and the cues ("the door opens only if the player carries a Tide card").
 - Music: describe the mood you want for a place or scene and send it to `music`.
 
@@ -33,6 +33,6 @@
 ## Talk to
 
 - `gamedev`: dialogue/quest data format, what the overworld and dungeons can do, story triggers.
-- `balance`: when the story wants a card or boss to work a certain way.
+- `tcg`: card concepts, loot cards and bosses that need names and legends, and story beats that need a mechanic.
 - `music`: the mood and themes for each region, character and boss.
 - `you`: tone, plot direction, anything that sets the game's identity.

@@ -6,19 +6,19 @@
 :root{
   --bg:#f4f1ea; --panel:#fffdf8; --panel2:#ebe6db; --line:#d9d2c3; --fg:#1f1c17; --mut:#6b6457; --faint:#9a9284;
   --accent:#7a4cc2; --accent-fg:#fff;
-  --balance:#b8860b; --story:#a23b5a; --music:#2f7d8c; --gamedev:#c4561f; --you:#4a4ad0;
+  --tcg:#3d7f4a; --balance:#b8860b; --story:#a23b5a; --music:#2f7d8c; --gamedev:#c4561f; --you:#4a4ad0;
   --warn:#b4471d; --ok:#3f7d3a;
   --shadow:0 1px 0 rgba(40,30,10,.04),0 6px 18px -10px rgba(40,30,10,.25);
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#15131a; --panel:#1d1a23; --panel2:#262230; --line:#363042; --fg:#ece7f2; --mut:#a59db3; --faint:#756d84;
   --accent:#a985ec; --accent-fg:#16121d;
-  --balance:#e0b43f; --story:#e57a98; --music:#5cc0cf; --gamedev:#f08a52; --you:#8f8ff5;
+  --tcg:#7cc98c; --balance:#e0b43f; --story:#e57a98; --music:#5cc0cf; --gamedev:#f08a52; --you:#8f8ff5;
   --warn:#f08a52; --ok:#7fc274; --shadow:0 6px 18px -10px rgba(0,0,0,.6); color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#15131a; --panel:#1d1a23; --panel2:#262230; --line:#363042; --fg:#ece7f2; --mut:#a59db3; --faint:#756d84;
   --accent:#a985ec; --accent-fg:#16121d;
-  --balance:#e0b43f; --story:#e57a98; --music:#5cc0cf; --gamedev:#f08a52; --you:#8f8ff5;
+  --tcg:#7cc98c; --balance:#e0b43f; --story:#e57a98; --music:#5cc0cf; --gamedev:#f08a52; --you:#8f8ff5;
   --warn:#f08a52; --ok:#7fc274; --shadow:0 6px 18px -10px rgba(0,0,0,.6); color-scheme:dark}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -37,9 +37,9 @@ header p{margin:4px 0 0;color:var(--mut);max-width:62ch}
 .dot.live{background:var(--ok)}
 /* role chips */
 .r{--c:var(--mut);color:var(--c);font-weight:700}
-.r-balance{--c:var(--balance)}.r-story{--c:var(--story)}.r-music{--c:var(--music)}.r-gamedev{--c:var(--gamedev)}.r-you{--c:var(--you)}
+.r-tcg{--c:var(--tcg)}.r-balance{--c:var(--balance)}.r-story{--c:var(--story)}.r-music{--c:var(--music)}.r-gamedev{--c:var(--gamedev)}.r-you{--c:var(--you)}
 /* crew */
-.crew{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.crew{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
 .agent{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 14px 12px;box-shadow:var(--shadow);
   border-top:4px solid var(--c);display:flex;flex-direction:column;gap:6px;min-width:0}
 .agent .top{display:flex;align-items:center;justify-content:space-between;gap:8px}
@@ -107,6 +107,7 @@ input:focus,textarea:focus,select:focus{outline:2px solid var(--accent);outline-
 .err{color:var(--warn);font-size:13px}
 details summary{cursor:pointer;font-weight:700;font-size:13px}
 details pre{white-space:pre-wrap;font-size:12px;background:var(--panel2);padding:10px;border-radius:8px;overflow-x:auto}
+@media (max-width:1100px){.crew{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media (max-width:900px){.main{grid-template-columns:minmax(0,1fr)}.crew{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:460px){.crew{grid-template-columns:minmax(0,1fr)}h1{font-size:25px}}
 </style>
@@ -116,7 +117,7 @@ details pre{white-space:pre-wrap;font-size:12px;background:var(--panel2);padding
     <div>
       <div class="lbl">Elementals Unbound · studio</div>
       <h1>Studio Board</h1>
-      <p>Where the four agents hand work to each other and to you. Anything that crosses out of one role's lane gets posted here; each agent checks the board when it starts a task.</p>
+      <p>Where the studio's agents hand work to each other and to you. Anything that crosses out of one role's lane gets posted here; each agent checks the board when it starts a task.</p>
     </div>
     <div class="conn"><span class="dot" id="dot"></span><span id="connText">Connecting…</span></div>
   </header>
@@ -142,7 +143,7 @@ details pre{white-space:pre-wrap;font-size:12px;background:var(--panel2);padding
           <div class="row">
             <label><span class="lbl">To</span>
               <select id="fTo">
-                <option value="balance">Balance</option><option value="story">Story</option>
+                <option value="tcg">TCG Design</option><option value="balance">Balance</option><option value="story">Story</option>
                 <option value="music">Music</option><option value="gamedev">Game Dev</option>
                 <option value="all">All agents</option>
               </select></label>
@@ -181,14 +182,15 @@ claims/{file with / as ~}  file, role, note, since</pre>
 
 <script>
 const ROLES={
-  balance:{name:"Balance",glyph:"⚖",blurb:"Card values, decks, win rates"},
+  tcg:{name:"TCG Design",glyph:"◆",blurb:"Mechanics, cards, fun, loot rules"},
+  balance:{name:"Balance",glyph:"⚖",blurb:"Card numbers, win rates"},
   story:{name:"Story",glyph:"✒",blurb:"World, plot, characters, card flavor"},
   music:{name:"Music",glyph:"♪",blurb:"Themes, battle and dungeon music"},
   gamedev:{name:"Game Dev",glyph:"⚒",blurb:"Engine, RPG systems, UI"},
   you:{name:"You",glyph:"★",blurb:""},
   all:{name:"All agents",glyph:"",blurb:""}
 };
-const AGENTS=["balance","story","music","gamedev"];
+const AGENTS=["tcg","balance","story","music","gamedev"];
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const rn=r=>(ROLES[r]||{name:r||"?"}).name;

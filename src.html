@@ -1,4 +1,5 @@
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Elementals Unbound Playtest</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya+SC:wght@500;700&family=Alegreya+Sans:wght@400;500;700&display=swap">
@@ -245,6 +246,33 @@ details.rules ul{margin:.5em 0 0;padding-left:1.2em;max-width:80ch;display:grid;
 .modal{position:fixed;inset:0;background:rgba(5,7,10,.66);display:grid;place-items:center;padding:16px;z-index:10}
 .modal .box{background:var(--surface);border:1px solid var(--brass);border-radius:10px;padding:20px;max-width:440px;width:100%;display:grid;gap:14px}
 .modal .box h2{font-size:22px}
+/* Adventure: overworld */
+.rpg{display:grid;gap:10px}
+.rpg-stage{position:relative;width:100%;max-width:min(960px, calc((100vh - 170px) * 15 / 11));margin:0 auto;aspect-ratio:15/11;background:#0b0d11;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.rpg-stage canvas{display:block;width:100%;height:100%;image-rendering:pixelated;image-rendering:crisp-edges}
+.rpg-dlg{position:absolute;left:3%;right:3%;bottom:4%;background:rgba(16,19,24,.94);border:2px solid var(--brass);border-radius:8px;padding:12px 16px 14px;display:grid;gap:4px;font-size:clamp(14px,2.2vw,19px);cursor:pointer}
+.rpg-dlg b{font-family:var(--f-display);color:var(--brass)}
+.rpg-dlg i{position:absolute;right:12px;bottom:6px;font-style:normal;font-size:12px;color:var(--brass);animation:rpgnudge 1s infinite}
+@keyframes rpgnudge{50%{transform:translateY(3px)}}
+.rpg-reveal{position:absolute;inset:0;display:grid;place-items:center;background:rgba(5,7,10,.78);cursor:pointer;overflow:hidden}
+.rpg-reveal .rays{position:absolute;width:160%;aspect-ratio:1;background:repeating-conic-gradient(from 0deg, color-mix(in srgb, var(--el) 38%, transparent) 0 10deg, transparent 10deg 20deg);animation:rpgspin 14s linear infinite;opacity:.55}
+.rpg-reveal .rv-in{position:relative;display:grid;justify-items:center;gap:10px;text-align:center;padding:12px;animation:rpgpop .6s cubic-bezier(.2,1.4,.4,1)}
+.rpg-reveal .lbl{color:var(--brass);font-size:13px}
+.rpg-reveal .muted{max-width:34ch;font-size:13px}
+@keyframes rpgspin{to{transform:rotate(360deg)}}
+@keyframes rpgpop{from{transform:scale(.4) rotate(-8deg);opacity:0}}
+.rpg-pad{display:none;justify-content:space-between;align-items:center;max-width:520px;width:100%;margin:0 auto;padding:4px 8px;touch-action:none;user-select:none;-webkit-user-select:none}
+.dpad{display:grid;grid-template-columns:repeat(3,56px);grid-template-rows:repeat(3,56px);grid-template-areas:". u ." "l . r" ". d ."}
+.dpad button,.abtn{background:var(--raise);border:1px solid var(--line);border-radius:10px;font-size:20px;color:var(--ink);touch-action:none}
+.dpad [data-pad=up]{grid-area:u}.dpad [data-pad=down]{grid-area:d}.dpad [data-pad=left]{grid-area:l}.dpad [data-pad=right]{grid-area:r}
+.abtn{width:76px;height:76px;border-radius:50%;background:var(--brass);color:#1a1408;font-family:var(--f-display);font-weight:700;font-size:26px}
+.rpg-file{display:inline-block}
+.rpg-drop{display:grid;justify-items:center;gap:8px;text-align:center}
+.rpg-drop-cards{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;padding-top:8px}
+.rpg-ess{color:var(--el);font-weight:700}
+.rpg-help{margin:0;font-size:13px}
+@media (pointer:coarse), (max-width:720px){.rpg-pad{display:flex}.rpg-help{display:none}}
+@media (prefers-reduced-motion:reduce){.rpg-reveal .rays,.rpg-reveal .rv-in,.rpg-dlg i{animation:none}}
 @media (max-width:960px){.game{grid-template-columns:minmax(0,1fr)}.rail{position:static}.log{max-height:280px}}
 @media (max-width:520px){.card{width:108px;min-height:150px}.cr,.crslot{--crw:104px;--crh:164px}.hand,.manis{gap:12px}}
 @media (prefers-reduced-motion:reduce){.flash{animation:none}.card,.crslot,.crslot .cr{transition:none}.card.playable,.card.sel,.cr.attacking{transform:none}}
@@ -455,7 +483,7 @@ function log(s, cls){ if (g.sim) return; g.log.unshift({s, cls}); if(g.log.lengt
 
 function sleep(ms){
   const id = g.id;
-  return new Promise((res, rej)=>setTimeout(()=> id===g.id ? res() : rej(STALE), HEADLESS?0:ms));
+  return new Promise((res, rej)=>setTimeout(()=> g && id===g.id ? res() : rej(STALE), HEADLESS?0:ms));
 }
 
 /* ---- Visual cues: targeting arrows and hit numbers (real game only, never in AI lookahead) ---- */
@@ -1691,12 +1719,13 @@ function renderGame(){
     modal = `<div class="modal"><div class="box"><h2>Respond to ${esc(ui.card.name)}?</h2><p>${esc(ui.text)}</p><div class="cards">${cardHTML(ui.card)}</div><div class="row">${ui.options.map(i=>`<button class="btn primary" data-btn="opt-${i}">${me.hand[i].counter?"Counter with ":"Play "}${esc(me.hand[i].name)} (${costOf(me.hand[i],me)} Energy)</button>`).join("")}<button class="btn" data-btn="pass">Let it resolve</button></div></div></div>`;
   } else if (g.over){
     modal = `<div class="modal"><div class="box"><h2>${g.over==="you"?"Victory":g.over==="enemy"?"Defeat":"Draw"}</h2><p>${g.over==="you"?"The enemy is out of life.":"Your life reached 0."} The game lasted ${g.turnNo} turns.</p><div class="row"><button class="btn primary" data-btn="again">Play again</button><button class="btn" data-btn="decks">Change decks</button><button class="btn" data-btn="close">Look at the board</button></div></div></div>`;
+    if (RPG.battle){ rpgSettle(); modal = `<div class="modal"><div class="box"><h2>${g.over==="you"?"Victory":g.over==="enemy"?"Defeat":"Draw"}</h2><p>${g.over==="you"?"The enemy is out of life.":"Your life reached 0."} The duel lasted ${g.turnNo} turns.</p>${rpgDropHTML()}<div class="row"><button class="btn primary" data-btn="rpg-return">Continue</button><button class="btn" data-btn="close">Look at the board</button></div></div></div>`; }
     if (g.closed) modal = "";
   }
 
   if (g.coin) modal += `<div class="flash coinflip" aria-live="polite"><div class="flash-in"><div class="coin ${g.coin.first===0?"you":"foe"}"><span class="face f-you">You</span><span class="face f-foe">Enemy</span></div><span class="flash-lbl">Coin flip: ${g.coin.first===0 ? "you go first" : "the enemy goes first"}</span><span class="muted">${g.coin.first===0 ? "You skip your first draw; the enemy starts with 1 banked Energy." : "The enemy skips its first draw; you start with 1 banked Energy."}</span></div></div>`;
   if (g.flash) modal += `<div class="flash" aria-live="polite"><div class="flash-in"><span class="flash-lbl">${esc(g.flash.who)}</span>${cardHTML(g.flash.m,{cls:"bigcard"})}</div></div>`;
-  return `<div class="top"><h1>Elementals Unbound</h1><div class="row"><span class="muted">Turn ${g.turnNo} · ${myTurn?"Your turn":"Enemy turn"}</span><button class="btn" data-btn="decks">Change decks</button><button class="btn" data-btn="again">Restart</button></div></div>
+  return `<div class="top"><h1>Elementals Unbound</h1><div class="row"><span class="muted">Turn ${g.turnNo} · ${myTurn?"Your turn":"Enemy turn"}</span>${RPG.battle ? (g.over ? `<button class="btn primary" data-btn="rpg-return">Continue</button>` : RPG.battle.kind==="wild" ? `<button class="btn" data-btn="rpg-flee">Run away</button>` : "") : `<button class="btn" data-btn="decks">Change decks</button><button class="btn" data-btn="again">Restart</button>`}</div></div>
   <div class="game" style="margin-top:12px">
     <section class="table">
       ${sideHTML(en, validPl.has(1))}
@@ -2028,7 +2057,7 @@ function renderSetup(){
     </div>`;
   }
   return `<div class="setup">
-    <header><h1 style="font-size:30px">Elementals Unbound</h1><p>Playtest build: 5 base elements, 10 dual confluences and 10 triple confluences. Every element has 100 basic cards and 40 Manifests. Base elements have Starter, Common, Uncommon and Rare decks; each confluence has Common, Uncommon and Rare fusion decks plus an Archetype deck built from its special cards. Try the Fusion Forge to fuse two elements into a dual card, or three into a triple card.</p></header>
+    <header><div class="top"><h1 style="font-size:30px">Elementals Unbound</h1><button class="btn primary" data-btn="rpg">Adventure (prototype)</button></div><p>Playtest build: 5 base elements, 10 dual confluences and 10 triple confluences. Every element has 100 basic cards and 40 Manifests. Base elements have Starter, Common, Uncommon and Rare decks; each confluence has Common, Uncommon and Rare fusion decks plus an Archetype deck built from its special cards. Try the Fusion Forge to fuse two elements into a dual card, or three into a triple card.</p></header>
     ${tabs}${body}
     ${rulesHTML()}
   </div>`;
@@ -2038,15 +2067,18 @@ function render(){
   const app = document.getElementById("app");
   const scrollLog = app.querySelector(".log ol")?.scrollTop || 0;
   const open = app.querySelector("details.rules")?.open;
-  app.innerHTML = (!g || g.screen==="setup") ? renderSetup() : renderGame();
+  const inWorld = RPG.active && !g;
+  app.innerHTML = inWorld ? renderWorld() : (!g || g.screen==="setup") ? renderSetup() : renderGame();
+  if (inWorld) rpgMount();
   if (open) app.querySelector("details.rules").open = true;
   const ol = app.querySelector(".log ol"); if (ol) ol.scrollTop = scrollLog;
   if (FX.q.length) requestAnimationFrame(fxPlay);
 }
 
 function onClick(e){
-  const el = e.target.closest("[data-logcard],[data-forge],[data-forgef],[data-recipe],[data-btn],[data-hand],[data-man],[data-cr],[data-pl],[data-tab],[data-pickel],[data-pickdeck],[data-lib],[data-life],[data-level],[data-aura],[data-emani],[data-wr]");
+  const el = e.target.closest("[data-logcard],[data-forge],[data-forgef],[data-recipe],[data-btn],[data-hand],[data-man],[data-cr],[data-pl],[data-tab],[data-pickel],[data-pickdeck],[data-lib],[data-life],[data-level],[data-aura],[data-emani],[data-wr],[data-rpgstart],[data-rpgnext]");
   if (!el) return;
+  if (rpgClick(el)) return;
   inspectFrom(el);
   const ds = el.dataset;
   if (ds.tab){ setup.tab=ds.tab; render(); return; }
@@ -2110,7 +2142,9 @@ function onClick(e){
       break;
   }
 }
+/*__RPG__*/
 if (!HEADLESS){
+  rpgInit();
   document.addEventListener("click", onClick);
   document.addEventListener("input", e=>{ if (e.target.id==="forgeq"){ setup.forge.q = e.target.value; render(); const i=document.getElementById("forgeq"); if(i){ i.focus(); i.setSelectionRange(i.value.length,i.value.length);} return; }
     if (e.target.id==="libq"){ setup.lib.q = e.target.value; const box = document.getElementById("libgrid"); if (box) box.innerHTML = libGridHTML(); } });
