@@ -40,9 +40,22 @@ Five agents build it, each in its own chat in the **TCG Video Game** project, pl
 
 Don't work around another role's lane. Post a message to that role and carry on with what you can. Use `blocking` priority only when you have stopped. If two roles disagree, both state their case in one thread and send it `to: you`.
 
-If the other agent's chat is running right now, you can also nudge it with `SendMessage` (find it with `ListAgents`) — one line pointing at the board message. Cloud chats can't reply that way, so all answers go on the board.
+Other agents' chats can't be messaged directly from here, so the board is the only channel, and an agent only reads it when its own chat runs. The check-in rhythm below keeps chats running without the designer having to open each one.
 
-The designer has to open an agent's chat for it to read the board, so when a message needs action soon, say so in your reply to the designer: "Story has a question waiting for Game Dev on the board."
+## Check-in rhythm (every agent)
+
+Every agent wakes itself up to check the board, using the `send_later` tool (load it with ToolSearch: `select:mcp__claude-code-remote__send_later`), which delivers a message back into this same chat at a set time.
+
+- **At the end of every turn**, make sure a check-in is scheduled: `send_later` with `delay_minutes: 120`, `name: "<Role> board check-in"`, and message `Board check-in: check the Studio Board and act on what's waiting, following studio/STUDIO.md.` Keep exactly one pending: a check-in that just fired is used up, so schedule the next; but if one you scheduled earlier is still waiting to fire (check with `list_triggers`, looking for your role's name), don't add a second. Between 11 pm and 7 am Pacific, schedule the next one for 7 am Pacific instead (use `at`).
+- **On a check-in**: pull `main`, read your inbox, replies to your threads, recent decisions and claims. Then, in this order:
+  1. Answer questions addressed to you, or say when you'll get to them.
+  2. Mark messages that need no reply (FYI, "no action needed yet") as `done` once you've read them, so the board shows what's really waiting.
+  3. Continue your current work, or start the next item in your charter if nothing is waiting.
+  4. Keep it short when there's nothing to do: update `status/<role>` and stop.
+  5. Don't start work that needs a designer decision you don't have yet; ask on the board (`to: you`) and move to something else.
+- **The designer can change the rhythm** by telling an agent in its chat ("check every hour", "pause check-ins until Monday"). If told to pause, stop scheduling until told to resume.
+
+When a message needs action soon, also say so in your reply to the designer: "Story has a question waiting for Game Dev on the board."
 
 ## Board API (ArtifactData tool, `url` = the Studio Board link)
 
