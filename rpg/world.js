@@ -106,12 +106,14 @@ function rpgAction(){
 /* ---- Battles ---- */
 function rpgPick(list){ const tot = list.reduce((a,e)=>a+(e.w||1),0); let r = Math.random()*tot; for (const e of list){ r -= (e.w||1); if (r<0) return e; } return list[list.length-1]; }
 function rpgWild(tbl){ const e = rpgPick(tbl.list); RPG.held = []; rpgFade(()=>rpgBattle({ kind:"wild", deck:e.deck, level:e.level, lifeMod:e.lifeMod||0, grace:tbl.grace, music:tbl.music || "battle-wild" }), reduceMotion() ? 150 : 700); }
-function rpgTrainer(n){ const t = RPG_TRAINERS[n.trainer]; if (!t) return; RPG.held = []; rpgFade(()=>rpgBattle({ kind:"trainer", npc:n.id, flag:n.flag, win:n.win || n.id+"_win", deck:t.deck, level:t.level, lifeMod:t.lifeMod||0, boss:t.boss, name:t.name || n.name, music:t.music || n.music || "battle-contract", grace:3 }), reduceMotion() ? 150 : 700); }
+function rpgTrainer(n){ const t = RPG_TRAINERS[n.trainer]; if (!t) return; RPG.held = []; rpgFade(()=>rpgBattle({ kind:"trainer", npc:n.id, flag:n.flag, win:n.win || n.id+"_win", deck:t.deck, level:t.level, lifeMod:t.lifeMod||0, boss:t.boss, name:t.name || n.name, music:t.music || n.music || "battle-contract", barks:rpgBarks(n.barks), grace:3 }), reduceMotion() ? 150 : 700); }
+// Boss barks on an NPC: { crown:"key", breaks:["key", ...], held:"key" } -> the lines themselves.
+function rpgBarks(k){ if (!k) return null; const L = key => key && RPG_TEXT[key] ? rpgText(key) : null; return { crown:L(k.crown), breaks:(k.breaks||[]).map(L), held:L(k.held) }; }
 function rpgBattle(b){
   if (!DECK_BY_ID[b.deck] || !DECK_BY_ID[RPG.save.deck]) { RPG.fade = null; return rpgSay(["(Missing deck: "+b.deck+")"]); }
   RPG.battle = b; cancelAnimationFrame(RPG.raf); RPG.raf = 0; RPG.fade = null;
   rpgMusic(b.music);
-  newGame(RPG.save.deck, b.deck, 15 + b.lifeMod, [3, b.level], { boss:b.boss, name:b.name });
+  newGame(RPG.save.deck, b.deck, 15 + b.lifeMod, [3, b.level], { boss:b.boss, name:b.name, barks:b.barks });
 }
 /* ---- Card drops: a won duel may give one basic card from the enemy's deck, weighted by rarity ---- */
 function rpgDropOdds(deckId, owned){

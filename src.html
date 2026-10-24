@@ -280,6 +280,8 @@ details.rules ul{margin:.5em 0 0;padding-left:1.2em;max-width:80ch;display:grid;
 .phases{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--brass);margin-top:4px}
 .phases .pips{display:flex;gap:3px}.phases i{width:16px;height:6px;border-radius:3px;background:var(--bad)}.phases i.gone{background:var(--line)}.phases i.now{box-shadow:0 0 6px var(--bad)}
 .crown,.side{display:block;font-size:12px;font-weight:700;color:var(--fire);margin-top:3px;max-width:44ch}.crown .muted,.side .muted{font-weight:400}
+.bark{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:8;width:min(560px,calc(100vw - 32px));background:rgba(16,19,24,.96);border:2px solid var(--fire);border-radius:10px;padding:12px 36px 12px 16px;display:grid;gap:6px;font-size:14px;box-shadow:0 8px 30px rgba(0,0,0,.5)}
+.bark p{margin:0}.bark b{color:var(--brass);font-family:var(--f-display)}.bark-x{position:absolute;top:6px;right:8px;background:none;border:none;color:var(--mute);cursor:pointer;font-size:14px}
 .phase-big{font-family:var(--f-display);font-size:34px;color:var(--brass);text-shadow:0 2px 10px rgba(0,0,0,.7)}
 .rpg-drop{display:grid;justify-items:center;gap:8px;text-align:center}
 .rpg-drop-cards{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;padding-top:8px}
@@ -704,7 +706,7 @@ function bossStartTurn(p){
 function bossEndTurn(p){
   if (!p.boss || !p.boss.side || !(p.sideHp > 0)) return;
   p.sideHp--;
-  if (!g.sim){ const sd = p.boss.side; log(p.sideHp > 0 ? `${sd.crew || "Your crew"} wear down ${sd.name} (${p.sideHp} left).` : `${sd.crew || "Your crew"} hold ${sd.name}!`, p.sideHp > 0 ? "" : "big"); if (p.sideHp === 0 && globalThis.onCrewWin) onCrewWin(p); }
+  if (!g.sim){ const sd = p.boss.side; log(p.sideHp > 0 ? `${sd.crew || "Your crew"} wear down ${sd.name} (${p.sideHp} left).` : `${sd.crew || "Your crew"} hold ${sd.name}!`, p.sideHp > 0 ? "" : "big"); if (p.sideHp === 0){ if (g.barks && g.barks.held) g.bark = { lines: g.barks.held, t: Date.now() }; if (globalThis.onCrewWin) onCrewWin(p); } }
 }
 function bossEnergyMod(p){
   const b = p.boss; if (!b) return 0;
@@ -721,6 +723,7 @@ function bossBreaks(){
     if (keep){ const c = makeCreature(keep.d, q), i = q.board.indexOf(keep); if (i >= 0) q.board[i] = c; else q.board.push(c); if (!g.sim) log(`Sealwork: ${keep.d.name} rebuilds.`, "big"); }
     const o = g.P[1-q.i];
     if (q.boss.breakHeal && o.life > 0){ o.life = Math.min(o.maxLife, o.life + q.boss.breakHeal); drawN(o, 1); }
+    if (!g.sim && g.barks && g.barks.breaks && g.barks.breaks[q.phase-2]) g.bark = { lines: g.barks.breaks[q.phase-2], t: Date.now() };
     if (!g.sim){ log(`${q.name} is broken but rises: phase ${q.phase} of ${bossPhases(q)}!`, "big"); g.phaseFlash = { who:q.name, phase:q.phase, of:bossPhases(q) }; if (globalThis.onBossPhase) onBossPhase(q); }
   }
 }
@@ -1612,6 +1615,8 @@ function newGame(myDeck, enemyDeck, enemyLife, kinds, opts){
   g.P = [ newPlayer(0, myDeck, "You", HEADLESS, deckLife(myDeck)), newPlayer(1, enemyDeck, "Enemy", true, deckLife(enemyDeck) + ((enemyLife ?? 15) - 15)) ];
   if (opts && opts.boss){ g.P[1].boss = opts.boss; g.P[1].phase = 1; if (opts.boss.side) g.P[1].sideHp = opts.boss.side.hp || 3; }
   if (opts && opts.name) g.P[1].name = opts.name;
+  // Story barks for boss fights: { crown:[lines], breaks:[[lines], ...], held:[lines] } shown at the start, on each break, when the crew wins.
+  if (!HEADLESS && opts && opts.barks){ g.barks = opts.barks; if (opts.barks.crown) g.bark = { lines: opts.barks.crown, t: Date.now() }; }
   g.P.forEach(p=>drawN(p,5));
   // A coin flip decides who goes first (simulations keep seat 0 first so seats can be alternated).
   const first = HEADLESS ? 0 : (Math.random() < 0.5 ? 0 : 1);
@@ -1795,6 +1800,8 @@ function renderGame(){
 
   if (g.coin) modal += `<div class="flash coinflip" aria-live="polite"><div class="flash-in"><div class="coin ${g.coin.first===0?"you":"foe"}"><span class="face f-you">You</span><span class="face f-foe">Enemy</span></div><span class="flash-lbl">Coin flip: ${g.coin.first===0 ? "you go first" : "the enemy goes first"}</span><span class="muted">${g.coin.first===0 ? "You skip your first draw; the enemy starts with 1 banked Energy." : "The enemy skips its first draw; you start with 1 banked Energy."}</span></div></div>`;
   if (g.phaseFlash){ modal += `<div class="flash" aria-live="polite"><div class="flash-in"><span class="flash-lbl">${esc(g.phaseFlash.who)} rises</span><span class="phase-big">Phase ${g.phaseFlash.phase} of ${g.phaseFlash.of}</span></div></div>`; const pf = g.phaseFlash; setTimeout(()=>{ if (g && g.phaseFlash===pf){ g.phaseFlash = null; render(); } }, reduceMotion() ? 900 : 1600); }
+  if (g.bark && !g.over){ modal += `<div class="bark" role="status" aria-live="polite"><button class="bark-x" data-btn="bark-x" aria-label="Dismiss">✕</button>${g.bark.lines.map(l=>{ const [w,t] = rpgSpeaker(l); return `<p>${w ? `<b>${esc(w)}:</b> ` : ""}${esc(t)}</p>`; }).join("")}</div>`;
+    const bk = g.bark; setTimeout(()=>{ if (g && g.bark===bk){ g.bark = null; render(); } }, 4000 + 2200*bk.lines.length); }
   if (g.flash) modal += `<div class="flash" aria-live="polite"><div class="flash-in"><span class="flash-lbl">${esc(g.flash.who)}</span>${cardHTML(g.flash.m,{cls:"bigcard"})}</div></div>`;
   return `<div class="top"><h1>Elementals Unbound</h1><div class="row"><span class="muted">Turn ${g.turnNo} · ${myTurn?"Your turn":"Enemy turn"}</span>${RPG.battle ? (g.over ? `<button class="btn primary" data-btn="rpg-return">Continue</button>` : RPG.battle.kind==="wild" ? `<button class="btn" data-btn="rpg-flee">Run away</button>` : "") : `<button class="btn" data-btn="decks">Change decks</button><button class="btn" data-btn="again">Restart</button>`}</div></div>
   <div class="game" style="margin-top:12px">
@@ -2167,6 +2174,7 @@ function onClick(e){
   if (ds.btn==="decks"){ if(g) g.id = Math.random(); g = null; render(); return; }
   if (!g) return;
   if (ds.btn==="close"){ g.closed=true; render(); return; }
+  if (ds.btn==="bark-x"){ g.bark=null; render(); return; }
   const ui = g.ui, me = g.P[0];
   switch (ui.mode){
     case "main":

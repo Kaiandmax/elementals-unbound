@@ -111,7 +111,8 @@ const RPG_MAPS = {
       "###########=####" ],
     warps:[ { x:11, y:9, to:"town", tx:1, ty:6, dir:"right" } ],
     npcs:[ { id:"gullet", x:11, y:2, dir:"down", sprite:"beast", look:{ shirt:"#3f6f6a", hair:"#9fd6c9" },
-             talk:"a1_gullet", trainer:"a1_gullet", flag:"a1_beat_gullet", win:"a1_gullet_win", unless:"a1_beat_gullet" } ],
+             talk:"a1_gullet", trainer:"a1_gullet", flag:"a1_beat_gullet", win:"a1_gullet_win", unless:"a1_beat_gullet",
+             barks:{ crown:"a1_gullet_crown", breaks:["a1_gullet_break1"] } } ],
     signs:[], chests:[]
   },
   route1: {
@@ -210,7 +211,8 @@ const RPG_MAPS = {
     warps:[ { x:0, y:7, to:"cross", tx:22, ty:7, dir:"left" } ],
     npcs:[ { id:"pim", x:3, y:6, dir:"right", look:{ shirt:"#7a8a3a", hair:"#8a8a8a" }, talk:[ { when:"a1_beat_mother", text:"a1_pim_after" }, { text:"a1_pim" } ] },
            { id:"mother", x:11, y:9, dir:"up", sprite:"beast", look:{ shirt:"#c0461e", hair:"#ffb347" }, unless:"a1_beat_mother",
-             talk:"a1_mother", trainer:"a1_mother", flag:"a1_beat_mother", win:"a1_mother_win" },
+             talk:"a1_mother", trainer:"a1_mother", flag:"a1_beat_mother", win:"a1_mother_win",
+             barks:{ crown:"a1_mother_crown", breaks:["a1_mother_break1", "a1_mother_break2"], held:"a1_mother_brood_held" } },
            { id:"brann_o", x:9, y:8, dir:"right", look:{ shirt:"#9a6b3a", hair:"#3a3a3a" }, when:"a1_orchard_taken", talk:"a1_brann_after" },
            { id:"dove_o", x:14, y:8, dir:"left", look:{ shirt:"#5b7fb0", hair:"#e0c27a" }, when:"a1_orchard_taken", talk:"a1_dove_after" } ],
     signs:[], chests:[]
@@ -277,10 +279,10 @@ const RPG_MAPS = {
       "VVVVVVVSVVVVVVVV" ],
     warps:[ { x:7, y:9, to:"vault1", tx:9, ty:1, dir:"down" } ],
     npcs:[ { id:"warden", x:7, y:4, dir:"down", sprite:"golem", look:{ shirt:"#7a7f86", hair:"#5aa0c8" }, unless:"a1_beat_warden",
-             talk:"a1_warden", trainer:"a1_warden", flag:"a1_beat_warden", win:"a1_warden_win" } ],
+             talk:"a1_warden", trainer:"a1_warden", flag:"a1_beat_warden", win:"a1_warden_win",
+             barks:{ crown:"a1_warden_crown", breaks:["a1_warden_break1", "a1_warden_break2"], held:"a1_warden_brood_held" } } ],
     signs:[ { x:9, y:2, text:"a1_edda_last" } ],
-    // Slackwater (TCG Design, PR #20); until that card is on main the chest falls back to an existing Water Manifest.
-    chests:[ { id:"slackwater", x:7, y:2, card:["water_slackwater_the_weir_serpent", "kraken"], text:["a1_slackwater_bind", "a1_rebuild_hint"], sets:"a1_slackwater", stinger:"sting-slackwater" } ]
+    chests:[ { id:"slackwater", x:7, y:2, card:"water_slackwater_the_weir_serpent", text:["a1_slackwater_bind", "a1_rebuild_hint"], sets:"a1_slackwater", stinger:"sting-slackwater" } ]
   }
 };
 

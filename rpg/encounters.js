@@ -61,5 +61,5 @@ const RPG_TRAINERS = {
   a1_mother: { name:"The Cinder Mother", deck:"fire_fury", level:3, lifeMod:0, music:"battle-cinder-mother",
     boss:{ bars:[8,8], slowStart:true, clearOnBreak:true, breakHeal:3, crown:"brood", side:{ name:"The Brood", hp:3, crew:"Brann and Dove", token:"ember" } } },
   a1_warden: { name:"The Sluicewarden", deck:"earth_titans", level:3, lifeMod:0, music:"battle-sluicewarden",
-    boss:{ bars:[8,8], slowStart:true, clearOnBreak:true, breakHeal:3, crown:"sealwork" } }
+    boss:{ bars:[8,8], slowStart:true, clearOnBreak:true, breakHeal:3, crown:"sealwork", side:{ name:"The serpent's brood", hp:3, crew:"Brann, Dove and Pell" } } }
 };
