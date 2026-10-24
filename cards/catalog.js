@@ -74,7 +74,37 @@ const MK = 1.0;
 const EF = Object.assign({"ash:c": 1.151, "ash:r": 1.24, "ash:u": 1.023, "aurora:c": 1.082, "aurora:r": 1.09, "aurora:u": 1.031, "earth:c": 1.008, "earth:r": 1.264, "earth:s": 1.015, "earth:u": 1.399, "fire:c": 1.024, "fire:r": 0.884, "fire:u": 0.937, "forge:c": 1.236, "forge:r": 1.198, "forge:u": 1.201, "geyser:c": 1.043, "geyser:r": 1.055, "geyser:u": 1.219, "glacier:c": 1.025, "glacier:r": 1.07, "glacier:u": 1.209, "glass:c": 1.178, "glass:r": 0.983, "glass:u": 1.044, "hurricane:c": 1.019, "hurricane:r": 0.84, "hurricane:u": 0.945, "ice:c": 0.865, "ice:r": 0.953, "ice:u": 1.008, "lightning:c": 1.006, "lightning:r": 0.849, "lightning:u": 0.855, "metal:c": 1.176, "metal:r": 1.04, "metal:u": 1.113, "mirage:c": 1.135, "mirage:r": 0.913, "mirage:u": 0.839, "plasma:c": 0.958, "plasma:r": 1.028, "plasma:u": 0.988, "quicksilver:c": 1.192, "quicksilver:r": 1.138, "quicksilver:u": 1.232, "sand:c": 1.152, "sand:r": 0.983, "sand:u": 0.907, "solar:c": 1.087, "solar:r": 0.978, "solar:u": 0.823, "steam:c": 0.968, "steam:r": 0.948, "steam:u": 0.981, "storm:c": 0.969, "storm:r": 1.024, "storm:u": 0.875, "swamp:c": 1.211, "swamp:r": 0.989, "swamp:u": 0.916, "tempest:c": 0.806, "tempest:r": 0.866, "tempest:u": 0.868, "volcano:c": 1.029, "volcano:r": 0.993, "volcano:u": 1.105, "water:c": 0.996, "water:r": 0.946, "water:s": 1.025, "water:u": 0.838, "wildfire:c": 0.851, "wildfire:r": 0.86, "wildfire:u": 0.74, "wind:c": 0.9, "wind:r": 0.889, "wind:u": 0.872}, globalThis.EF_OVR||{});
 const SPMF = Object.assign({"ash": 0.92, "aurora": 0.92, "forge": 1.08, "geyser": 1.08, "glacier": 1.08, "glass": 1.08, "hurricane": 0.92, "ice": 1.012, "metal": 0.97, "mirage": 0.92, "plasma": 0.92, "quicksilver": 1.08, "sand": 1.08, "solar": 0.92, "steam": 0.92, "storm": 0.92, "swamp": 1.055, "tempest": 0.92, "volcano": 0.92, "wildfire": 1.044}, globalThis.SPMF_OVR||{});
 const balGroup = d => d.el+"|"+(d.r==="s"?"s":d.r)+"|"+(d.manifest?"M":"B");
+// Resource gains (charge, energy) are never scaled above what the card was written with: the value model prices them
+// low, so the scaling steps used to compound them (a written "charge 4" became "charge 15"). A Manifest never refunds
+// its own cost in charge. Riders the pass adds (charge 1-2 on a card that had none) are kept.
+const RES_RE = /\b(charge|energy) (\d+)/g;
+function clampResources(d, written, mc){
+  if (!d.fx) return false;
+  let fx = d.fx.replace(RES_RE, (m, k, n) => written[k] != null && +n > written[k] ? k+" "+written[k] : m);
+  if (d.manifest){
+    let room = Math.max(0, mc - 1);
+    fx = fx.replace(/\bcharge (\d+)/g, (m, n) => { const v = Math.min(+n, room); room -= v; return "charge "+v; });
+    if (/\bcharge 0\b/.test(fx)) fx = fx.split("|").map(b => { const i = b.indexOf(":"); if (i<0) return b;
+      const parts = b.slice(i+1).split(";").map(s=>s.trim()).filter(s => !/^charge 0$/.test(s));
+      return parts.length ? b.slice(0,i)+": "+parts.join("; ") : null; }).filter(b => b!=null).map(b=>b.trim()).join(" | ");
+  }
+  if (fx===d.fx) return false;
+  respecCard(d, fx); return true;
+}
 function normalizeCard(d, f){
+  const written = {}; for (const [, k, n] of (d.fx||"").matchAll(RES_RE)) written[k] = Math.max(written[k]||0, +n);
+  normalizeCore(d, f);
+  const cost = () => d.manifest ? d.mcost[d.el] : d.cost;
+  if (!clampResources(d, written, cost())) return;
+  // The clamp took value away: pick the closest cost again (Manifests within 1 of their written cost), then re-check the refund.
+  const med = BAL_MED[balGroup(d)]; if (!med) return;
+  const target = med*(f||1), setCost = n => { if (d.manifest) d.mcost[d.el] = n; else d.cost = n; };
+  const c0 = cost(), lo = d.manifest ? Math.max(2, d.mc0-1) : Math.max(d.cost===0 ? 0 : 1, c0-1), hi = d.manifest ? Math.min(6, d.mc0+1) : Math.min(6, c0+1);
+  let best = c0, bd = Math.abs(Math.log(cardRatio(d)/target));
+  for (let n=lo; n<=hi; n++){ setCost(n); const dd = Math.abs(Math.log(cardRatio(d)/target)); if (dd < bd - 1e-9){ bd = dd; best = n; } }
+  setCost(best); clampResources(d, written, cost());
+}
+function normalizeCore(d, f){
   const med = BAL_MED[balGroup(d)]; if (!med) return;
   const target = med*(f||1), lo = target*(1-BAL.band), hi = target*(1+BAL.band);
   const cost = () => d.manifest ? d.mcost[d.el] : d.cost;
