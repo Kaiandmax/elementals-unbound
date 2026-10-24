@@ -92,6 +92,19 @@ What already exists and these options build on:
 
 **Risks to test:** the AI's Reaction timing (a reaction deck piloted badly by the AI looks weak in sims); stalls (Water already has the longest games; the Warden's 1 face damage per Reaction is there to keep it closing games); whether 2/5 Ward is too safe a body.
 
+**Built (2026-10-24):** `water_slackwater_the_weir_serpent`, Slackwater, the Weir Serpent (Story's name), in `cards/water.js`. It reworks the unused rare Manifest Moonlit Tide, so the card count is unchanged. Proposed numbers: 3 Water charge, 2/5, Ward; Balance sets the final ones.
+
+Loot-card test (AI level 3, 120 games each against the ten mono common decks):
+
+| Deck | Wins | Slackwater cast |
+|---|---|---|
+| Water Starter, unchanged | 58% | — |
+| Water Starter, Slackwater swapped in for Kraken of the Deep | 47% | 68% of games |
+| Rebuilt around Reactions (Chill, Deflect, Tidal Shield, Icy Grip, Riptide Counter + the Starter's three), no Slackwater | 56% | — |
+| Rebuilt around Reactions, with Slackwater | **84%** | 98% of games |
+
+It does what a loot card should: little in an unchanged deck, a big payoff once you rebuild. 84% is high against same-rank decks; Balance may trim it, but a big jump is the point of a loot card.
+
 ### The next few (sketch, to refine with Story's region order)
 
 | # | Element | Build-around | What you rebuild into | Skill it teaches |
