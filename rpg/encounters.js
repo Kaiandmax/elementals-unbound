@@ -7,7 +7,10 @@
      level   AI level 1-5
      lifeMod added to the enemy deck's element life (a normal encounter is -5)
      w       relative weight when picking from the list
-   Trainers (NPC battles) use the same { deck, level, lifeMod } shape in RPG_TRAINERS. */
+   Trainers (NPC battles) use the same { deck, level, lifeMod } shape in RPG_TRAINERS. A boss monster adds
+   boss: { bars:[8,8], slowStart:true, clearOnBreak:true, breakHeal:3 } (design/bosses.md): bars are the extra life bars
+   (phases = bars + 1), slowStart gives 2 Energy a turn in phase 1, breakHeal heals the player and draws 1 on each break;
+   energyByPhase:[2,3,4] overrides the Energy per turn by phase. name: what the battle screen calls the opponent. */
 const RPG_ENCOUNTERS = {
   town_grass: { rate:0.10, grace:3, list:[
     { deck:"water_starter", level:1, lifeMod:-5, w:3 },

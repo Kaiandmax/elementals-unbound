@@ -91,11 +91,11 @@ function rpgAction(){
 /* ---- Battles ---- */
 function rpgPick(list){ const tot = list.reduce((a,e)=>a+(e.w||1),0); let r = Math.random()*tot; for (const e of list){ r -= (e.w||1); if (r<0) return e; } return list[list.length-1]; }
 function rpgWild(tbl){ const e = rpgPick(tbl.list); RPG.held = []; rpgFade(()=>rpgBattle({ kind:"wild", deck:e.deck, level:e.level, lifeMod:e.lifeMod||0, grace:tbl.grace }), reduceMotion() ? 150 : 700); }
-function rpgTrainer(n){ const t = RPG_TRAINERS[n.trainer]; if (!t) return; RPG.held = []; rpgFade(()=>rpgBattle({ kind:"trainer", npc:n.id, flag:n.flag, win:n.id+"_win", deck:t.deck, level:t.level, lifeMod:t.lifeMod||0, grace:3 }), reduceMotion() ? 150 : 700); }
+function rpgTrainer(n){ const t = RPG_TRAINERS[n.trainer]; if (!t) return; RPG.held = []; rpgFade(()=>rpgBattle({ kind:"trainer", npc:n.id, flag:n.flag, win:n.id+"_win", deck:t.deck, level:t.level, lifeMod:t.lifeMod||0, boss:t.boss, name:t.name, grace:3 }), reduceMotion() ? 150 : 700); }
 function rpgBattle(b){
   if (!DECK_BY_ID[b.deck] || !DECK_BY_ID[RPG.save.deck]) { RPG.fade = null; return rpgSay(["(Missing deck: "+b.deck+")"]); }
   RPG.battle = b; cancelAnimationFrame(RPG.raf); RPG.raf = 0; RPG.fade = null;
-  newGame(RPG.save.deck, b.deck, 15 + b.lifeMod, [3, b.level]);
+  newGame(RPG.save.deck, b.deck, 15 + b.lifeMod, [3, b.level], { boss:b.boss, name:b.name });
 }
 /* ---- Card drops: a won duel may give one basic card from the enemy's deck, weighted by rarity ---- */
 function rpgDropOdds(deckId, owned){

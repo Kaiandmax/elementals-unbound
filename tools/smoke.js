@@ -50,6 +50,15 @@ for (const d of decks) if (!d.main || !d.main.length || !d.manifests || !d.manif
     try { const r = await S.newGame(a.id, b.id, 15, [3, 3]); if (r === "you" || r === "enemy") done++; else draws++; }
     catch (e) { console.error(`game ${a.id} vs ${b.id} threw:`, e && e.stack || e); bad++; }
   }
-  console.log(`${decks.length} decks, ${N} games: ${done} decided, ${draws} undecided, ${bad} errors`);
+  // Boss fights (design/bosses.md): phases must happen and games must still finish.
+  const BOSS = { bars:[8, 8], slowStart:true, clearOnBreak:true, breakHeal:3 }; let bossDone = 0, broke = 0; const BN = Math.max(6, N >> 2);
+  for (let i = 0; i < BN; i++) {
+    const a = decks[(i * 11) % decks.length], b = decks[(i * 5 + 2) % decks.length];
+    try { const r = await S.newGame(a.id, b.id, 15, [3, 3], { boss: BOSS }); if (r === "you" || r === "enemy") bossDone++; if ((S.getG().P[1].phase || 1) > 1) broke++; }
+    catch (e) { console.error(`boss game ${a.id} vs ${b.id} threw:`, e && e.stack || e); bad++; }
+  }
+  if (bossDone < BN * 0.9) { console.error(`boss games: only ${bossDone}/${BN} decided`); bad++; }
+  if (!broke) { console.error("boss games: no phase break ever happened"); bad++; }
+  console.log(`${decks.length} decks, ${N} games: ${done} decided, ${draws} undecided, ${bad} errors; boss games ${bossDone}/${BN} decided, ${broke} reached phase 2+`);
   if (bad || draws > N * 0.1) process.exit(1);
 })();
