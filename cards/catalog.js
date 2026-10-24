@@ -184,17 +184,7 @@ const ARCH_K = Object.assign({"ash": 4, "aurora": 10, "forge": 8, "geyser": 4, "
   }
 })();
 
-/* ---- Triple decks carry 3 Manifests ----
-   Mono and dual decks keep 4. A triple deck drops its most expensive regular Manifest (an archetype deck keeps its two
-   special Manifests and its cheapest regular one). */
-(function(){
-  const tot = id => Object.values(LIB[id].mcost).reduce((a,b)=>a+b,0);
-  for (const list of Object.values(DECKS)) for (const dk of list){
-    if (!CONFLUENCE[dk.el] || CONFLUENCE[dk.el].length!==3 || dk.manifests.length<=3) continue;
-    const sp = dk.manifests.filter(id=>LIB[id].special), reg = dk.manifests.filter(id=>!LIB[id].special).sort((a,b)=>tot(a)-tot(b));
-    dk.manifests = dk.tier==="special" ? [...sp, ...reg].slice(0,3) : reg.slice(0,3).concat(sp).slice(0,3);
-  }
-})();
+/* Every deck carries 4 Manifests (designer, 2026-10-24); the old 'triple decks carry 3' trim is gone. */
 
 /* ---- Starting life by element ----
    Each element (or confluence) starts at its own life total, a balance lever alongside card strength: set by
