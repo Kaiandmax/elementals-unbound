@@ -84,7 +84,7 @@ const RPG_MAPS = {
     warps:[ { x:9, y:23, to:"town", tx:11, ty:1, dir:"down" }, { x:10, y:23, to:"town", tx:12, ty:1, dir:"down" } ],
     npcs:[ { id:"hiker", x:12, y:8, dir:"left", look:{ shirt:"#9a6b3a", hair:"#3a3a3a" }, talk:"hiker", trainer:"route1_hiker", flag:"beat_hiker", after:"hiker_after" } ],
     signs:[ { x:1, y:1, text:"sign_route1" } ],
-    chests:[ { id:"route1_chest", x:2, y:2, card:"wind_tempest_dragon" } ]
+    chests:[ { id:"route1_chest", x:2, y:2, card:"sovereign_gales" } ]
   }
 };
 
