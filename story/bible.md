@@ -73,10 +73,10 @@ What we keep from BioWare, because it's craft rather than choice:
 - **Basic cards** are ordinary bindings: lesser wilds, and spellwork drawn from bound element.
 - **Charge** is the binder's own channel filling as they work one element. Enough charge lets them call a **Manifest**.
 - **Manifests** are the great bindings: old, named, powerful wilds. Calling one strains the seal, so a Manifest can be called **once per fight** (the once-per-game rule). Their creatures keep their names, histories and grudges.
-- **Purity:** a binder who keeps to one element can hold more great bindings at once, because their channel runs deeper. This is the Manifest-slot bonus (mono 5, dual 4, triple 3). It's common binder wisdom and a point of pride in some nations.
+- **Four great bindings:** no binder's channel can hold more than four great bindings at once, whatever elements they work. Novice and Exalted alike carry four (the rule that every deck has 4 Manifests, designer 2026-10-24). Which four you carry is a binder's signature, and swapping one out is a serious choice. Old binder wisdom says keeping to one element runs deeper, but in truth it buys nothing; some nations still preach it.
 - **Any binder can carry any card.** Bindings don't bond to their owner; skill lives in the binder. That's why rebuilding a deck around a new find costs nothing, and why a great card in a dungeon is worth the trip.
 - **Wards:** every binder wears an elemental ward that soaks harm in a duel. When it breaks, the duel is lost. That's starting life, and it differs by element (a Solar ward is the thickest; Storm, Swamp, Ice, Aurora and Quicksilver wards are the thinnest). Ordinary wilds have weaker wards than binders, which is why normal enemies start with less life.
-- **Duels are short.** Bindings burn hot and wards break fast, so most fights are over in a few exchanges (the 3-turn rule). Long fights happen only against crowned wilds and great binders.
+- **Duels are short.** Bindings burn hot and wards break fast, so most fights with wilds end in under four exchanges a side. Boss fights (a crowned wild, a wild above your rank, or an important duel against a great binder) last six or seven exchanges (designer, 2026-10-24); their crowns and strength are why.
 
 ### Confluences: braiding
 
