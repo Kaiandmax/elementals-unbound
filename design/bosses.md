@@ -1,8 +1,17 @@
 # Boss fights
 
-Owner: TCG Design. Status: **Proposal for the designer** (2026-10-24). Numbers are Balance's; the engine work is Game Dev's.
+Owner: TCG Design. Status: **Approved for boss monsters** (designer, 2026-10-24); NPC duels stay normal battles for now. Numbers are Balance's; the engine work is Game Dev's.
 
-**Goal (designer, 2026-10-24):** normal monster battles last under 4 turns a side. Boss battles (a crowned monster, a monster of a higher rank, or an important duel against an NPC) last about 6-7 turns.
+**Goal (designer, 2026-10-24):** normal monster battles last under 4 turns a side. Boss monster battles (a crowned monster or a monster of a higher rank) last about 6-7 turns.
+
+**NPC duels (designer, 2026-10-24):** phases don't fit people, so NPC duels play as normal battles, without phases. What makes an important one hard is the AI level.
+
+| Opponent | AI level |
+|---|---|
+| Normal monsters (wilds) | 1, 2 or 3 |
+| Boss monsters | 3 or 4 |
+| Normal NPC duels (trainers, contracts) | 3 or 4 |
+| Important NPC duels (rivals, Exalted, story duels) | 5 |
 
 **Proposal:** a boss fights in **phases** (2 or 3 life bars). It **starts slow** (2 Energy instead of 3 in its first phase) and **wakes up** as you break it. Each **phase break** is a beat: the boss's creatures leave the board, you get a breather, the music and story step up. A crowned boss also breaks **one named rule** (its crown).
 
@@ -24,7 +33,7 @@ Owner: TCG Design. Status: **Proposal for the designer** (2026-10-24). Numbers a
 | 2 bars (+10), board clears, boss 2 Energy throughout | 54% | 5.8 | 3.5-7 | 26% | 23% |
 | Damage cap: boss loses at most 4 life a turn, +10 life, player +5 | 13% | 5.5 | 3-7 | 29% | 20% |
 
-**Boss at the player's own rank** (an important NPC duel; mono common vs mono common):
+**Boss at the player's own rank** (tested for NPC duels before the designer kept them as normal battles; mono common vs mono common):
 
 | Boss rules | Player wins | Rounds | Middle half | Over by round 4 |
 |---|---|---|---|---|
@@ -49,11 +58,10 @@ What this means:
 
 ## The boss framework
 
-| Boss kind | Phases | Phase 1 | Each break | Crown rule | Target |
+| Boss kind (AI level 3 or 4) | Phases | Phase 1 | Each break | Crown rule | Target |
 |---|---|---|---|---|---|
 | Higher-rank monster (no crown) | 2 (bar 2 about +10) | Boss at 2 Energy | Boss's creatures leave | None | about 6 rounds |
 | Crowned monster (act boss, Vault guardian) | 3 (bars about +8, +8) | Boss at 2 Energy | Boss's creatures leave; player heals 3 and draws 1; the crown may escalate | One named broken rule | 6-7 rounds |
-| Important NPC duel (rival, Exalted, story duel) | 2 (bar about +8) | NPC at 2 Energy ("sizing you up") | Their creatures leave ("second wind") | Optional: a signature rule | 6-7 rounds |
 
 Rules for every boss:
 
