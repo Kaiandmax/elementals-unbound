@@ -51,6 +51,7 @@ What we keep from BioWare, because it's craft rather than choice:
 - **Distinct voices.** You should be able to tell who's speaking with the name hidden.
 - **Short lines.** Each line fits one dialogue box: about 140 characters, usually one or two beats.
 - **Humor even in bad times.**
+- **Speaker format.** On screen, a line that starts `Name: ` shows a speaker. Narration and signs never put a colon right after their first words; use a dash or a full stop.
 - **No villain monologues.** Antagonists explain themselves like people.
 - **Every scene ends** with Wren learning something, deciding something, or changing a relationship.
 

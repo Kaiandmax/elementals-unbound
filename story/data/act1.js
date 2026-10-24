@@ -101,7 +101,7 @@ Object.assign(RPG_TEXT, {
     "CONTRACTS — BRINDLE FORD",
     "[Copper] Calder millrace. DONE — Calder. Wheel turning. Flour collected (mostly).",
     "[Copper] Wild advisory, Millrace Road. A Holdfast hunter is working it. Coordinate.",
-    "[Steel] ALL STEEL HUNTERS: report to the eastern border posts. By order of the Covenant council."
+    "[Steel] ALL STEEL HUNTERS — report to the eastern border posts. By order of the Covenant council."
   ],
   a1_tilly_copper: [
     "Tilly: COPPER! You're COPPER! Next you'll be Iron, and then Steel, and then...",
@@ -109,7 +109,7 @@ Object.assign(RPG_TEXT, {
   ],
 
   /* ---------- 4. The Road ---------- */
-  a1_sign_road: ["MILLRACE ROAD. North: Weir Vault (SEALED). East: Hollin's Cross. South: Brindle Ford."],
+  a1_sign_road: ["MILLRACE ROAD. North — Weir Vault (SEALED). East — Hollin's Cross. South — Brindle Ford."],
   a1_sign_vault_closed: ["COVENANT SEAL. The Weir Vault is closed by order of the Covenant. Wild activity. Steel rank and above only."],
   a1_brann: [
     "Brann: Whoa, there. Fresh Copper, by the shine on that licence.",
@@ -138,7 +138,7 @@ Object.assign(RPG_TEXT, {
 
   /* ---------- 5. Hollin's Cross ---------- */
   a1_cross_arrival: [
-    "Hollin's Cross: a market at the meeting of three roads, loud with cider-sellers and goat bells.",
+    "Hollin's Cross. A market at the meeting of three roads, loud with cider-sellers and goat bells.",
     "Then the noise stops. Everyone is looking up.",
     "A sky-skiff drops out of the clouds, white sails snapping, and lands on the hall roof without a bump.",
     "A man steps off it, silver-blue coat, hair like a gale had styled it. He doesn't use the stairs. He just steps down.",
@@ -160,7 +160,7 @@ Object.assign(RPG_TEXT, {
   a1_market_3: ["Child: Did you SEE him? Aeris Calloway! He winked at ME. I'm never washing my face again."],
   a1_sign_broadsheet: [
     "THE HEARTHVALE CRIER — Pyrrhen Dominion sends 'relief columns' to wild-struck border towns. Regent Vexis: 'A neighbour's duty.'",
-    "Below, in smaller print: Covenant council 'monitoring the situation'."
+    "Below, in smaller print — Covenant council 'monitoring the situation'."
   ],
   a1_davor: [
     "Captain Davor: Good morning, hunter. Captain Davor Varrane, Third Relief Column of the Pyrrhen Dominion.",
@@ -302,7 +302,7 @@ Object.assign(RPG_TEXT, {
   ],
   a1_edda_last: [
     "Folded under the casket, a last page.",
-    "'To the Calder who finds this: it's yours now. It doesn't want a fighter. It wants someone who can wait, then answer.'",
+    "'To the Calder who finds this — it's yours now. It doesn't want a fighter. It wants someone who can wait, then answer.'",
     "'Build around it, and it'll guard you as it guarded the weir. Mind the Hollows. Mind the crowns. Mind everyone, really.' — Edda"
   ],
   a1_rebuild_hint: [
@@ -388,7 +388,7 @@ Object.assign(RPG_TEXT, {
   ],
   a1_end: [
     "End of the Act I demo.",
-    "Wren Calder: Iron rank. Binder of Slackwater, the Weir Serpent.",
-    "Next: Act II — The Wider World."
+    "Wren Calder — Iron rank. Binder of Slackwater, the Weir Serpent.",
+    "Next — Act II, The Wider World."
   ]
 });
