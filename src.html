@@ -279,6 +279,9 @@ details.rules ul{margin:.5em 0 0;padding-left:1.2em;max-width:80ch;display:grid;
 @media (prefers-reduced-motion:reduce){.rpg-card .rc-in{animation:none}}
 .phases{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--brass);margin-top:4px}
 .phases .pips{display:flex;gap:3px}.phases i{width:16px;height:6px;border-radius:3px;background:var(--bad)}.phases i.gone{background:var(--line)}.phases i.now{box-shadow:0 0 6px var(--bad)}
+.crown,.side{display:block;font-size:12px;font-weight:700;color:var(--fire);margin-top:3px;max-width:44ch}.crown .muted,.side .muted{font-weight:400}
+.bark{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:8;width:min(560px,calc(100vw - 32px));background:rgba(16,19,24,.96);border:2px solid var(--fire);border-radius:10px;padding:12px 36px 12px 16px;display:grid;gap:6px;font-size:14px;box-shadow:0 8px 30px rgba(0,0,0,.5)}
+.bark p{margin:0}.bark b{color:var(--brass);font-family:var(--f-display)}.bark-x{position:absolute;top:6px;right:8px;background:none;border:none;color:var(--mute);cursor:pointer;font-size:14px}
 .phase-big{font-family:var(--f-display);font-size:34px;color:var(--brass);text-shadow:0 2px 10px rgba(0,0,0,.7)}
 .rpg-drop{display:grid;justify-items:center;gap:8px;text-align:center}
 .rpg-drop-cards{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;padding-top:8px}
@@ -542,7 +545,7 @@ async function fxArrows(pairs, label, ms){
   try { await sleep(reduceMotion() ? Math.min(ms, 500) : ms); } finally { svg.remove(); chip && chip.remove(); }
 }
 function onBoard(c){ return g.P[c.owner].board.includes(c); }
-function baseKw(c, k){ if (k==="barrier") return !!c.shield; return c.d.kw.includes(k) || (c.kws && c.kws.includes(k)) || (c.tKws && c.tKws.includes(k)); }
+function baseKw(c, k){ if (k==="barrier") return !!c.shield; if (k==="ward" && c.lurk && g && c.lurk >= g.turnNo) return true; return c.d.kw.includes(k) || (c.kws && c.kws.includes(k)) || (c.tKws && c.tKws.includes(k)); }
 function addKw(c, k, temp){ if (!onBoard(c)) return; if (k==="barrier"){ c.shield = true; return; } if (temp) c.tKws = [...(c.tKws||[]), k]; else c.kws = [...(c.kws||[]), k]; }
 function stMatch(f, c, src){
   switch (f){
@@ -634,7 +637,8 @@ function drawN(p, n){
   }
 }
 function makeCreature(d, p){
-  return { uid: uidSeq++, d, owner:p.i, atk:d.atk, hp:d.hp, dmg:0, tAtk:0, tHp:0, tKws:null, kws:null,
+  const lurk = g && p.boss && p.boss.crown==="lurker" ? g.turnNo + 1 : 0;
+  return { lurk, uid: uidSeq++, d, owner:p.i, atk:d.atk, hp:d.hp, dmg:0, tAtk:0, tHp:0, tKws:null, kws:null,
     sick: !d.kw.includes("haste"), exhausted:false, frozen:false, attacking:false, noBlock:false, shield: d.kw.includes("barrier") };
 }
 const BOARD_MAX = 8;   // creatures per side
@@ -686,6 +690,24 @@ function checkDeaths(){
    At 0 life with a bar left it refills to the next bar instead of losing; its creatures can leave play (no Last Gasp);
    the other side may heal and draw. p.boss is shared by AI look-ahead clones and never mutated; p.phase counts from 1. */
 const bossPhases = p => p.boss ? p.boss.bars.length + 1 : 1;
+/* Crowns (design/bosses.md): a crowned boss breaks one named rule.
+   lurker: its creatures have Ward until the end of your next turn after they arrive.
+   brood: at the start of its turn it summons a token while its side threat lives; the crew wears the threat down 1 a round.
+   sealwork: at each phase break its best creature rebuilds instead of leaving. */
+const CROWNS = {
+  lurker:   { name:"Lurker",   text:"Its creatures can't be targeted until your next turn ends after they arrive." },
+  brood:    { name:"Brood",    text:"While its brood lives, it summons a token at the start of its turn." },
+  sealwork: { name:"Sealwork", text:"At each phase break, its best creature rebuilds." }
+};
+const bossCrown = p => p.boss && p.boss.crown && CROWNS[p.boss.crown] ? p.boss.crown : null;
+function bossStartTurn(p){
+  if (bossCrown(p)==="brood" && p.sideHp > 0){ const t = TOKENS[(p.boss.side && p.boss.side.token) || "ember"]; if (t && summon(p, t)) log(`The brood: ${p.name} summons ${t.name}.`); }
+}
+function bossEndTurn(p){
+  if (!p.boss || !p.boss.side || !(p.sideHp > 0)) return;
+  p.sideHp--;
+  if (!g.sim){ const sd = p.boss.side; log(p.sideHp > 0 ? `${sd.crew || "Your crew"} wear down ${sd.name} (${p.sideHp} left).` : `${sd.crew || "Your crew"} hold ${sd.name}!`, p.sideHp > 0 ? "" : "big"); if (p.sideHp === 0){ if (g.barks && g.barks.held) g.bark = { lines: g.barks.held, t: Date.now() }; if (globalThis.onCrewWin) onCrewWin(p); } }
+}
 function bossEnergyMod(p){
   const b = p.boss; if (!b) return 0;
   if (b.energyByPhase) return (b.energyByPhase[Math.min(p.phase, b.energyByPhase.length) - 1] || 3) - 3;
@@ -695,9 +717,13 @@ function bossBreaks(){
   for (const q of g.P){
     if (q.life > 0 || !q.boss || q.phase >= bossPhases(q)) continue;
     q.life = q.maxLife = q.boss.bars[q.phase - 1]; q.phase++;
-    if (q.boss.clearOnBreak){ for (const c of q.board) if (!c.d.token && !c.d.manifest) q.grave.push(c.d); q.board.length = 0; }
+    let keep = null;
+    if (bossCrown(q)==="sealwork") keep = q.board.filter(c=>!c.d.token).sort((a,b)=>(atkOf(b)+hpOf(b))-(atkOf(a)+hpOf(a)))[0] || null;
+    if (q.boss.clearOnBreak){ for (const c of q.board) if (c!==keep && !c.d.token && !c.d.manifest) q.grave.push(c.d); q.board.length = 0; }
+    if (keep){ const c = makeCreature(keep.d, q), i = q.board.indexOf(keep); if (i >= 0) q.board[i] = c; else q.board.push(c); if (!g.sim) log(`Sealwork: ${keep.d.name} rebuilds.`, "big"); }
     const o = g.P[1-q.i];
     if (q.boss.breakHeal && o.life > 0){ o.life = Math.min(o.maxLife, o.life + q.boss.breakHeal); drawN(o, 1); }
+    if (!g.sim && g.barks && g.barks.breaks && g.barks.breaks[q.phase-2]) g.bark = { lines: g.barks.breaks[q.phase-2], t: Date.now() };
     if (!g.sim){ log(`${q.name} is broken but rises: phase ${q.phase} of ${bossPhases(q)}!`, "big"); g.phaseFlash = { who:q.name, phase:q.phase, of:bossPhases(q) }; if (globalThis.onBossPhase) onBossPhase(q); }
   }
 }
@@ -921,6 +947,7 @@ function resolveCombat(ap){
 function startTurn(p){
   g.P.forEach(q=>{ q.played=0; q.spent=false; q.spells=0; });
   p.energy += 3 + bossEnergyMod(p);
+  if (p.boss) bossStartTurn(p);
   for (const c of p.board){
     if (c.frozen){ c.frozen=false; c.exhausted=true; } else c.exhausted=false;
     c.sick = false;
@@ -934,6 +961,7 @@ function startTurn(p){
 }
 function endTurn(p){
   hook(p, "end"); checkDeaths();
+  if (p.boss) bossEndTurn(p);
   for (const q of g.P) for (const c of q.board){ c.dmg=0; c.tAtk=0; c.tHp=0; c.tKws=null; c.noBlock=false; }
   while (p.hand.length>7){ const d=p.hand.pop(); p.grave.push(d); log(`${p.name} ${p.isAI?"discards":"discard"} ${d.name} (hand limit).`); }
   const cap = bankCap(p);
@@ -1585,8 +1613,10 @@ function newGame(myDeck, enemyDeck, enemyLife, kinds, opts){
   g = { id: Math.random(), screen:"game", P:[], active:0, turnNo:0, phase:"main1", ui:{mode:"idle"}, log:[], combat:null, over:null, cfg:{myDeck, enemyDeck, enemyLife} };
   // Each side starts at its element's life; a normal encounter gives the enemy 5 less.
   g.P = [ newPlayer(0, myDeck, "You", HEADLESS, deckLife(myDeck)), newPlayer(1, enemyDeck, "Enemy", true, deckLife(enemyDeck) + ((enemyLife ?? 15) - 15)) ];
-  if (opts && opts.boss){ g.P[1].boss = opts.boss; g.P[1].phase = 1; }
+  if (opts && opts.boss){ g.P[1].boss = opts.boss; g.P[1].phase = 1; if (opts.boss.side) g.P[1].sideHp = opts.boss.side.hp || 3; }
   if (opts && opts.name) g.P[1].name = opts.name;
+  // Story barks for boss fights: { crown:[lines], breaks:[[lines], ...], held:[lines] } shown at the start, on each break, when the crew wins.
+  if (!HEADLESS && opts && opts.barks){ g.barks = opts.barks; if (opts.barks.crown) g.bark = { lines: opts.barks.crown, t: Date.now() }; }
   g.P.forEach(p=>drawN(p,5));
   // A coin flip decides who goes first (simulations keep seat 0 first so seats can be alternated).
   const first = HEADLESS ? 0 : (Math.random() < 0.5 ? 0 : 1);
@@ -1625,7 +1655,10 @@ function kwLine(d){
 /*__ART__*/
 function bossBarsHTML(p){
   const n = bossPhases(p), pips = Array.from({length:n}, (_, i) => `<i class="${i < p.phase - 1 ? "gone" : i === p.phase - 1 ? "now" : ""}"></i>`).join("");
-  return `<span class="phases" aria-label="Phase ${p.phase} of ${n}"><span class="pips" aria-hidden="true">${pips}</span>Phase ${p.phase} of ${n}${bossEnergyMod(p) < 0 ? " · waking (2 Energy)" : ""}</span>`;
+  const cr = bossCrown(p), sd = p.boss.side;
+  return `<span class="phases" aria-label="Phase ${p.phase} of ${n}"><span class="pips" aria-hidden="true">${pips}</span>Phase ${p.phase} of ${n}${bossEnergyMod(p) < 0 ? " · waking (2 Energy)" : ""}</span>`
+    + (cr ? `<span class="crown" title="${esc(CROWNS[cr].text)}">Crown: ${esc(CROWNS[cr].name)} <span class="muted">${esc(CROWNS[cr].text)}</span></span>` : "")
+    + (sd ? `<span class="side">${esc(sd.name)} ${"●".repeat(Math.max(0,p.sideHp))}${"○".repeat(Math.max(0,(sd.hp||3)-Math.max(0,p.sideHp)))} <span class="muted">${p.sideHp > 0 ? `${esc(sd.crew || "Your crew")} are holding it` : "held!"}</span></span>` : "");
 }
 function cardHTML(d, opts={}){
   const cls = ["card", "el-"+d.el];
@@ -1767,6 +1800,8 @@ function renderGame(){
 
   if (g.coin) modal += `<div class="flash coinflip" aria-live="polite"><div class="flash-in"><div class="coin ${g.coin.first===0?"you":"foe"}"><span class="face f-you">You</span><span class="face f-foe">Enemy</span></div><span class="flash-lbl">Coin flip: ${g.coin.first===0 ? "you go first" : "the enemy goes first"}</span><span class="muted">${g.coin.first===0 ? "You skip your first draw; the enemy starts with 1 banked Energy." : "The enemy skips its first draw; you start with 1 banked Energy."}</span></div></div>`;
   if (g.phaseFlash){ modal += `<div class="flash" aria-live="polite"><div class="flash-in"><span class="flash-lbl">${esc(g.phaseFlash.who)} rises</span><span class="phase-big">Phase ${g.phaseFlash.phase} of ${g.phaseFlash.of}</span></div></div>`; const pf = g.phaseFlash; setTimeout(()=>{ if (g && g.phaseFlash===pf){ g.phaseFlash = null; render(); } }, reduceMotion() ? 900 : 1600); }
+  if (g.bark && !g.over){ modal += `<div class="bark" role="status" aria-live="polite"><button class="bark-x" data-btn="bark-x" aria-label="Dismiss">✕</button>${g.bark.lines.map(l=>{ const [w,t] = rpgSpeaker(l); return `<p>${w ? `<b>${esc(w)}:</b> ` : ""}${esc(t)}</p>`; }).join("")}</div>`;
+    const bk = g.bark; setTimeout(()=>{ if (g && g.bark===bk){ g.bark = null; render(); } }, 4000 + 2200*bk.lines.length); }
   if (g.flash) modal += `<div class="flash" aria-live="polite"><div class="flash-in"><span class="flash-lbl">${esc(g.flash.who)}</span>${cardHTML(g.flash.m,{cls:"bigcard"})}</div></div>`;
   return `<div class="top"><h1>Elementals Unbound</h1><div class="row"><span class="muted">Turn ${g.turnNo} · ${myTurn?"Your turn":"Enemy turn"}</span>${RPG.battle ? (g.over ? `<button class="btn primary" data-btn="rpg-return">Continue</button>` : RPG.battle.kind==="wild" ? `<button class="btn" data-btn="rpg-flee">Run away</button>` : "") : `<button class="btn" data-btn="decks">Change decks</button><button class="btn" data-btn="again">Restart</button>`}</div></div>
   <div class="game" style="margin-top:12px">
@@ -2139,6 +2174,7 @@ function onClick(e){
   if (ds.btn==="decks"){ if(g) g.id = Math.random(); g = null; render(); return; }
   if (!g) return;
   if (ds.btn==="close"){ g.closed=true; render(); return; }
+  if (ds.btn==="bark-x"){ g.bark=null; render(); return; }
   const ui = g.ui, me = g.P[0];
   switch (ui.mode){
     case "main":

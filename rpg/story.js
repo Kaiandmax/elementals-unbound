@@ -4,6 +4,12 @@
    Like world.js, nothing here runs at load time, so the headless sims are unaffected. */
 
 const rpgList = v => v == null ? [] : Array.isArray(v) ? v : [v];
+// "Name: line" shows a speaker. A short prefix with no full stop or comma, not in capitals (sign headings), counts as a name.
+function rpgSpeaker(line){
+  const k = line.indexOf(": "), who = k > 0 && k < 24 ? line.slice(0, k) : "";
+  const ok = who && (who === "???" || (!/[.,]/.test(who) && who !== who.toUpperCase()));
+  return ok ? [who, line.slice(k + 2)] : ["", line];
+}
 function rpgFlags(){ return (RPG.save && RPG.save.flags) || {}; }
 // A thing (NPC, sign, warp, chest, scene, talk variant) is active when all its `when` flags are set and none of its `unless` flags.
 function rpgOk(o){ if (!o) return true; const f = rpgFlags(); return rpgList(o.when).every(k=>f[k]) && !rpgList(o.unless).some(k=>f[k]); }
@@ -15,7 +21,7 @@ function rpgPickLine(spec){
   return rpgOk(spec) ? spec : null;
 }
 // Every text key a spec can show (for smoke.js checks).
-function rpgSpecKeys(spec){ return rpgList(spec).flatMap(e => typeof e === "string" ? [e] : e && e.text ? [e.text] : []); }
+function rpgSpecKeys(spec){ return rpgList(spec).flatMap(e => typeof e === "string" ? [e] : e && e.text ? rpgList(e.text) : []); }
 
 /* ---- Rank: the first rank whose flag is set, else the starting rank ---- */
 function rpgRank(){ const f = rpgFlags(); for (const r of RPG_STORY.ranks || []) if (f[r.flag]) return r.name; return RPG_STORY.firstRank || ""; }
@@ -37,7 +43,7 @@ function rpgPlay(x, then){
     if (x.end){ rpgCard(x.end, () => { render(); then && then(); }); return; }
     render(); then && then();
   };
-  if (x.text) rpgSay(x.text, done); else done();
+  if (x.text) rpgSay(Array.isArray(x.text) ? x.text.flatMap(rpgText) : x.text, done); else done();
 }
 
 /* ---- Full-screen text cards: the cold open before the first map, the end card ---- */
@@ -48,7 +54,7 @@ function rpgCardNext(){
 }
 function rpgCardHTML(){
   const c = RPG.card; if (!c) return "";
-  const line = c.lines[c.i] || "", k = line.indexOf(": "), who = k>0 && k<24 ? line.slice(0,k) : "", txt = who ? line.slice(k+2) : line;
+  const line = c.lines[c.i] || "", [who, txt] = rpgSpeaker(line);
   return `<div class="rpg-card" data-rpgnext role="dialog" aria-live="polite"><div class="rc-in">${who ? `<b>${esc(who)}</b>` : ""}<p>${esc(txt)}</p></div>
     <span class="rc-hint">Enter, Space or tap to continue</span>${c.skip ? `<button class="btn rc-skip" data-btn="rpg-skip">Skip</button>` : ""}</div>`;
 }
