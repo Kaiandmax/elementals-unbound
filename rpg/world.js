@@ -3,10 +3,11 @@
    Everything that touches the page is inside functions that only run in the browser, so the
    headless sims (tools/engine.js) load this file without side effects. */
 const RPG_T = 16, RPG_VW = 15, RPG_VH = 11, RPG_STEP_MS = 170, RPG_SAVE_KEY = "eu.save.v1";
-const RPG_TILE = { ".":1, ",":1, "=":1, "f":1, "D":1, "_":1, ">":1, "s":0, "#":0, "~":0, "R":0, "H":0, "W":0, "t":0 };
+const RPG_TILE = { ".":1, ",":1, "=":1, "f":1, "D":1, "_":1, ">":1, "w":1, "s":0, "#":0, "~":0, "R":0, "H":0, "W":0, "t":0 };
+const RPG_ENC_TILES = { ",":1, "w":1 };   // tall grass and shallow water start wild duels
 const RPG_DIRS = { up:[0,-1], down:[0,1], left:[-1,0], right:[1,0] };
 const RPG = { active:false, save:null, held:[], move:null, turnAt:0, dlg:null, reveal:null, fade:null, battle:null,
-  canvas:null, ctx:null, raf:0, last:0, cam:null, grace:0, eraseArm:false, pad:{}, toast:null };
+  canvas:null, ctx:null, raf:0, last:0, cam:null, grace:0, eraseArm:false, pad:{}, toast:null, card:null, cue:null, introShown:false };
 
 function rpgNewSave(el){
   return { v:1, starter:el, deck:el+"_starter", map:RPG_START.map, x:RPG_START.x, y:RPG_START.y, dir:RPG_START.dir,
@@ -19,9 +20,10 @@ function rpgMap(){ return RPG_MAPS[RPG.save.map]; }
 function rpgTile(m, x, y){ return (m.rows[y] || "")[x] || "#"; }
 function rpgThingAt(m, x, y){
   const s = RPG.save;
-  const n = (m.npcs||[]).find(o=>o.x===x && o.y===y); if (n) return { kind:"npc", o:n };
-  const c = (m.chests||[]).find(o=>o.x===x && o.y===y); if (c) return { kind:"chest", o:c, open:!!s.opened[c.id] };
-  const g2 = (m.signs||[]).find(o=>o.x===x && o.y===y); if (g2) return { kind:"sign", o:g2 };
+  const at = o => o.x===x && o.y===y && rpgOk(o);
+  const n = (m.npcs||[]).find(at); if (n) return { kind:"npc", o:n };
+  const c = (m.chests||[]).find(at); if (c) return { kind:"chest", o:c, open:!!s.opened[c.id] };
+  const g2 = (m.signs||[]).find(at); if (g2) return { kind:"sign", o:g2 };
   return null;
 }
 function rpgWalkable(m, x, y){ return !!RPG_TILE[rpgTile(m,x,y)] && !rpgThingAt(m,x,y); }
@@ -29,13 +31,18 @@ function rpgText(key){ return (RPG_TEXT[key] || ["("+key+")"]).slice(); }
 function rpgSay(lines, then){ RPG.dlg = { lines: Array.isArray(lines) ? lines : rpgText(lines), i:0, then }; rpgUI(); }
 
 /* ---- Entering and leaving the overworld ---- */
-function rpgOpen(){ RPG.save = RPG.save || rpgLoad(); RPG.active = true; RPG.cam = null; render(); }
+function rpgOpen(){
+  RPG.save = RPG.save || rpgLoad(); RPG.active = true; RPG.cam = null;
+  if (!RPG.save && RPG_STORY.intro && !RPG.introShown){ RPG.card = { lines: rpgText(RPG_STORY.intro), i:0, skip:true, then: rpgIntroDone }; rpgMusic(RPG_STORY.introMusic); }
+  render();
+}
+function rpgIntroDone(){ RPG.introShown = true; RPG.card = null; render(); }
 function rpgQuit(){ rpgStore(); RPG.active = false; cancelAnimationFrame(RPG.raf); RPG.raf = 0; render(); }
-function rpgBegin(el){ RPG.save = rpgNewSave(el); RPG.grace = 2; rpgStore(); RPG.cam = null; render(); rpgSay("parent"); }
+function rpgBegin(el){ RPG.save = rpgNewSave(el); RPG.grace = 2; rpgStore(); RPG.cam = null; render(); if (!rpgCheckScenes(true) && RPG_STORY.startText) rpgSay(RPG_STORY.startText); }
 
 /* ---- Movement ---- */
 function rpgFront(){ const s = RPG.save, d = RPG_DIRS[s.dir]; return [s.x+d[0], s.y+d[1]]; }
-function rpgBusy(){ return !!(RPG.dlg || RPG.reveal || RPG.fade || RPG.battle); }
+function rpgBusy(){ return !!(RPG.dlg || RPG.reveal || RPG.fade || RPG.battle || RPG.card); }
 function rpgUpdate(dt, now){
   const s = RPG.save; if (!s) return;
   if (RPG.fade){ RPG.fade.t += dt; if (!RPG.fade.done && RPG.fade.t >= RPG.fade.ms/2){ RPG.fade.done = true; RPG.fade.mid && RPG.fade.mid(); } if (RPG.fade && RPG.fade.t >= RPG.fade.ms) RPG.fade = null; return; }
@@ -56,45 +63,54 @@ function rpgUpdate(dt, now){
 function rpgArrive(){
   const s = RPG.save, m = rpgMap();
   s.steps++; if (RPG.grace > 0) RPG.grace--;
-  const w = (m.warps||[]).find(o=>o.x===s.x && o.y===s.y);
-  if (w){ RPG.held = RPG.held.filter(d=>d===w.dir); return rpgFade(()=>{ s.map = w.to; s.x = w.tx; s.y = w.ty; s.dir = w.dir || s.dir; RPG.cam = null; RPG.grace = Math.max(RPG.grace, 1); rpgStore(); render(); }); }
+  const w = (m.warps||[]).find(o=>o.x===s.x && o.y===s.y && rpgOk(o));
+  if (w){ RPG.held = RPG.held.filter(d=>d===w.dir); return rpgFade(()=>{ s.map = w.to; s.x = w.tx; s.y = w.ty; s.dir = w.dir || s.dir; RPG.cam = null; RPG.grace = Math.max(RPG.grace, 1); rpgStore(); render(); rpgCheckScenes(true); }); }
   rpgStore();
-  if (rpgTile(m, s.x, s.y)==="," && m.grass && RPG.grace<=0){
-    const tbl = RPG_ENCOUNTERS[m.grass];
+  if (rpgCheckScenes(false)) return;
+  if (RPG_ENC_TILES[rpgTile(m, s.x, s.y)] && RPG.grace<=0){
+    const tbl = RPG_ENCOUNTERS[rpgGrassTable(m)];
     if (tbl && Math.random() < tbl.rate) rpgWild(tbl);
   }
 }
+// m.grass is a table key, or a list [{ when, unless, table }] where the first match wins.
+function rpgGrassTable(m){ if (!m.grass || typeof m.grass === "string") return m.grass; const e = m.grass.find(rpgOk); return e && e.table; }
 function rpgFade(mid, ms){ RPG.fade = { t:0, ms: ms || (reduceMotion() ? 120 : 420), mid }; }
 
 /* ---- Talking, signs, chests ---- */
 function rpgAction(){
+  if (RPG.card){ rpgCardNext(); return; }
   if (RPG.reveal){ RPG.reveal = null; rpgUI(); if (RPG.after){ const f = RPG.after; RPG.after = null; f(); } return; }
   if (RPG.dlg){ const d = RPG.dlg; d.i++; if (d.i >= d.lines.length){ RPG.dlg = null; rpgUI(); d.then && d.then(); } else rpgUI(); return; }
   if (rpgBusy() || RPG.move) return;
   const s = RPG.save, m = rpgMap(), [fx, fy] = rpgFront(), th = rpgThingAt(m, fx, fy);
   if (!th) return;
-  if (th.kind==="sign") return rpgSay(th.o.text);
+  if (th.kind==="sign") return rpgPlay(rpgPickLine(th.o.text));
   if (th.kind==="chest"){
     if (th.open) return rpgSay("chest_empty");
-    const d = LIB[th.o.card]; if (!d) return rpgSay(["(This chest's card is missing: "+th.o.card+")"]);
-    s.opened[th.o.id] = true; s.collection.push(d.id); rpgStore();
-    RPG.reveal = { card:d, t:Date.now() }; render(); return;
+    const c = th.o, d = LIB[c.card]; if (!d) return rpgSay(["(This chest's card is missing: "+c.card+")"]);
+    s.opened[c.id] = true; s.collection.push(d.id); rpgStore();
+    rpgSting(c.stinger || "sting-card");
+    RPG.reveal = { card:d, t:Date.now() };
+    if (c.text || c.sets) RPG.after = () => rpgPlay({ text:c.text, sets:c.sets });
+    render(); return;
   }
   if (th.kind==="npc"){
     const n = th.o, back = { up:"down", down:"up", left:"right", right:"left" };
     if (!n.still) n.dir = back[s.dir];
-    if (n.trainer && !(n.flag && s.flags[n.flag])) return rpgSay(n.talk, ()=>rpgTrainer(n));
-    return rpgSay(n.trainer && n.after ? n.after : n.talk);
+    if (n.trainer && !(n.flag && s.flags[n.flag])) return rpgPlay(rpgPickLine(n.talk) || {}, ()=>rpgTrainer(n));
+    const x = rpgPickLine(n.trainer && n.after ? n.after : n.talk);
+    return rpgPlay(x && n.sets && !x.sets ? { ...x, sets:n.sets } : x);
   }
 }
 
 /* ---- Battles ---- */
 function rpgPick(list){ const tot = list.reduce((a,e)=>a+(e.w||1),0); let r = Math.random()*tot; for (const e of list){ r -= (e.w||1); if (r<0) return e; } return list[list.length-1]; }
-function rpgWild(tbl){ const e = rpgPick(tbl.list); RPG.held = []; rpgFade(()=>rpgBattle({ kind:"wild", deck:e.deck, level:e.level, lifeMod:e.lifeMod||0, grace:tbl.grace }), reduceMotion() ? 150 : 700); }
-function rpgTrainer(n){ const t = RPG_TRAINERS[n.trainer]; if (!t) return; RPG.held = []; rpgFade(()=>rpgBattle({ kind:"trainer", npc:n.id, flag:n.flag, win:n.id+"_win", deck:t.deck, level:t.level, lifeMod:t.lifeMod||0, boss:t.boss, name:t.name, grace:3 }), reduceMotion() ? 150 : 700); }
+function rpgWild(tbl){ const e = rpgPick(tbl.list); RPG.held = []; rpgFade(()=>rpgBattle({ kind:"wild", deck:e.deck, level:e.level, lifeMod:e.lifeMod||0, grace:tbl.grace, music:tbl.music || "battle-wild" }), reduceMotion() ? 150 : 700); }
+function rpgTrainer(n){ const t = RPG_TRAINERS[n.trainer]; if (!t) return; RPG.held = []; rpgFade(()=>rpgBattle({ kind:"trainer", npc:n.id, flag:n.flag, win:n.win || n.id+"_win", deck:t.deck, level:t.level, lifeMod:t.lifeMod||0, boss:t.boss, name:t.name || n.name, music:t.music || n.music || "battle-contract", grace:3 }), reduceMotion() ? 150 : 700); }
 function rpgBattle(b){
   if (!DECK_BY_ID[b.deck] || !DECK_BY_ID[RPG.save.deck]) { RPG.fade = null; return rpgSay(["(Missing deck: "+b.deck+")"]); }
   RPG.battle = b; cancelAnimationFrame(RPG.raf); RPG.raf = 0; RPG.fade = null;
+  rpgMusic(b.music);
   newGame(RPG.save.deck, b.deck, 15 + b.lifeMod, [3, b.level], { boss:b.boss, name:b.name });
 }
 /* ---- Card drops: a won duel may give one basic card from the enemy's deck, weighted by rarity ---- */
@@ -123,6 +139,7 @@ function rpgRollDrops(deckId, kind, owned){
 // Called once when a duel launched from the overworld ends in a win: rolls the drop and banks it right away.
 function rpgSettle(){
   const b = RPG.battle; if (!b || b.settled || !g || !g.over) return; b.settled = true;
+  rpgSting(g.over==="you" ? "sting-victory" : "sting-defeat");
   if (g.over!=="you") return;
   const s = RPG.save; b.loot = rpgRollDrops(b.deck, b.kind, s.collection);
   s.collection.push(...b.loot.cards);
@@ -139,13 +156,20 @@ function rpgEndBattle(fled){
   const b = RPG.battle, res = fled ? "fled" : (g && g.over), s = RPG.save;
   if (g) g.id = Math.random(); g = null; RPG.battle = null; RPG.grace = b ? b.grace : 2; RPG.cam = null;
   let msg = null;
-  if (res==="you"){ s.wins++; if (b.flag) s.flags[b.flag] = true; if (b.kind==="trainer" && RPG_TEXT[b.win]) msg = b.win; }
+  if (res==="you"){ s.wins++; if (b.kind==="trainer" && RPG_TEXT[b.win]) msg = { text:b.win, sets:b.flag }; else if (b.flag) rpgSetFlag(b.flag); }
   else if (res==="enemy" || res==="draw"){
     s.losses++;
-    const m = rpgMap(), h = m.heal ? { map:s.map, x:m.heal[0], y:m.heal[1] } : { map:"town", x:RPG_MAPS.town.heal[0], y:RPG_MAPS.town.heal[1] };
-    s.map = h.map; s.x = h.x; s.y = h.y; s.dir = "down"; msg = "lost";
+    const m = rpgMap(), h = rpgHealPoint(m);
+    msg = { text: m.lost || "lost" };
+    s.map = h.map; s.x = h.x; s.y = h.y; s.dir = "down";
   }
-  rpgStore(); render(); if (msg) rpgSay(msg);
+  rpgStore(); render(); if (msg) rpgPlay(msg);
+}
+// Where you wake up after losing: the map's heal point ([x, y] on this map, or { map, x, y }), else the start.
+function rpgHealPoint(m){
+  const h = m.heal; if (Array.isArray(h)) return { map:RPG.save.map, x:h[0], y:h[1] };
+  if (h && h.map) return h;
+  return { map:RPG_START.map, x:RPG_START.x, y:RPG_START.y };
 }
 
 /* ---- Save file export / import (saves live in this browser; a file moves them between devices) ---- */
@@ -165,7 +189,7 @@ function rpgImport(file){
 /* ---- Input: keyboard, touch d-pad, gamepad ---- */
 const RPG_KEYS = { ArrowUp:"up", ArrowDown:"down", ArrowLeft:"left", ArrowRight:"right", w:"up", s:"down", a:"left", d:"right", W:"up", S:"down", A:"left", D:"right" };
 function rpgOnKey(e, down){
-  if (!RPG.active || g || !RPG.save) return;
+  if (!RPG.active || g || (!RPG.save && !RPG.card)) return;
   if (e.target && e.target.closest && e.target.closest("input,textarea,select")) return;
   const dir = RPG_KEYS[e.key];
   if (dir){ e.preventDefault(); RPG.held = RPG.held.filter(d=>d!==dir); if (down) RPG.held.push(dir); return; }
@@ -198,6 +222,7 @@ function rpgDrawTile(c, ch, tx, ty, px, py, now){
       for (let row=0; row<3; row++) for (let i=0;i<4;i++){ const x = i*4 + (row%2?2:0), y = 3 + row*5; R(x+sway,y,1,3,"#2a5a25"); R(x+1+sway,y-1,1,4,"#5fa34c"); R(x+2,y+1,1,2,"#2a5a25"); } break; }
     case "=": R(0,0,T,T,"#c2a26a"); for (let i=0;i<3;i++) R((rpgHash(tx,ty,i+11)*14)|0,(rpgHash(ty,tx,i+13)*14)|0,2,1,"#a88a55"); break;
     case "#": grass(); R(6,10,4,6,"#5a3d22"); c.fillStyle = "#24502a"; c.beginPath(); c.arc(px+8, py+7, 7, 0, Math.PI*2); c.fill(); R(4,3,3,2,"#3a7a3c"); R(9,6,2,2,"#3a7a3c"); break;
+    case "w": { R(0,0,T,T,"#3f7f9e"); const o = Math.floor(now/500 + tx*2 + ty) % 4; R(2+o*3,5,3,1,"#8cc4dc"); R(9-o,11,4,1,"#8cc4dc"); R((tx*5+ty*3)%12+2,8,1,2,"#2e5f78"); break; }
     case "~": { R(0,0,T,T,"#2f6ea8"); const o = Math.floor(now/400 + tx + ty) % 4; R((o*4)%T,4,4,1,"#6aa8dc"); R(((o*4)+8)%T,11,4,1,"#6aa8dc"); break; }
     case "R": R(0,0,T,T,"#9a4434"); for (let y=2;y<T;y+=4) R(0,y,T,1,"#7a3328"); R((ty%2)*4,0,1,T,"#7a3328"); R((ty%2)*4+8,0,1,T,"#7a3328"); break;
     case "H": R(0,0,T,T,"#ddcfae"); R(0,T-2,T,2,"#b4a582"); if (tx%2===0){ R(4,4,8,7,"#3c5f86"); R(4,4,8,1,"#6d4a2c"); R(7,4,2,7,"#6d4a2c"); } break;
@@ -236,18 +261,20 @@ function rpgDraw(now){
     rpgDrawTile(c, m.rows[ty][tx], tx, ty, Math.round((tx-cx)*T), Math.round((ty-cy)*T), now);
   }
   const P = (x, y) => [Math.round((x-cx)*T), Math.round((y-cy)*T)];
-  for (const sg of (m.signs||[])){ const [px,py] = P(sg.x, sg.y); c.fillStyle="#6d4a2c"; c.fillRect(px+7,py+8,2,7); c.fillRect(px+2,py+3,12,7); c.fillStyle="#a8824e"; c.fillRect(px+3,py+4,10,5); }
-  for (const ch of (m.chests||[])){ const [px,py] = P(ch.x, ch.y), open = s.opened[ch.id];
+  const ok = o => rpgOk(o);
+  for (const sg of (m.signs||[]).filter(ok)){ const [px,py] = P(sg.x, sg.y); c.fillStyle="#6d4a2c"; c.fillRect(px+7,py+8,2,7); c.fillRect(px+2,py+3,12,7); c.fillStyle="#a8824e"; c.fillRect(px+3,py+4,10,5); }
+  for (const ch of (m.chests||[]).filter(ok)){ const [px,py] = P(ch.x, ch.y), open = s.opened[ch.id];
     c.fillStyle="rgba(0,0,0,.25)"; c.fillRect(px+2,py+13,12,2);
     c.fillStyle="#6a3f1e"; c.fillRect(px+2,py+5,12,9); c.fillStyle= open ? "#2a1a0e" : "#9a6430"; c.fillRect(px+3, py+(open?5:6), 10, open?3:7);
     c.fillStyle="#e2c46a"; c.fillRect(px+2,py+8,12,1); if (!open){ c.fillRect(px+7,py+8,2,3); const glint = Math.sin(now/300) > 0.7; if (glint){ c.fillStyle="#fff6c8"; c.fillRect(px+11,py+4,1,1); } } }
-  const people = (m.npcs||[]).map(n=>({ y:n.y, draw:()=>{ const [px,py] = P(n.x, n.y); rpgDrawPerson(c, px, py, n.dir, n.look, 0); } }));
+  const npcs = (m.npcs||[]).filter(ok);
+  const people = npcs.map(n=>({ y:n.y, draw:()=>{ const [px,py] = P(n.x, n.y); rpgDrawPerson(c, px, py, n.dir, n.look, 0); } }));
   const shirt = getComputedStyle(document.documentElement).getPropertyValue("--"+s.starter).trim() || "#cda54d";
   const step = RPG.move ? (RPG.move.t > RPG_STEP_MS/2 ? 0 : ((s.steps % 2) ? 1 : 2)) : 0;
   people.push({ y:fy, draw:()=>{ const [px,py] = P(fx, fy); rpgDrawPerson(c, px, py, s.dir, { shirt, hair:"#3b2a1e" }, step); } });
   people.sort((a,b)=>a.y-b.y).forEach(p=>p.draw());
-  if (m.grass){ // tall grass covers the lower half of anyone standing in it
-    for (const who of [{x:fx,y:fy}, ...(m.npcs||[])]){ const tx = Math.round(who.x), ty = Math.round(who.y); if (rpgTile(m,tx,ty)!==",") continue; const [px,py] = P(tx,ty); c.fillStyle="#3f7a34"; c.fillRect(px+1,py+11,14,5); c.fillStyle="#5fa34c"; for (let i=1;i<15;i+=3) c.fillRect(px+i,py+10,1,4); }
+  { // tall grass covers the lower half of anyone standing in it
+    for (const who of [{x:fx,y:fy}, ...npcs]){ const tx = Math.round(who.x), ty = Math.round(who.y); if (rpgTile(m,tx,ty)!==",") continue; const [px,py] = P(tx,ty); c.fillStyle="#3f7a34"; c.fillRect(px+1,py+11,14,5); c.fillStyle="#5fa34c"; for (let i=1;i<15;i+=3) c.fillRect(px+i,py+10,1,4); }
   }
   if (RPG.fade){ const k = RPG.fade.t / RPG.fade.ms, a = k < .5 ? k*2 : (1-k)*2; c.fillStyle = `rgba(8,10,14,${Math.max(0,Math.min(1,a)).toFixed(3)})`; c.fillRect(0,0,RPG_VW*T,RPG_VH*T); }
 }
@@ -261,15 +288,17 @@ function rpgLoop(now){
 /* ---- Screen ---- */
 function renderWorld(){
   const s = RPG.save;
+  if (!s && RPG.card) return `<div class="rpg"><div class="rpg-stage rpg-intro"><div id="rpgui"></div></div></div>`;
   if (!s){
     const tiles = BASE_ELS.map(e=>`<button class="tile el-${e}" data-rpgstart="${e}"><b>${ELS[e]}</b><span>${esc(EL_STYLE[e])}</span></button>`).join("");
-    return `<div class="setup rpg-start"><header><h1 style="font-size:30px">Adventure</h1><p>A first look at the overworld: walk around, step into tall grass for wild duels, talk to people, open a chest. Pick the element of your starter deck.</p></header>
+    const prompt = RPG_STORY.pickPrompt && RPG_TEXT[RPG_STORY.pickPrompt] ? rpgText(RPG_STORY.pickPrompt).map(l=>{ const k = l.indexOf(": "); return k>0 && k<24 ? `<b>${esc(l.slice(0,k))}:</b> ${esc(l.slice(k+2))}` : esc(l); }).join("<br>") : "Pick the element of your starter deck.";
+    return `<div class="setup rpg-start"><header><h1 style="font-size:30px">Adventure</h1><p>${prompt}</p></header>
       <div class="tiles">${tiles}</div><div class="row"><button class="btn" data-btn="rpg-quit">Back to playtest menu</button><label class="btn rpg-file">Load a save file<input type="file" accept=".json,application/json" data-rpgimport hidden></label></div>${RPG.toast ? `<p class="muted">${esc(RPG.toast)}</p>` : ""}</div>`;
   }
   const m = rpgMap(), dk = DECK_BY_ID[s.deck];
   return `<div class="rpg">
-    <div class="top"><h1>${esc(m.name)}</h1><div class="row"><span class="muted">Deck: ${esc(dk ? dk.name : s.deck)} · ${s.collection.length} found · ${s.wins} wins${Object.entries(s.essence||{}).filter(([,n])=>n>0).map(([e,n])=>` · ${n} ${esc(ELS[e])} essence`).join("")}</span>
-      <button class="btn" data-btn="rpg-export">Save to file</button><label class="btn rpg-file">Load file<input type="file" accept=".json,application/json" data-rpgimport hidden></label>
+    <div class="top"><h1>${esc(m.name)}</h1><div class="row"><span class="muted">${rpgRank() ? `<b class="rpg-rank">${esc(rpgRank())}</b> · ` : ""}Deck: ${esc(dk ? dk.name : s.deck)} · ${s.collection.length} found · ${s.wins} wins${Object.entries(s.essence||{}).filter(([,n])=>n>0).map(([e,n])=>` · ${n} ${esc(ELS[e])} essence`).join("")}</span>
+      <button class="btn" data-btn="rpg-sound" aria-pressed="${rpgSoundOn()}">${rpgSoundOn() ? "Sound on" : "Sound off"}</button><button class="btn" data-btn="rpg-export">Save to file</button><label class="btn rpg-file">Load file<input type="file" accept=".json,application/json" data-rpgimport hidden></label>
       <button class="btn" data-btn="rpg-new">${RPG.eraseArm ? "Click again to erase" : "New adventure"}</button><button class="btn" data-btn="rpg-quit">Playtest menu</button></div></div>
     <div class="rpg-stage"><canvas id="rpgc" width="${RPG_VW*RPG_T}" height="${RPG_VH*RPG_T}" aria-label="Overworld map. Arrow keys or WASD to walk, Enter or Space to talk."></canvas><div id="rpgui"></div></div>
     <div class="rpg-pad" aria-hidden="true"><div class="dpad"><button data-pad="up">▲</button><button data-pad="left">◀</button><button data-pad="right">▶</button><button data-pad="down">▼</button></div><button class="abtn" data-pad="a">A</button></div>
@@ -283,12 +312,14 @@ function rpgUI(){
     h += `<div class="rpg-dlg" data-rpgnext role="status" aria-live="polite">${who ? `<b>${esc(who)}</b>` : ""}<span>${esc(txt)}</span><i aria-hidden="true">▼</i></div>`; }
   if (RPG.reveal){ const d = RPG.reveal.card;
     h += `<div class="rpg-reveal" data-rpgnext role="dialog" aria-label="New card"><div class="rays el-${d.el}"></div><div class="rv-in"><span class="lbl">You found a card</span>${cardHTML(d,{cls:"bigcard"})}<span class="muted">Added to your collection. (The deck builder comes next.) Press Enter or tap to continue.</span></div></div>`; }
+  h += rpgCardHTML();
   box.innerHTML = h;
 }
 function rpgMount(){
+  rpgUI();
   const cv = document.getElementById("rpgc"); if (!cv) return;
   RPG.canvas = cv; RPG.ctx = cv.getContext("2d"); RPG.ctx.imageSmoothingEnabled = false;
-  rpgUI(); RPG.last = 0;
+  RPG.last = 0; rpgMusic(RPG.cue || rpgMap().music);
   if (!RPG.raf) RPG.raf = requestAnimationFrame(rpgLoop);
 }
 function rpgClick(el){
@@ -299,6 +330,8 @@ function rpgClick(el){
     case "rpg": rpgOpen(); return true;
     case "rpg-quit": RPG.eraseArm = false; rpgQuit(); return true;
     case "rpg-export": rpgExport(); return true;
+    case "rpg-sound": rpgToggleSound(); return true;
+    case "rpg-skip": { const c = RPG.card; RPG.card = null; c && c.then && c.then(); return true; }
     case "rpg-new": if (!RPG.eraseArm){ RPG.eraseArm = true; render(); setTimeout(()=>{ if (RPG.eraseArm){ RPG.eraseArm = false; if (RPG.active && !g) render(); } }, 4000); }
       else { RPG.eraseArm = false; RPG.save = null; try { localStorage.removeItem(RPG_SAVE_KEY); } catch(e){} render(); } return true;
     case "rpg-return": rpgEndBattle(false); return true;
@@ -315,4 +348,7 @@ function rpgInit(){
     if (k==="a") rpgAction(); else RPG.pad = { dir:k, src:"touch" }; };
   const padUp = ()=>{ if (RPG.pad.src==="touch") RPG.pad = {}; };
   document.addEventListener("pointerdown", padDown); document.addEventListener("pointerup", padUp); document.addEventListener("pointercancel", padUp);
+  // Browsers only start audio after a user gesture.
+  const unlock = () => { if (rpgHasMusic() && rpgSoundOn()){ try { Music.unlock(); if (!RPG.unlocked){ RPG.unlocked = true; if (RPG.active && !g) rpgMusic(RPG.card ? RPG_STORY.introMusic : RPG.save && (RPG.cue || rpgMap().music)); } } catch(e){} } };
+  document.addEventListener("pointerdown", unlock, true); document.addEventListener("keydown", unlock, true);
 }

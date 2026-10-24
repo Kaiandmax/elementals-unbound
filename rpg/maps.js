@@ -1,20 +1,32 @@
 /* ---- RPG maps (owner: Game Dev; place names and all words come from Story) ----
    A map is a grid of one-character tiles plus things placed on it.
-   Tiles:  .  grass          ,  tall grass (encounters)   =  path       f  flowers
-           #  tree (solid)   ~  water (solid)             R  roof       H  house wall
-           D  door           s  sign (solid, read it)     _  floor      W  inside wall
-           t  table (solid)  >  doormat / exit
-   Things: warps   [{ x, y, to, tx, ty, dir }]   step on (x,y) -> map `to` at (tx,ty) facing dir
-           npcs    [{ id, x, y, dir, look:{shirt,hair}, talk, trainer?, flag?, after?, still? }]
-                     talk/after are RPG_TEXT keys; trainer is an RPG_TRAINERS key; flag is set when beaten
-           signs   [{ x, y, text }]              text is an RPG_TEXT key
-           chests  [{ id, x, y, card, text? }]   card is a card id; opened once per save
-           grass   an RPG_ENCOUNTERS key for this map's tall grass
-           heal    [x, y]  where you wake up after losing on this map (falls back to the town's) */
+   Tiles:  .  grass          ,  tall grass (wild duels)   w  shallow water (wild duels)   =  path      f  flowers
+           #  tree (solid)   ~  water (solid)             R  roof       H  house wall    D  door
+           s  sign post      _  floor                     W  inside wall   t  table (solid)   >  doormat / exit
+   Map fields:
+     name, music (a track id from music/), grass (an RPG_ENCOUNTERS key, or [{ when, unless, table }], first match wins)
+     heal  where you wake up after losing: [x, y] on this map or { map, x, y }      lost  text key played when you do
+   Things (every one can carry when: "flag" / unless: "flag", or lists of flags, to appear only in some story states):
+     warps   [{ x, y, to, tx, ty, dir }]   step on (x,y) -> map `to` at (tx,ty) facing dir
+     npcs    [{ id, x, y, dir, look:{shirt,hair}, talk, sets?, trainer?, flag?, win?, after?, music?, still? }]
+               talk/after: a text spec (below); trainer: an RPG_TRAINERS key; flag: set when beaten;
+               win: text key after a win (default <id>_win); sets: flag(s) set after talking
+     signs   [{ x, y, text }]              text is a text spec; a sign is solid, so a sign with `unless` can block a road
+     chests  [{ id, x, y, card, text?, sets?, stinger? }]   card is a card id, opened once per save; text plays after the reveal
+     scenes  [{ id, at:[x,y] | area:[x0,y0,x1,y1] | (neither: on entering the map), text, sets?, stinger?, music?, end?, repeat? }]
+               one-time unless repeat: playing it sets the flag scene_<id>; end: a text key shown as a full-screen end card
+   Text spec: "key" | { text, sets?, stinger?, music?, end? } | a list of those with when/unless, where the first match wins.
+   Keys are RPG_TEXT entries (placeholders below; Story's real words in story/data/*.js). smoke.js checks every reference. */
+
+/* Story setup: the cold open before the first map, the deck-pick prompt, hunter ranks (first match wins) and their stinger. */
+const RPG_STORY = {
+  intro: "a1_intro", introMusic: "cold-open", pickPrompt: "a1_pick_deck", startText: null,
+  firstRank: "Tin", ranks: [ { flag:"a1_rank_iron", name:"Iron" }, { flag:"a1_rank_copper", name:"Copper" } ], rankStinger: "sting-rankup"
+};
 const RPG_START = { map:"house", x:5, y:4, dir:"up" };
 const RPG_MAPS = {
   town: {
-    name:"Hometown", grass:"town_grass", heal:[11,9],
+    name:"Hometown", music:"brindle-ford", grass:"town_grass", heal:[11,9],
     rows:[
       "###########==###########",
       "#f.........==.........f#",
@@ -40,7 +52,7 @@ const RPG_MAPS = {
     chests:[]
   },
   house: {
-    name:"Your house", heal:[4,4],
+    name:"Your house", music:"brindle-ford", heal:[4,4],
     rows:[
       "WWWWWWWWWW",
       "W________W",
@@ -55,7 +67,7 @@ const RPG_MAPS = {
     signs:[], chests:[]
   },
   route1: {
-    name:"Route 1", grass:"route1_grass",
+    name:"Route 1", music:"hearthvale-roads", grass:"route1_grass",
     rows:[
       "####################",
       "#.........#,,,,,,,,#",
