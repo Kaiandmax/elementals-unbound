@@ -49,7 +49,7 @@ What we keep from BioWare, because it's craft rather than choice:
 **How it reads:**
 
 - **Distinct voices.** You should be able to tell who's speaking with the name hidden.
-- **Short lines.** Two sentences per line at most.
+- **Short lines.** Each line fits one dialogue box: about 140 characters, usually one or two beats.
 - **Humor even in bad times.**
 - **No villain monologues.** Antagonists explain themselves like people.
 - **Every scene ends** with Wren learning something, deciding something, or changing a relationship.
