@@ -112,7 +112,7 @@ War comes. The party fights as Covenant neutrals, protecting people on both side
   - The hot-spring towns sit between two armies.
   - The party escorts refugees.
   - **Pell's choice:** his brother Davor's column is ordered to burn a spring town. Pell stands against his brother in a duel at the top AI level, and Davor never forgives him.
-- **Vault:** a Steam vault under the springs. **Loot concept:** a Steam Manifest that gets stronger with cards in hand.
+- **Vault:** a Steam vault under the springs, guarded for generations by the Varranes. **Loot:** the **Varrane Crest-Drake**, Pell's personal card (see `characters/pell.md`): a Fire Manifest that rewards attacking alone.
 - **Boss:** a crowned steam wild, **Overcharge** crown. **Gold** rank.
 
 ### III-3. The Ashfields (Volcano / Wildfire, the Dominion)
@@ -209,7 +209,7 @@ The world is breaking. Wren fights beside the Exalted as a peer. **Tone:** epic,
 ## What other roles will need from this outline
 
 - **TCG Design:**
-  - About a dozen loot-card concepts: six vaults (Bellwater, Root, Galewright, Steam, Ash, Thunderhold) and five companion cards (Pell, Isa, Brann, Kes, Tamsin), plus Slackwater, already done.
+  - Six loot-card concepts. Five are also the companions' personal cards: the Tolling Kraken (Isa), the Rootbound Colossus (Brann), the Windlord's Roc (Kes), the Varrane Crest-Drake (Pell) and the Hymn of Thunderhold (Tamsin). The sixth is the Ash vault card. Slackwater is already done. See `characters/`.
   - Bosses and crowns per chapter.
   - Two special duels: the **Vexis escape** (survive N turns) and **Seraphine** (every crown at once).
 - **Game Dev:** about 15 regions of maps over the game; returning to Brindle Ford with a changed map in each act.
