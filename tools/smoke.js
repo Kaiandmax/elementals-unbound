@@ -5,17 +5,24 @@ const decks = Object.values(S.DECK_BY_ID); const N = +(process.env.N || 60);
 let bad = 0;
 // RPG data: maps are rectangles of known tiles, every reference points at something that exists, and every walkable tile is reachable.
 { const M = S.RPG_MAPS, err = (m, t) => { console.error(`rpg ${m}: ${t}`); bad++; };
-  const walk = (m, x, y) => !!S.RPG_TILE[(m.rows[y]||"")[x]] && ![...(m.npcs||[]), ...(m.chests||[]), ...(m.signs||[])].some(o => o.x===x && o.y===y);
+  // Things with when/unless come and go with the story, so only unconditional ones count as permanent walls here.
+  const fixed = o => o.when == null && o.unless == null;
+  const walk = (m, x, y) => !!S.RPG_TILE[(m.rows[y]||"")[x]] && ![...(m.npcs||[]), ...(m.chests||[]), ...(m.signs||[])].some(o => fixed(o) && o.x===x && o.y===y);
+  const keys = (where, spec) => { for (const k of S.rpgSpecKeys(spec)) if (!S.RPG_TEXT[k]) err(where, `text '${k}' missing`); };
+  const ST = S.RPG_STORY; keys("story", [ST.intro, ST.pickPrompt, ST.startText].filter(Boolean));
   const st = S.RPG_START; if (!M[st.map] || !walk(M[st.map], st.x, st.y)) err("start", "start position is not walkable");
   for (const [id, m] of Object.entries(M)) {
     const w = m.rows[0].length;
     m.rows.forEach((r, y) => { if (r.length !== w) err(id, `row ${y} is ${r.length} wide, expected ${w}`); for (const ch of r) if (!(ch in S.RPG_TILE)) err(id, `unknown tile '${ch}' in row ${y}`); });
     for (const o of m.warps||[]) { if (!M[o.to]) err(id, `warp to missing map ${o.to}`); else if (!walk(M[o.to], o.tx, o.ty)) err(id, `warp lands on a solid tile ${o.to} ${o.tx},${o.ty}`); if (!S.RPG_TILE[m.rows[o.y][o.x]]) err(id, `warp at ${o.x},${o.y} is on a solid tile`); }
-    for (const n of m.npcs||[]) { if (!S.RPG_TEXT[n.talk]) err(id, `npc ${n.id} talk '${n.talk}' has no text`); if (n.after && !S.RPG_TEXT[n.after]) err(id, `npc ${n.id} after '${n.after}' has no text`); if (n.trainer && !S.RPG_TRAINERS[n.trainer]) err(id, `npc ${n.id} trainer ${n.trainer} missing`); }
-    for (const sg of m.signs||[]) if (!S.RPG_TEXT[sg.text]) err(id, `sign text '${sg.text}' missing`);
-    for (const c of m.chests||[]) if (!S.LIB[c.card]) err(id, `chest ${c.id} card ${c.card} missing`);
-    if (m.grass && !S.RPG_ENCOUNTERS[m.grass]) err(id, `encounter table ${m.grass} missing`);
-    if (m.heal && !walk(m, m.heal[0], m.heal[1])) err(id, "heal point is not walkable");
+    for (const n of m.npcs||[]) { keys(`${id} npc ${n.id}`, n.talk); keys(`${id} npc ${n.id}`, n.after); if (n.trainer && !S.RPG_TRAINERS[n.trainer]) err(id, `npc ${n.id} trainer ${n.trainer} missing`); if (!S.rpgSpecKeys(n.talk).length) err(id, `npc ${n.id} has no talk`); }
+    for (const sg of m.signs||[]) { keys(`${id} sign`, sg.text); if (!S.rpgSpecKeys(sg.text).length) err(id, `sign at ${sg.x},${sg.y} has no text`); }
+    for (const c of m.chests||[]) { if (!S.LIB[c.card]) err(id, `chest ${c.id} card ${c.card} missing`); keys(`${id} chest ${c.id}`, c.text); }
+    for (const sc of m.scenes||[]) { keys(`${id} scene ${sc.id}`, sc.text); if (sc.end) keys(`${id} scene ${sc.id}`, sc.end); if (sc.at && !walk(m, sc.at[0], sc.at[1])) err(id, `scene ${sc.id} is on a solid tile`); }
+    for (const gt of typeof m.grass === "string" ? [m.grass] : (m.grass||[]).map(e => e.table)) if (!S.RPG_ENCOUNTERS[gt]) err(id, `encounter table ${gt} missing`);
+    if (m.lost) keys(id, m.lost);
+    if (Array.isArray(m.heal) && !walk(m, m.heal[0], m.heal[1])) err(id, "heal point is not walkable");
+    if (m.heal && !Array.isArray(m.heal) && (!M[m.heal.map] || !walk(M[m.heal.map], m.heal.x, m.heal.y))) err(id, "heal point is not walkable");
     // flood fill from every warp landing / start, then every walkable tile should have been reached
     const seen = new Set(), q = [];
     if (st.map === id) q.push([st.x, st.y]);
