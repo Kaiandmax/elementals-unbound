@@ -42,4 +42,4 @@ Never edit `index.html`, `tools/engine.js` or `cards/winrates.js` by hand (gener
 
 ## Rules snapshot
 
-Energy 3 per turn (bank up to 3). Basic cards give charge of their element; charge casts Manifests (2-6 charge, once each). Mono decks have 5 Manifests, dual 4, triple 3. Starting life depends on the element (13-20). A coin flip decides who goes first. Board holds 8 creatures. AI levels 1-5. Battles last about 3 turns on purpose; bosses get longer fights through special mechanics.
+Energy 3 per turn (bank up to 3). Basic cards give charge of their element; charge casts Manifests (2-6 charge, once each). Every deck has 4 Manifests, whatever its element count. Starting life depends on the element (13-20). A coin flip decides who goes first. Board holds 8 creatures. AI levels 1-5. Normal battles last under 4 turns a side on purpose; boss fights (crowned monsters, higher-rank monsters, key NPC duels) aim for 6-7 turns through boss mechanics.

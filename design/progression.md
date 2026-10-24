@@ -47,7 +47,7 @@ What already exists and these options build on:
 | Starting deck | A Starter deck. |
 | Owning cards | As A (bound). |
 | Deck size and copies | 20 cards, up to 2 copies; any mix of base elements. |
-| Elements | Mix any elements freely; each card gives its own element's charge and each Manifest costs its own element's charge. (The Purity bonus this option leaned on was removed on 2026-10-24.) Confluences become a bonus layer on top. |
+| Elements | Mix any elements freely; each card gives its own element's charge and each Manifest costs its own element's charge. Confluences become a bonus layer on top. |
 | Rebuilding | Any time outside battle. |
 
 **Why:** the most freedom; a loot card from any element slots into any deck.
@@ -106,7 +106,7 @@ Each of 2-5 deliberately revives an element's signature mechanic, which `design/
 
 ## Manifest deck size: 4 for every deck (decided 2026-10-24)
 
-The old 5 / 4 / 3 by element count (the Purity bonus) made mono decks keep up with duals and triples. The designer wants players to move through the elements as the journey goes, so every deck now carries **4 Manifests**.
+Every deck carries **4 Manifests**, whatever its element count. Nothing rewards staying with fewer elements: the designer wants players to move through the elements as the journey goes.
 
 Why 4 (mono decks, AI level 3, 760 games per size):
 
@@ -147,4 +147,4 @@ The first pass of the change (PR: tcg/four-manifests) cut one Manifest from each
 
 ## Not yet covered
 
-Shops and currencies, trading, card upgrades (the doc's "Pure cards grow at milestones"), enemy decks per region and what each teaches, boss mechanics. These come after the designer picks a rule set.
+Shops and currencies, trading, card upgrades, enemy decks per region and what each teaches, boss mechanics. These come after the designer picks a rule set.
