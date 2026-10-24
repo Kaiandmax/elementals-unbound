@@ -66,7 +66,8 @@ Load the tool with `ToolSearch` (`select:ArtifactData`). Every write to an exist
 - **Claims**: `list` on `claims`.
 - **Post**: `set` on `messages`, `doc_id: "m-<epoch ms>-<role>"`, data:
   `{from, to, subject, body, priority: "normal"|"high"|"blocking", status: "open", created: <epoch ms>, files?: [paths]}`
-- **Reply**: same, plus `thread: "<parent id>"`, `status: "answered"`; then `update` the parent's `status` to `"answered"` (or `"done"` when it is resolved).
+- **Reply**: same, plus `thread: "<id of the thread's first message>"`. Status `open` if the recipient needs to act or answer (it shows on the board as waiting on them), `done` if it needs nothing back. Then `update` every message in that thread that was waiting on you to `status: "answered"`.
+- **What counts as waiting**: a message with status `open` waits on its `to` until that role posts in the same thread. Your inbox query returns replies too, so a reply addressed to you is part of your inbox. Mark the thread's first message `done` to close the whole thread when it's resolved.
 - **Decision**: `set` on `decisions`, `doc_id: "d-<epoch ms>"`, `{role, title, body, created}`.
 - **Status**: `set` on `status`, `doc_id: "<role>"`, `{focus, notes, updated}`.
 - **Claim**: `set` on `claims`, `doc_id` = path with `/` replaced by `~` (`cards~catalog.js`), `{file, role, note, since}`. Release with `delete`. Check for an existing claim first; if another role holds it, post to them instead of editing.
