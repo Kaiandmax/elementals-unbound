@@ -17,7 +17,7 @@ let bad = 0;
     for (const o of m.warps||[]) { if (!M[o.to]) err(id, `warp to missing map ${o.to}`); else if (!walk(M[o.to], o.tx, o.ty)) err(id, `warp lands on a solid tile ${o.to} ${o.tx},${o.ty}`); if (!S.RPG_TILE[m.rows[o.y][o.x]]) err(id, `warp at ${o.x},${o.y} is on a solid tile`); }
     for (const n of m.npcs||[]) { keys(`${id} npc ${n.id}`, n.talk); keys(`${id} npc ${n.id}`, n.after); if (n.trainer && !S.RPG_TRAINERS[n.trainer]) err(id, `npc ${n.id} trainer ${n.trainer} missing`); if (!S.rpgSpecKeys(n.talk).length) err(id, `npc ${n.id} has no talk`); }
     for (const sg of m.signs||[]) { keys(`${id} sign`, sg.text); if (!S.rpgSpecKeys(sg.text).length) err(id, `sign at ${sg.x},${sg.y} has no text`); }
-    for (const c of m.chests||[]) { if (!S.LIB[c.card]) err(id, `chest ${c.id} card ${c.card} missing`); keys(`${id} chest ${c.id}`, c.text); }
+    for (const c of m.chests||[]) { if (![].concat(c.card).some(k => S.LIB[k])) err(id, `chest ${c.id} card ${c.card} missing`); keys(`${id} chest ${c.id}`, c.text && { text:c.text }); }
     for (const sc of m.scenes||[]) { keys(`${id} scene ${sc.id}`, sc.text); if (sc.end) keys(`${id} scene ${sc.id}`, sc.end); if (sc.at && !walk(m, sc.at[0], sc.at[1])) err(id, `scene ${sc.id} is on a solid tile`); }
     for (const gt of typeof m.grass === "string" ? [m.grass] : (m.grass||[]).map(e => e.table)) if (!S.RPG_ENCOUNTERS[gt]) err(id, `encounter table ${gt} missing`);
     if (m.lost) keys(id, m.lost);

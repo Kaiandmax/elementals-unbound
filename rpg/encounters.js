@@ -20,7 +20,20 @@ const RPG_ENCOUNTERS = {
     { deck:"fire_starter",      level:2, lifeMod:-5, w:3 },
     { deck:"lightning_starter", level:2, lifeMod:-5, w:3 },
     { deck:"wind_flock",        level:2, lifeMod:-5, w:2 },
-    { deck:"water_tide",        level:2, lifeMod:-5, w:2 } ] }
+    { deck:"water_tide",        level:2, lifeMod:-5, w:2 } ] },
+  // Act I demo (Story's proposals in story/demo/act1.md; Balance tunes):
+  route1_iron: { rate:0.12, grace:3, list:[
+    { deck:"water_riptide", level:3, lifeMod:-5, w:2 },
+    { deck:"water_frost",   level:3, lifeMod:-5, w:2 },
+    { deck:"earth_crystal", level:3, lifeMod:-5, w:2 } ] },
+  orchard_grass: { rate:0.12, grace:3, list:[
+    { deck:"fire_swarm", level:2, lifeMod:-5, w:3 },
+    { deck:"fire_pyro",  level:2, lifeMod:-5, w:3 },
+    { deck:"wind_flock", level:2, lifeMod:-5, w:2 } ] },
+  vault_shallows: { rate:0.12, grace:3, list:[
+    { deck:"water_riptide", level:3, lifeMod:-5, w:3 },
+    { deck:"water_frost",   level:3, lifeMod:-5, w:3 },
+    { deck:"earth_crystal", level:3, lifeMod:-5, w:2 } ] }
 };
 /* Card drops after a won duel (designer rule, 2026-10-24): the card comes from the enemy's own deck, picked with
    weights by rarity, so a rare in a mostly-common deck is a long shot and an all-rare deck can only give rares.
@@ -38,5 +51,15 @@ const RPG_DROPS = {
   essence: { dual:1, triple:1 }
 };
 const RPG_TRAINERS = {
-  route1_hiker: { deck:"earth_wall", level:3, lifeMod:0 }
+  route1_hiker: { deck:"earth_wall", level:3, lifeMod:0 },
+  // Act I demo. AI levels by designer rule (d-1792866671427): boss monsters 3-4, NPC duels 3-4, rivals 5.
+  // Boss shapes from design/bosses.md; bars, life and level are Balance's to tune.
+  a1_gullet: { name:"Gullet", deck:"water_tide", level:3, lifeMod:0, music:"battle-gullet",
+    boss:{ bars:[8], slowStart:true, clearOnBreak:true, crown:"lurker" } },
+  a1_brann:  { name:"Brann", deck:"earth_wall", level:3, lifeMod:0, music:"battle-contract" },
+  a1_pell:   { name:"Pell", deck:"fire_swarm", level:5, lifeMod:0, music:"battle-rival" },
+  a1_mother: { name:"The Cinder Mother", deck:"fire_fury", level:3, lifeMod:0, music:"battle-cinder-mother",
+    boss:{ bars:[8,8], slowStart:true, clearOnBreak:true, breakHeal:3, crown:"brood", side:{ name:"The Brood", hp:3, crew:"Brann and Dove", token:"ember" } } },
+  a1_warden: { name:"The Sluicewarden", deck:"earth_titans", level:3, lifeMod:0, music:"battle-sluicewarden",
+    boss:{ bars:[8,8], slowStart:true, clearOnBreak:true, breakHeal:3, crown:"sealwork" } }
 };

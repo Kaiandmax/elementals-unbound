@@ -24,4 +24,4 @@ Formats are documented at the top of each file. `node tools/smoke.js` checks the
 
 ## Next
 
-Collection and deck builder (use cards found in chests), a first dungeon with a boss room, Story's dialogue and place names, Music's player.
+The Act I demo (story/demo/act1.md) is fully laid out: Calder Mill, Brindle Ford, its branch hall, the Millrace, Millrace Road, Hollin's Cross, Greyapple Orchard, the Weir Vault gate and its two floors, with Gullet (Lurker crown), the Cinder Mother (Brood crown, Brann and Dove holding the brood) and the Sluicewarden (Sealwork crown). Next: the collection and deck builder (so the Slackwater rebuild lands), then the Forge.

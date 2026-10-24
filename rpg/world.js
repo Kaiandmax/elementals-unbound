@@ -3,7 +3,7 @@
    Everything that touches the page is inside functions that only run in the browser, so the
    headless sims (tools/engine.js) load this file without side effects. */
 const RPG_T = 16, RPG_VW = 15, RPG_VH = 11, RPG_STEP_MS = 170, RPG_SAVE_KEY = "eu.save.v1";
-const RPG_TILE = { ".":1, ",":1, "=":1, "f":1, "D":1, "_":1, ">":1, "w":1, "s":0, "#":0, "~":0, "R":0, "H":0, "W":0, "t":0 };
+const RPG_TILE = { ".":1, ",":1, "=":1, "f":1, "D":1, "_":1, ">":1, "w":1, "v":1, "S":1, "s":0, "V":0, "#":0, "~":0, "R":0, "H":0, "W":0, "t":0 };
 const RPG_ENC_TILES = { ",":1, "w":1 };   // tall grass and shallow water start wild duels
 const RPG_DIRS = { up:[0,-1], down:[0,1], left:[-1,0], right:[1,0] };
 const RPG = { active:false, save:null, held:[], move:null, turnAt:0, dlg:null, reveal:null, fade:null, battle:null,
@@ -87,7 +87,7 @@ function rpgAction(){
   if (th.kind==="sign") return rpgPlay(rpgPickLine(th.o.text));
   if (th.kind==="chest"){
     if (th.open) return rpgSay("chest_empty");
-    const c = th.o, d = LIB[c.card]; if (!d) return rpgSay(["(This chest's card is missing: "+c.card+")"]);
+    const c = th.o, d = LIB[rpgList(c.card).find(id=>LIB[id])]; if (!d) return rpgSay(["(This chest's card is missing: "+c.card+")"]);
     s.opened[c.id] = true; s.collection.push(d.id); rpgStore();
     rpgSting(c.stinger || "sting-card");
     RPG.reveal = { card:d, t:Date.now() };
@@ -222,6 +222,9 @@ function rpgDrawTile(c, ch, tx, ty, px, py, now){
       for (let row=0; row<3; row++) for (let i=0;i<4;i++){ const x = i*4 + (row%2?2:0), y = 3 + row*5; R(x+sway,y,1,3,"#2a5a25"); R(x+1+sway,y-1,1,4,"#5fa34c"); R(x+2,y+1,1,2,"#2a5a25"); } break; }
     case "=": R(0,0,T,T,"#c2a26a"); for (let i=0;i<3;i++) R((rpgHash(tx,ty,i+11)*14)|0,(rpgHash(ty,tx,i+13)*14)|0,2,1,"#a88a55"); break;
     case "#": grass(); R(6,10,4,6,"#5a3d22"); c.fillStyle = "#24502a"; c.beginPath(); c.arc(px+8, py+7, 7, 0, Math.PI*2); c.fill(); R(4,3,3,2,"#3a7a3c"); R(9,6,2,2,"#3a7a3c"); break;
+    case "v": R(0,0,T,T,"#4a4f57"); R(0,7,T,1,"#3c4047"); R(0,15,T,1,"#3c4047"); R((ty%2)*8+4,0,1,7,"#3c4047"); R((ty%2)*8+12,8,1,7,"#3c4047"); if (rpgHash(tx,ty,3) > .8) R(5,10,3,2,"#2f5f4a"); break;
+    case "V": R(0,0,T,T,"#2a2d33"); R(0,0,T,2,"#3a3e46"); R(1,5,6,4,"#33373e"); R(9,10,6,4,"#33373e"); break;
+    case "S": R(0,0,T,T,"#4a4f57"); for (let i=0;i<4;i++) R(2,2+i*3,12,2, i%2 ? "#2f3237" : "#5d636c"); break;
     case "w": { R(0,0,T,T,"#3f7f9e"); const o = Math.floor(now/500 + tx*2 + ty) % 4; R(2+o*3,5,3,1,"#8cc4dc"); R(9-o,11,4,1,"#8cc4dc"); R((tx*5+ty*3)%12+2,8,1,2,"#2e5f78"); break; }
     case "~": { R(0,0,T,T,"#2f6ea8"); const o = Math.floor(now/400 + tx + ty) % 4; R((o*4)%T,4,4,1,"#6aa8dc"); R(((o*4)+8)%T,11,4,1,"#6aa8dc"); break; }
     case "R": R(0,0,T,T,"#9a4434"); for (let y=2;y<T;y+=4) R(0,y,T,1,"#7a3328"); R((ty%2)*4,0,1,T,"#7a3328"); R((ty%2)*4+8,0,1,T,"#7a3328"); break;
@@ -246,6 +249,14 @@ function rpgDrawPerson(c, px, py, dir, look, step){
   else if (dir==="left"){ R(5,5-bob,1,1,"#222"); R(10,2-bob,1,4,look.hair); }
   else { R(10,5-bob,1,1,"#222"); R(5,2-bob,1,4,look.hair); }
 }
+// Monsters on the map: a crouched beast, or a blocky golem.
+function rpgDrawBeast(c, px, py, look, kind, now){
+  const R = (x,y,w,h,col)=>{ c.fillStyle = col; c.fillRect(px+x, py+y, w, h); }, bob = Math.sin(now/400) > 0 ? 1 : 0;
+  R(1,13,14,3,"rgba(0,0,0,.3)");
+  if (kind === "golem"){ R(3,2-bob,10,12,look.shirt); R(1,5-bob,2,7,look.shirt); R(13,5-bob,2,7,look.shirt); R(5,5-bob,2,2,look.hair); R(9,5-bob,2,2,look.hair); R(3,10-bob,10,1,"#4a4f57"); return; }
+  R(2,6+bob,12,8,look.shirt); R(4,4+bob,8,3,look.shirt); R(1,10+bob,2,4,look.shirt); R(13,10+bob,2,4,look.shirt);
+  R(5,6+bob,2,2,look.hair); R(9,6+bob,2,2,look.hair); R(6,11+bob,4,1,"#1a1a1a");
+}
 function rpgDraw(now){
   const c = RPG.ctx, s = RPG.save; if (!c || !s) return;
   const m = rpgMap(), T = RPG_T, W = m.rows[0].length, H = m.rows.length;
@@ -268,7 +279,7 @@ function rpgDraw(now){
     c.fillStyle="#6a3f1e"; c.fillRect(px+2,py+5,12,9); c.fillStyle= open ? "#2a1a0e" : "#9a6430"; c.fillRect(px+3, py+(open?5:6), 10, open?3:7);
     c.fillStyle="#e2c46a"; c.fillRect(px+2,py+8,12,1); if (!open){ c.fillRect(px+7,py+8,2,3); const glint = Math.sin(now/300) > 0.7; if (glint){ c.fillStyle="#fff6c8"; c.fillRect(px+11,py+4,1,1); } } }
   const npcs = (m.npcs||[]).filter(ok);
-  const people = npcs.map(n=>({ y:n.y, draw:()=>{ const [px,py] = P(n.x, n.y); rpgDrawPerson(c, px, py, n.dir, n.look, 0); } }));
+  const people = npcs.map(n=>({ y:n.y, draw:()=>{ const [px,py] = P(n.x, n.y); n.sprite ? rpgDrawBeast(c, px, py, n.look, n.sprite, now) : rpgDrawPerson(c, px, py, n.dir, n.look, 0); } }));
   const shirt = getComputedStyle(document.documentElement).getPropertyValue("--"+s.starter).trim() || "#cda54d";
   const step = RPG.move ? (RPG.move.t > RPG_STEP_MS/2 ? 0 : ((s.steps % 2) ? 1 : 2)) : 0;
   people.push({ y:fy, draw:()=>{ const [px,py] = P(fx, fy); rpgDrawPerson(c, px, py, s.dir, { shirt, hair:"#3b2a1e" }, step); } });
@@ -308,7 +319,7 @@ function renderWorld(){
 function rpgUI(){
   const box = document.getElementById("rpgui"); if (!box) return;
   let h = "";
-  if (RPG.dlg){ const line = RPG.dlg.lines[RPG.dlg.i] || "", k = line.indexOf(": "), who = k>0 && k<24 ? line.slice(0,k) : "", txt = who ? line.slice(k+2) : line;
+  if (RPG.dlg){ const line = RPG.dlg.lines[RPG.dlg.i] || "", [who, txt] = rpgSpeaker(line);
     h += `<div class="rpg-dlg" data-rpgnext role="status" aria-live="polite">${who ? `<b>${esc(who)}</b>` : ""}<span>${esc(txt)}</span><i aria-hidden="true">▼</i></div>`; }
   if (RPG.reveal){ const d = RPG.reveal.card;
     h += `<div class="rpg-reveal" data-rpgnext role="dialog" aria-label="New card"><div class="rays el-${d.el}"></div><div class="rv-in"><span class="lbl">You found a card</span>${cardHTML(d,{cls:"bigcard"})}<span class="muted">Added to your collection. (The deck builder comes next.) Press Enter or tap to continue.</span></div></div>`; }
