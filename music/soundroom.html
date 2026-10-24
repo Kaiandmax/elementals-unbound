@@ -3,7 +3,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
-/* Layout: a listening console. One wide strip for the main theme, then one strip per element, each with a piano roll of the motif in its own mode. */
+/* Layout: a listening console. A "now playing" deck with the lead line drawn as a piano roll, then the soundtrack
+   in groups (elements, confluences, zones, battles, stingers) as rows of play buttons. */
 :root {
   --bg: #eef0f4; --panel: #ffffff; --ink: #1a1f2b; --muted: #5d6576; --line: #d5d9e2; --roll: #f4f6f9;
   --accent: #3b4fd8;
@@ -21,211 +22,235 @@
   --accent: #8d9cff; --fire: #ff7a5c; --water: #5cb8e8; --earth: #c9b26a; --wind: #5fd3b0; --lightning: #b996ff; --main: #8d9cff;
   color-scheme: dark }
 body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.5; }
-.wrap { max-width: 1040px; margin: 0 auto; padding-block: 28px 56px;
+.wrap { max-width: 1080px; margin: 0 auto; padding-block: 28px 56px;
   padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
   display: grid; gap: 28px; }
 header { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 16px; }
-h1 { font-family: var(--display); font-weight: 700; font-size: clamp(30px, 5vw, 44px); line-height: 1; margin: 0; letter-spacing: .01em; text-wrap: balance; }
-.sub { color: var(--muted); margin: 8px 0 0; max-width: 60ch; }
-.draft { font-family: var(--mono); font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--accent);
+h1 { font-family: var(--display); font-weight: 700; font-size: clamp(30px, 5vw, 44px); line-height: 1; margin: 0; letter-spacing: .01em; }
+.sub { color: var(--muted); margin: 8px 0 0; max-width: 62ch; }
+.tag { font-family: var(--mono); font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--accent);
   border: 1px solid var(--accent); border-radius: 3px; padding: 2px 8px; display: inline-block; margin-bottom: 10px; }
 .controls { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; font-size: 14px; color: var(--muted); }
-.controls label { display: flex; align-items: center; gap: 8px; cursor: pointer; }
-input[type=range] { width: 110px; accent-color: var(--accent); }
-input[type=checkbox] { accent-color: var(--accent); width: 16px; height: 16px; }
-.strips { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
-.strip { --c: var(--main); background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 16px; display: grid; gap: 12px; min-width: 0; }
-.strip.wide { grid-column: 1 / -1; }
-.strip.playing { border-color: var(--c); box-shadow: 0 0 0 1px var(--c) inset; }
-.top { display: flex; gap: 14px; align-items: center; }
-.play { flex: none; width: 46px; height: 46px; border-radius: 50%; border: 2px solid var(--c); background: transparent; color: var(--c);
-  cursor: pointer; display: grid; place-items: center; transition: background .15s, color .15s; }
-.play:hover, .strip.playing .play { background: var(--c); color: var(--panel); }
-.play:focus-visible { outline: 3px solid var(--c); outline-offset: 3px; }
-.play svg { width: 16px; height: 16px; fill: currentColor; }
-.name { font-family: var(--display); font-weight: 700; font-size: 22px; line-height: 1.1; color: var(--c); margin: 0; }
-.meta { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-top: 3px; }
-canvas { width: 100%; height: 84px; display: block; background: var(--roll); border-radius: 4px; }
-.wide canvas { height: 120px; }
-.notes { font-family: var(--mono); font-size: 12.5px; color: var(--ink); overflow-x: auto; white-space: nowrap; }
-.mood { color: var(--muted); font-size: 14px; margin: 0; }
-.chans { display: flex; flex-wrap: wrap; gap: 6px; }
-.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 4px; overflow: hidden; }
+.controls label { display: flex; align-items: center; gap: 8px; }
+input[type=range] { width: 120px; accent-color: var(--accent); }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 4px; overflow: hidden; position: relative; }
 .seg input { position: absolute; opacity: 0; pointer-events: none; }
 .seg label { padding: 5px 12px; font-size: 13px; color: var(--muted); cursor: pointer; }
 .seg input:checked + label { background: var(--accent); color: var(--panel); }
 .seg input:focus-visible + label { outline: 2px solid var(--accent); outline-offset: -2px; }
-.chan { font-family: var(--mono); font-size: 11.5px; color: var(--muted); border: 1px solid var(--line); border-radius: 3px; padding: 1px 6px; }
-.chan b { color: var(--c); font-weight: 500; }
-section h2 { font-family: var(--display); font-weight: 500; font-size: 20px; margin: 0 0 10px; }
-.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 28px; }
-.cols p, .cols li { max-width: 62ch; }
-ul { padding-left: 20px; margin: 0; display: grid; gap: 8px; }
-table { border-collapse: collapse; font-size: 14px; width: 100%; }
-td, th { text-align: left; padding: 6px 10px 6px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
-th { font-weight: 600; color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
-.tbl { overflow-x: auto; }
-.mono { font-family: var(--mono); font-size: 12.5px; }
+
+.deck { --c: var(--main); background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 18px; display: grid; gap: 14px; min-width: 0; }
+.deck.on { border-color: var(--c); box-shadow: 0 0 0 1px var(--c) inset; }
+.deck-top { display: flex; gap: 16px; align-items: center; }
+.big { flex: none; width: 54px; height: 54px; border-radius: 50%; border: 2px solid var(--c); background: transparent; color: var(--c); cursor: pointer; display: grid; place-items: center; }
+.big:hover, .deck.on .big { background: var(--c); color: var(--panel); }
+.big:focus-visible, .row:focus-visible { outline: 3px solid var(--c); outline-offset: 3px; }
+.big svg { width: 18px; height: 18px; fill: currentColor; }
+.deck-title { min-width: 0; flex: 1; }
+.np-name { font-family: var(--display); font-weight: 700; font-size: 26px; line-height: 1.1; color: var(--c); margin: 0; }
+.meta { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-top: 3px; font-weight: 400; }
+.np-desc { color: var(--muted); margin: 0; max-width: 75ch; }
+canvas { width: 100%; height: 120px; display: block; background: var(--roll); border-radius: 4px; }
+.inten { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; font-size: 14px; color: var(--muted); }
+.inten input { width: 200px; }
+.inten .lvl { font-family: var(--mono); font-size: 12px; color: var(--ink); min-width: 18ch; }
+
+#groups { display: grid; gap: 28px; }
+section h2 { font-family: var(--display); font-weight: 500; font-size: 21px; margin: 0 0 4px; }
+section > p { color: var(--muted); margin: 0 0 12px; max-width: 75ch; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 8px; }
+.row { --c: var(--main); display: flex; gap: 10px; align-items: flex-start; text-align: left; width: 100%; background: var(--panel); color: var(--ink);
+  border: 1px solid var(--line); border-radius: 5px; padding: 10px 12px; cursor: pointer; font: inherit; min-width: 0; }
+.row:hover { border-color: var(--c); }
+.row.on { border-color: var(--c); box-shadow: 0 0 0 1px var(--c) inset; }
+.row .ic { flex: none; width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid var(--c); color: var(--c); display: grid; place-items: center; margin-top: 1px; }
+.row.on .ic { background: var(--c); color: var(--panel); }
+.row .ic svg { width: 10px; height: 10px; fill: currentColor; }
+.row .tx { min-width: 0; display: grid; gap: 2px; }
+.row .nm { font-weight: 600; line-height: 1.25; }
+.row .mt { font-family: var(--mono); font-size: 11.5px; color: var(--muted); display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.dots { display: inline-flex; gap: 3px; }
+.dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.notes { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 28px; }
+.notes p, .notes li { max-width: 64ch; }
+.notes ul { padding-left: 20px; margin: 0; display: grid; gap: 6px; }
 footer { color: var(--muted); font-size: 13px; }
 footer a { color: var(--accent); }
-@media (prefers-reduced-motion: reduce) { .play { transition: none; } }
+.mono { font-family: var(--mono); font-size: 12.5px; }
 </style>
 
 <div class="wrap">
   <header>
     <div>
-      <span class="draft">Palette v0.3 · Enhanced retro</span>
+      <span class="tag" id="tag">Soundtrack v0.4</span>
       <h1>Sound Room</h1>
-      <p class="sub">Elementals Unbound's music, as it's written. Each strip plays the main motif in that element's sound, in an enhanced retro style: handheld-RPG writing with a fuller, smoother sound. Switch to Classic chip to hear the strict 8-bit version. Press play; sound starts after your first tap.</p>
+      <p class="sub">Every piece of Elementals Unbound's music so far: themes for all 25 elements, a backing track for each zone, the important battles and the short stingers. Retro handheld-RPG writing, played fuller. Pick anything to hear it; tracks loop until you stop them.</p>
     </div>
     <div class="controls">
       <div class="seg" role="radiogroup" aria-label="Sound">
         <input type="radio" name="finish" id="fin-enhanced" value="enhanced" checked><label for="fin-enhanced">Enhanced</label>
         <input type="radio" name="finish" id="fin-chip" value="chip"><label for="fin-chip">Classic chip</label>
       </div>
-      <label for="loop"><input type="checkbox" id="loop"> Loop</label>
-      <label for="vol">Volume <input type="range" id="vol" min="0" max="1" step="0.01" value="0.7"></label>
+      <label for="vol">Volume <input type="range" id="vol" min="0" max="1" step="0.01" value="0.8"></label>
     </div>
   </header>
 
-  <div class="strips" id="strips"></div>
+  <div class="deck" id="deck">
+    <div class="deck-top">
+      <button class="big" id="big" aria-label="Play"></button>
+      <div class="deck-title">
+        <h3 class="np-name" id="np-name">Elementals Unbound</h3>
+        <div class="meta" id="np-meta"></div>
+      </div>
+    </div>
+    <p class="np-desc" id="np-desc"></p>
+    <canvas id="roll" aria-hidden="true"></canvas>
+    <div class="inten" id="inten" hidden>
+      <label for="int">Intensity</label>
+      <input type="range" id="int" min="0" max="1" step="0.01" value="1">
+      <span class="lvl" id="int-lvl">All-out</span>
+      <span>In battle the game raises it as life drops or a boss changes phase; parts join from the next bar.</span>
+    </div>
+  </div>
 
-  <div class="cols">
+  <div id="groups"></div>
+
+  <div class="notes">
     <section>
-      <h2>The motif: "Unbound"</h2>
-      <p>Nine notes over two bars: an open fifth, a turn around the fourth, then a leap to the octave. It's written as scale degrees, so every element plays the same shape in its own mode. The middle notes are where the modes differ most, which is why Fire and Wind sound so unlike each other.</p>
-      <div class="tbl"><table>
-        <thead><tr><th>Degree</th><td class="mono">1</td><td class="mono">5</td><td class="mono">4</td><td class="mono">3</td><td class="mono">4</td><td class="mono">5</td><td class="mono">6</td><td class="mono">5</td><td class="mono">8</td></tr></thead>
-        <tbody><tr><th>Beats</th><td class="mono">1</td><td class="mono">1</td><td class="mono">½</td><td class="mono">½</td><td class="mono">1</td><td class="mono">½</td><td class="mono">½</td><td class="mono">1</td><td class="mono">2</td></tr></tbody>
-      </table></div>
+      <h2>How the confluence themes are made</h2>
+      <p>Each dual and triple theme is braided from its parents' themes, the way a braided card is. The first half takes the lead element's opening bars and a partner's answer; the second half takes the rhythm element's tune and the lead's ending. The lead element sets the mode and the lead sound; the others bring the harmony, bass and drums. Every confluence has its own key and tempo.</p>
     </section>
     <section>
-      <h2>Direction</h2>
-      <p>Retro in the style of the classic handheld monster-collecting RPGs, but less retro than a real handheld: same vibe, fuller sound (set by the designer, 23 Oct 2026). The tunes are all original. Still open, to explore later:</p>
+      <h2>Open for the designer and Story</h2>
       <ul>
-        <li><b>The motif.</b> Keep "Unbound", tweak it, or try another?</li>
-        <li><b>How retro.</b> Is Enhanced the right distance from the handheld, or should it move further either way?</li>
-        <li><b>Each element.</b> Does any element sound wrong for its cards? Say which and why.</li>
+        <li><b>Zones and battles</b> follow Story's draft bible (not merged yet). Names and moods will change as Story confirms them.</li>
+        <li><b>Favourites.</b> Any braided theme worth a hand-written tune of its own? Say which.</li>
+        <li><b>How retro.</b> Is Enhanced the right distance from the handheld?</li>
       </ul>
     </section>
   </div>
 
-  <footer>Source: <span class="mono">music/palette.md</span>, <span class="mono">palette.js</span> and <span class="mono">synth.js</span> in <a href="https://github.com/Kaiandmax/elementals-unbound/tree/main/music" target="_blank" rel="noopener">the repository</a>. Synthesized live in your browser with Web Audio. Answer on the Studio Board or in the Music chat.</footer>
+  <footer>Source: <span class="mono">music/</span> in <a href="https://github.com/Kaiandmax/elementals-unbound/tree/main/music" target="_blank" rel="noopener">the repository</a> (scores in <span class="mono">tracks/</span>, engine in <span class="mono">synth.js</span>, game API in <span class="mono">player.js</span>). Synthesized live in your browser; every melody is original.</footer>
 </div>
 
 <script src="palette.js"></script>
 <script src="synth.js"></script>
+<script src="tracks/elements.js"></script>
+<script src="tracks/confluences.js"></script>
+<script src="tracks/zones.js"></script>
+<script src="tracks/battles.js"></script>
+<script src="levels.js"></script>
+<script src="player.js"></script>
 <script>
 (function () {
-  const { MODES, MOTIF, PALETTE } = EU_PALETTE;
-  const NAMES = "C C# D Eb E F F# G Ab A Bb B".split(" ");
-  const MODE_LABEL = { dorian: "Dorian", aeolian: "Aeolian", phrygdom: "Phrygian dominant", lydian: "Lydian", mixolydian: "Mixolydian" };
-  const MOODS = {
-    main: "Round lead with vibrato, thirds underneath, bouncing octave bass. The version every region theme quotes.",
-    fire: "Bright lead, off-beat stabs, saw bass in octaves, a snare roll into the loop. Haste and burn.",
-    water: "Soft lead with wide vibrato over triplet arpeggios and a slow pedal bass. Draw, freeze, patience.",
-    earth: "Low, loud lead with thirds beneath, one hollow bass note per bar, sparse heavy beat. Walls and giants.",
-    wind: "Thin, airy lead echoed an 8th later, walking bass, triplet shuffle. The raised 4th keeps it airborne.",
-    lightning: "Snappy lead over 16th arpeggios that end each bar on a tritone zap. Chain spells, fast.",
-  };
   const PLAY = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 1.5v13l11-6.5z"/></svg>';
   const STOP = '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.5" y="2.5" width="11" height="11" rx="1"/></svg>';
+  const MODE = { ionian: "major", dorian: "Dorian", phrygian: "Phrygian", phrygdom: "Phrygian dom.", lydian: "Lydian", mixolydian: "Mixolydian", aeolian: "minor", harmonic: "harmonic minor" };
+  const GROUPS = [
+    ["element", "Element themes", "The title theme and the five elements. Each opens with the motif in its element's mode, then plays its own tune."],
+    ["dual", "Dual confluences", "Ten themes braided from two elements each. The dots show the parents, lead first."],
+    ["triple", "Triple confluences", "Ten themes braided from three elements: lead, harmony, rhythm."],
+    ["zone", "Zones", "Backing music for the places in Story's draft: home, the roads, each nation's seat, the war front, the vaults and camp."],
+    ["battle", "Important battles", "Layered battle music. Use the intensity slider above to hear the parts build (element and confluence themes are layered too, so they can score a duel against that element)."],
+    ["stinger", "Stingers", "One-shots over the music: victory, defeat, a card found, a promotion."],
+  ];
+  const EL = ["fire", "water", "earth", "wind", "lightning"];
+  let sel = "main", playing = null;
 
-  const P2 = { third: "thirds", echo: "echo", arp: "arpeggio", stabs: "stabs" };
-  const pct = (d) => (d * 100).toFixed(d === .125 ? 1 : 0) + "%";
-  const chans = (e) => [["Lead", "pulse " + pct(e.p1.duty)], ["Harmony", P2[e.p2.style]], ["Bass", e.bass.wave + " wave"], ["Drums", e.drums.length === 12 ? "triplet" : "straight"], ...(e.pad ? [["Pad", "chords"]] : [])]
-    .map(([c, v]) => `<span class="chan"><b>${c}</b> ${v}</span>`).join("");
+  const groupsEl = document.getElementById("groups"), rows = {};
+  GROUPS.forEach(([g, title, blurb]) => {
+    const list = Music.tracks(g); if (!list.length) return;
+    const s = document.createElement("section");
+    s.innerHTML = `<h2>${title} <span class="meta">${list.length}</span></h2><p>${blurb}</p><div class="grid"></div>`;
+    const grid = s.querySelector(".grid");
+    list.forEach((t) => {
+      const full = EU_TRACKS.find((x) => x.id === t.id), C = Music.info(t.id), b = document.createElement("button");
+      b.className = "row"; b.id = "t-" + t.id;
+      const lead = full.parents ? full.sound : null;
+      b.style.setProperty("--c", EL.includes(t.id) ? `var(--${t.id})` : lead ? `var(--${lead})` : "var(--main)");
+      const order = full.parents ? [full.sound, ...full.parents.filter((p) => p !== full.sound)] : [];
+      const dots = order.length ? `<span class="dots">${order.map((p) => `<span class="dot" style="background:var(--${p})" title="${p}"></span>`).join("")}</span>` : "";
+      b.innerHTML = `<span class="ic">${PLAY}</span><span class="tx"><span class="nm">${t.name}</span><span class="mt">${dots}${keyOf(C)} · ${C.bpm}${C.once ? " · once" : ""}</span></span>`;
+      b.setAttribute("aria-label", "Play " + t.name);
+      b.addEventListener("click", () => toggle(t.id));
+      grid.appendChild(b); rows[t.id] = b;
+    });
+    groupsEl.appendChild(s);
+  });
+  function keyOf(C) { return C.T.tonic.replace(/-?\d/, "") + " " + (MODE[C.T.mode] || C.T.mode) + (C.meter === 3 ? " · 3/4" : ""); }
 
-  function motifNotes(key) {
-    const e = PALETTE[key], s = MODES[e.mode], t = EUSynth.midiOf(e.tonic) + 12;
-    let beat = 0;
-    return MOTIF.map(([d, b]) => { const i = d - 1, m = t + s[i % 7] + 12 * Math.floor(i / 7);
-      const n = { m, start: beat, len: b, label: NAMES[m % 12] + (Math.floor(m / 12) - 1) }; beat += b; return n; });
+  function select(id) {
+    sel = id; const C = Music.info(id), t = EU_TRACKS.find((x) => x.id === id);
+    document.getElementById("deck").style.setProperty("--c", rows[id].style.getPropertyValue("--c"));
+    document.getElementById("np-name").textContent = t.name;
+    document.getElementById("np-meta").textContent = `${keyOf(C)} · ${C.bpm} BPM · ${C.nBars} bars · ${C.seconds.toFixed(0)} s ${C.once ? "(plays once)" : "loop"}`;
+    document.getElementById("np-desc").textContent = t.desc;
+    document.getElementById("inten").hidden = !C.layered;
+    draw();
+  }
+  let sting = null;
+  function toggle(id) {
+    Music.unlock();
+    if (playing === id) { stop(); return; }
+    const C = Music.info(id); select(id);
+    if (C.once) { const len = Music.stinger(id); playing = id; mark(id, true); sting = { C, t0: performance.now(), len };
+      setTimeout(() => { if (playing === id && sting && sting.C === C) { playing = null; mark(id, false); } }, len * 1000 + 300);
+      requestAnimationFrame(tick); return; }
+    sting = null; Music.setIntensity(C.layered ? +document.getElementById("int").value : 1);
+    Music.play(id); playing = id; mark(id, true); requestAnimationFrame(tick);
+  }
+  function stop() { Music.stop(); const id = playing; playing = null; sting = null; if (id) mark(id, false); draw(); }
+  function mark(id, on) {
+    Object.values(rows).forEach((r) => { r.classList.remove("on"); r.querySelector(".ic").innerHTML = PLAY; });
+    if (on) { rows[id].classList.add("on"); rows[id].querySelector(".ic").innerHTML = STOP; }
+    const big = document.getElementById("big");
+    document.getElementById("deck").classList.toggle("on", !!on); big.innerHTML = on ? STOP : PLAY; big.setAttribute("aria-label", on ? "Stop" : "Play");
+  }
+  document.getElementById("big").addEventListener("click", () => toggle(sel));
+
+  function tick() {
+    if (!playing) { draw(); return; }
+    let beat = null;
+    if (sting) { const e = (performance.now() - sting.t0) / 1000 - .05; if (e > sting.len) { draw(); return; } beat = Math.max(0, e) / sting.C.spb; }
+    else { const c = Music.current(); if (c && c.id === sel) beat = c.beat; }
+    draw(beat); requestAnimationFrame(tick);
   }
 
-  const strips = document.getElementById("strips"), cards = {};
-  Object.keys(PALETTE).forEach((key) => {
-    const e = PALETTE[key], notes = motifNotes(key), el = document.createElement("article");
-    el.className = "strip"; el.style.setProperty("--c", `var(--${key})`);
-    const tonic = e.tonic.replace(/\d/, "");
-    el.innerHTML = `<div class="top"><button class="play" id="play-${key}" aria-label="Play ${e.name}">${PLAY}</button>
-      <div><h3 class="name">${e.name}</h3><div class="meta">${tonic} ${MODE_LABEL[e.mode]} · ${e.bpm} BPM</div></div></div>
-      <canvas aria-hidden="true"></canvas>
-      <div class="notes">${notes.map((n) => n.label).join("  ")}</div>
-      <div class="chans">${chans(e)}</div>
-      <p class="mood">${MOODS[key]}</p>`;
-    strips.appendChild(el);
-    cards[key] = { el, notes, canvas: el.querySelector("canvas"), btn: el.querySelector("button") };
-    cards[key].btn.addEventListener("click", () => (now && now.key === key ? stop() : play(key)));
-  });
-
-  function draw(key, beatPos) {
-    const { canvas, notes } = cards[key], dpr = window.devicePixelRatio || 1, w = canvas.clientWidth, h = canvas.clientHeight;
+  function draw(beat) {
+    const cv = document.getElementById("roll"), C = Music.info(sel), dpr = window.devicePixelRatio || 1, w = cv.clientWidth, h = cv.clientHeight;
     if (!w) return;
-    if (canvas.width !== Math.round(w * dpr)) { canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr); }
-    const g = canvas.getContext("2d"); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, w, h);
-    const cs = getComputedStyle(cards[key].el), c = cs.getPropertyValue("--c").trim() || "#888", line = cs.getPropertyValue("--line").trim();
-    const lo = Math.min(...notes.map((n) => n.m)) - 1, hi = Math.max(...notes.map((n) => n.m)) + 1, total = 8, pad = 10;
+    if (cv.width !== Math.round(w * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); }
+    const g = cv.getContext("2d"); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, w, h);
+    const cs = getComputedStyle(document.getElementById("deck")), c = cs.getPropertyValue("--c").trim() || "#888", line = cs.getPropertyValue("--line").trim();
+    const ms = C.lead.map((n) => n.m), lo = Math.min(...ms) - 1, hi = Math.max(...ms) + 1, total = C.loopBeats, pad = 10;
     const x = (b) => pad + (b / total) * (w - 2 * pad), y = (m) => pad + (1 - (m - lo) / (hi - lo)) * (h - 2 * pad);
     g.strokeStyle = line; g.lineWidth = 1;
-    for (let b = 0; b <= total; b++) { g.globalAlpha = b % 4 ? .5 : 1; g.beginPath(); g.moveTo(x(b) + .5, pad / 2); g.lineTo(x(b) + .5, h - pad / 2); g.stroke(); }
+    for (let b = 0; b <= C.nBars; b++) { g.globalAlpha = b % 4 ? .45 : 1; const xx = Math.round(x(b * C.meter)) + .5; g.beginPath(); g.moveTo(xx, 4); g.lineTo(xx, h - 4); g.stroke(); }
+    const bh = Math.max(3, Math.min(8, (h - 2 * pad) / (hi - lo) * .8));
+    C.lead.forEach((n) => { const on = beat != null && beat >= n.t && beat < n.t + n.len;
+      g.fillStyle = c; g.globalAlpha = beat == null ? .85 : on ? 1 : .35;
+      g.fillRect(x(n.t) + .5, y(n.m) - bh / 2, Math.max(1.5, x(n.t + n.len) - x(n.t) - 1.5), bh); });
     g.globalAlpha = 1;
-    const bh = Math.max(5, (h - 2 * pad) / (hi - lo) * .8);
-    notes.forEach((n) => { const on = beatPos != null && beatPos >= n.start && beatPos < n.start + n.len;
-      g.fillStyle = c; g.globalAlpha = beatPos == null ? .85 : on ? 1 : .35;
-      const rx = x(n.start) + 1, rw = x(n.start + n.len) - x(n.start) - 3;
-      g.beginPath(); g.roundRect ? g.roundRect(rx, y(n.m) - bh / 2, rw, bh, 2) : g.rect(rx, y(n.m) - bh / 2, rw, bh); g.fill(); });
-    g.globalAlpha = 1;
-    if (beatPos != null && beatPos < total) { g.fillStyle = c; g.fillRect(x(beatPos), 0, 2, h); }
+    if (beat != null && beat < total) { g.fillStyle = c; g.fillRect(x(beat), 0, 2, h); }
   }
-  const drawAll = () => Object.keys(cards).forEach((k) => draw(k, now && now.key === k ? now.beatPos : null));
 
-  let ac = null, vol = null, now = null;
-  const volEl = document.getElementById("vol"), loopEl = document.getElementById("loop");
-  const finish = () => (document.querySelector('input[name=finish]:checked') || {}).value || "enhanced";
-  try { const f = localStorage.getItem("sr-finish"); if (f && document.getElementById("fin-" + f)) document.getElementById("fin-" + f).checked = true; } catch (e) {}
+  const volEl = document.getElementById("vol"), intEl = document.getElementById("int");
+  const LV = ["Calm: drums, bass", "Heated: + harmony", "All-out: + lead"];
+  const lvl = () => { const v = +intEl.value; document.getElementById("int-lvl").textContent = LV[v < 1 / 3 ? 0 : v < 2 / 3 ? 1 : 2]; };
+  intEl.addEventListener("input", () => { Music.setIntensity(+intEl.value); lvl(); }); lvl();
+  try { const v = localStorage.getItem("sr-vol"); if (v) volEl.value = v; const f = localStorage.getItem("sr-finish");
+    if (f && document.getElementById("fin-" + f)) { document.getElementById("fin-" + f).checked = true; Music.setFinish(f); } } catch (e) {}
+  Music.setVolume(+volEl.value);
+  volEl.addEventListener("input", () => { Music.setVolume(+volEl.value); try { localStorage.setItem("sr-vol", volEl.value); } catch (e) {} });
   document.querySelectorAll("input[name=finish]").forEach((r) => r.addEventListener("change", () => {
-    try { localStorage.setItem("sr-finish", finish()); } catch (e) {}
-    if (now) play(now.key); }));
-  try { const v = localStorage.getItem("sr-vol"); if (v) volEl.value = v; loopEl.checked = localStorage.getItem("sr-loop") === "1"; } catch (e) {}
-  volEl.addEventListener("input", () => { if (vol) vol.gain.value = +volEl.value; try { localStorage.setItem("sr-vol", volEl.value); } catch (e) {} });
-  loopEl.addEventListener("change", () => { try { localStorage.setItem("sr-loop", loopEl.checked ? "1" : "0"); } catch (e) {} });
+    const f = document.querySelector("input[name=finish]:checked").value; Music.setFinish(f);
+    try { localStorage.setItem("sr-finish", f); } catch (e) {} }));
+  document.getElementById("tag").textContent = `Soundtrack v0.4 · ${EU_TRACKS.length} pieces`;
 
-  function play(key) {
-    stop();
-    if (!ac) { ac = new (window.AudioContext || window.webkitAudioContext)(); vol = ac.createGain(); vol.connect(ac.destination); }
-    ac.resume(); vol.gain.value = +volEl.value;
-    const bus = ac.createGain(); bus.connect(vol);
-    const t0 = ac.currentTime + .08, len = EUSynth.sketch(ac, bus, key, t0, { finish: finish() });
-    now = { key, bus, t0, len, beat: 60 / PALETTE[key].bpm, beatPos: 0, next: null };
-    cards[key].el.classList.add("playing"); cards[key].btn.innerHTML = STOP; cards[key].btn.setAttribute("aria-label", "Stop " + PALETTE[key].name);
-    queueNext(); requestAnimationFrame(tick);
-  }
-  function queueNext() { // schedule the next statement slightly ahead when looping
-    const n = now; n.next = setTimeout(() => {
-      if (now !== n) return;
-      if (loopEl.checked) { const t = n.t0 + n.len; EUSynth.sketch(ac, n.bus, n.key, t, { finish: finish() }); n.t0 = t; queueNext(); }
-      else n.next = setTimeout(() => { if (now === n) stop(); }, (n.t0 + n.len - ac.currentTime + 2.5) * 1000);
-    }, Math.max(0, (n.t0 + n.len - ac.currentTime - .4) * 1000));
-  }
-  function stop() {
-    if (!now) return;
-    const n = now; now = null; clearTimeout(n.next);
-    n.bus.gain.setTargetAtTime(0, ac.currentTime, .03); setTimeout(() => n.bus.disconnect(), 300);
-    cards[n.key].el.classList.remove("playing"); cards[n.key].btn.innerHTML = PLAY; cards[n.key].btn.setAttribute("aria-label", "Play " + PALETTE[n.key].name);
-    draw(n.key, null);
-  }
-  function tick() {
-    if (!now) return;
-    const elapsed = ac.currentTime - now.t0, beats = elapsed / now.beat;
-    now.beatPos = elapsed < 0 ? null : beats % 8; // the motif repeats every 8 beats
-    draw(now.key, now.beatPos); requestAnimationFrame(tick);
-  }
-
-  drawAll();
-  window.addEventListener("resize", drawAll);
-  if (window.matchMedia) matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", drawAll);
-  new MutationObserver(drawAll).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-  if (document.fonts) document.fonts.ready.then(drawAll);
+  select("main"); mark("main", false);
+  window.addEventListener("resize", () => draw());
+  new MutationObserver(() => draw()).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  if (window.matchMedia) matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", () => draw());
+  if (document.fonts) document.fonts.ready.then(() => draw());
 })();
 </script>

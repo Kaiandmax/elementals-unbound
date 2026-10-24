@@ -1,10 +1,10 @@
-# Sound palette (v0.3)
+# Sound palette and soundtrack (v0.4)
 
 Status: **direction set, details still open.** On 2026-10-23 the designer chose *retro, in the style of the classic handheld monster-collecting RPGs (Pokemon)*, then asked for it *"a little less retro… similar vibe but less sounds like it's coming out of a gameboy."* Every tune here is original; only the style is borrowed.
 
 ## Two finishes, one arrangement
 
-The music is still **written** like a handheld RPG score: four parts (lead, harmony, bass, drums), bouncy octave bass, arpeggios, delayed vibrato. It is **played** in one of two finishes (`EUSynth.sketch(..., {finish})`):
+The music is still **written** like a handheld RPG score: four parts (lead, harmony, bass, drums), bouncy octave bass, arpeggios, delayed vibrato. It is **played** in one of two finishes (`Music.setFinish`):
 
 | Finish | What it sounds like | Status |
 |---|---|---|
@@ -26,7 +26,7 @@ Each part maps to one channel of the 8-bit handheld sound chip, and in the Class
 
 In Classic chip, volume envelopes step through 16 levels at 1/64 s, like the hardware. Thin duty (12.5 %) sounds reedy and airy; 50 % is round and hollow; 25 % is the bright middle. Those duty choices, plus the wavetable and drum pattern, are most of what tells the elements apart.
 
-The palette is also data: `music/palette.js` holds the same numbers and `music/synth.js` plays them. The [Sound Room](https://claude.ai/artifact/Nz4Vs5tjXdGoexGgbza3o8) plays each element's sketch.
+The palette is also data: `music/palette.js` holds the element sounds, the tracks in `music/tracks/` hold the notes, `music/synth.js` plays them and `music/player.js` is the game's API. The [Sound Room](https://claude.ai/artifact/Nz4Vs5tjXdGoexGgbza3o8) plays everything.
 
 ## The main motif: "Unbound"
 
@@ -74,34 +74,70 @@ In Enhanced, Main, Water, Earth and Wind add a soft chord pad; Fire and Lightnin
 
 Card-game ties (from the card files): Fire is haste and burn, so it is the fastest steady beat; Water is draw, freeze and big blockers, so it is the slowest and most sustained; Earth is walls and ramp into giants, so it sits lowest and heaviest; Wind is fliers and bounce, so it floats in triplets with the bright raised 4th; Lightning is chain spells and thresholds, so it is the busiest rhythm with a stab that "discharges" every bar.
 
-### Confluences (dual and triple decks)
+## The soundtrack (v0.4, 48 pieces)
 
-Not scored yet. The proposed rule, so they sound related to their parents:
+The designer asked (2026-10-24) for a theme for every element including duals and triples, backing music for each zone, and music for the important battles. Track list and format: `tracks/README.md`.
 
-- **Dual** (e.g. Steam = Fire + Water): melody in the mode of the element that leads the deck, rhythm of the other, home key of the leader. Pulse 1 takes the leader's duty; pulse 2 and the drums take the other element's style.
-- **Triple**: one channel style from each parent over the main-theme harmony (D Dorian), tempo averaged.
+### Element themes (6)
 
-## Battle music plan (next)
+`main` plus the five elements, 16 bars each: A opens with the motif in the element's mode, B is the element's own tune. All melodies hand-written.
 
-Battles last about 3 turns, so each element gets a short loop (8-16 bars) built in layers across the four channels: noise and wave at full life, pulse 2 added as life drops, the full motif on pulse 1 at low life, then a faster tempo for the last turn (the classic low-health urgency, done musically rather than with a beeping alarm). `Music.setIntensity(0..1)` would fade layers in and out. Victory and defeat stingers per the table above. Player API to agree with Game Dev.
+### Confluence themes (10 dual + 10 triple)
+
+Braided from the element themes, the way a braided card is, so each one sounds related to its parents:
+
+- **Dual** (lead + rhythm element): A = lead's A bars 1-4 + rhythm's A bars 5-8; B = rhythm's B bars 1-4 + lead's B bars 5-8. Lead sound from the lead element; harmony, bass and drums from the rhythm element.
+- **Triple** (lead + harmony + rhythm): A = lead's A 1-4 + harmony's A 5-8; B = rhythm's B 1-4 + lead's B 5-8. Lead, harmony and rhythm sounds from each.
+- Each gets its own key, the lead element's mode (melodies are scale degrees, so a borrowed phrase takes on the new mode's colour) and its parents' average tempo. Which element leads is chosen from the archetypes in `design/elements.md` (e.g. Steam: Water's calm tune over Fire's hurried beat; Storm: Water's melody over Lightning's crackle).
+- This is a rule, not twenty hand-written tunes. Favourites can get their own tune later.
+
+### Zones (10)
+
+From Story's draft bible (PR #6, not merged), so names and moods may change:
+
+| Track | Zone | Feel |
+|---|---|---|
+| `brindle-ford` | Home town | G major, warm walking bass; the motif returns gently |
+| `hearthvale-roads` | Overworld | D Mixolydian, bouncy, built on the motif's first bar |
+| `saltmere` | Tidewater League | A Dorian shanty in 3/4 |
+| `deepmoot` | Holdfast | E minor hymn and guard march |
+| `highcourt` | Skyreach | B♭ Lydian, courtly, echoing |
+| `thunderhold` | Stormcourt of Vol | C♯ Phrygian chant over restless arpeggios |
+| `cindergate` | Pyrrhen Dominion | D Phrygian dominant imperial march |
+| `borderlands` | Confluence war front | C minor, tense and driven |
+| `vault` | Dungeons | F♯ Phrygian, sparse and echoing |
+| `camp` | Rest and camp scenes | F major waltz |
+
+### Battles (8, layered) and stingers (4)
+
+| Track | Fight |
+|---|---|
+| `battle-wild` | Grass duels with wilds |
+| `battle-contract` | Binders, trainers, contract targets |
+| `battle-rival` | Pell Varrane (Act I rival, Fire) |
+| `battle-crowned` | Act-end crowned wilds; raise intensity per phase |
+| `battle-vexis` | Vexis, the Pyrelord (grows from Cindergate's march) |
+| `battle-exalted` | Duels with or beside the Seven Exalted |
+| `battle-primordial` | The Primordials (the motif turned upside down) |
+| `battle-seraphine` | The final duel: Seraphine's darkened motif against Wren's answer in major |
+
+Layers (`Music.setIntensity`): below 1/3 drums, bass and pad; below 2/3 adds harmony; above adds the lead and extra percussion. Element and confluence themes are layered too, so the game can score a duel with the enemy's element theme. Stingers: victory, defeat, card found, promotion.
 
 ## Limits
 
-Everything is synthesized in the browser (Web Audio); nothing is sampled. Enhanced can move further from the handheld (real-instrument-like voices, more parts) or back toward it, a knob at a time. MIDI export is planned so a track can move into a DAW or to a human composer later.
+Everything is synthesized in the browser (Web Audio); nothing is sampled. The whole soundtrack is about 60 KB of code and data. Enhanced can move further from the handheld (real-instrument-like voices, more parts) or back toward it, a knob at a time. MIDI export is planned so a track can move into a DAW or to a human composer later.
 
 ## Checks
 
-`node music/tools/render-check.js` renders every sketch in both finishes offline in headless Chromium and fails on clipping (peak above -1 dBFS), a tail that doesn't decay, or bad samples. Run with `NODE_PATH=$(npm root -g)` if Playwright is installed globally. Add `--wav <dir>` to save WAVs.
+- `node music/tools/lint.js` (no browser): every bar adds up to its meter, chord counts match, lead notes stay between C3 and E6, every track compiles.
+- `node music/tools/render-check.js` renders every track in both finishes in headless Chromium: peak, loudness, the loop seam (the jump from the last bar back to the first, compared with the track's other bar lines, for clicks or drop-outs), tails on stingers, and loudness at intensity 0 for layered tracks. `--levels` re-measures loudness and writes `levels.js` (trims to about -16 dBFS RMS, peaks held under -1.5 dBFS). Needs `NODE_PATH=$(npm root -g)` when Playwright is installed globally.
 
-Last run (v0.3, 4-bar sketches). Loudness target -14.5 dBFS RMS, set with per-element trims in `palette.js` (`trimHD` for Enhanced, `trim` for Classic chip). Fire and Lightning sit about 1 dB lower in Enhanced because the bus compressor holds their drum peaks down.
+Last run (v0.4, all 48 pieces × 2 finishes = 96 renders, 0 flagged):
 
-| Sketch | Length | Enhanced peak / RMS | Classic chip peak / RMS |
-|---|---|---|---|
-| Main theme | 8.0 s | -3.0 / -14.2 dBFS | -2.2 / -14.4 dBFS |
-| Fire | 6.3 s | -1.4 / -15.9 dBFS | -1.6 / -14.5 dBFS |
-| Water | 10.0 s | -4.7 / -14.0 dBFS | -6.2 / -14.5 dBFS |
-| Earth | 9.6 s | -3.3 / -14.2 dBFS | -3.4 / -14.5 dBFS |
-| Wind | 7.3 s | -2.7 / -14.4 dBFS | -2.5 / -14.5 dBFS |
-| Lightning | 5.7 s | -1.9 / -15.5 dBFS | -1.3 / -14.5 dBFS |
-
-A spectrum check on the renders confirms the opening lead pitches (main D4 at 294 Hz, Earth A3 at 220 Hz, Fire E4 over its E3 bass).
+| Measure | Result |
+|---|---|
+| Loudness (RMS) | -17.0 to -15.9 dBFS across every track and finish |
+| Peak | -7.8 to -1.5 dBFS (none above -1) |
+| Loop seam | Jump at the loop point at most 1.75× the track's typical bar line; level after the seam within 1.1 dB of other bars (no clicks or drop-outs) |
+| Layered tracks at intensity 0 | 0.3 to 3 dB quieter than full, so a calm duel isn't a volume dip |
+| Stinger tails | Silent (below -60 dBFS) by the end of the render |
