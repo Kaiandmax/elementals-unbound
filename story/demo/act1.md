@@ -158,12 +158,24 @@ The enemy decks and numbers are **Balance's** (`rpg/encounters.js`). Boss mechan
 
 **Fallback:** if a boss rule isn't built in time, the demo works with the deck and extra life alone.
 
+## Boss crowns and barks
+
+TCG Design's boss framework is in `design/bosses.md`, approved by the designer: bosses have phases and one crown each. Story gives each crown its name and reason, and writes the lines shown at three moments: when the fight starts (the crown is announced), at each phase break, and when the companions finish the side fight.
+
+| Boss | Phases | Crown | Fight start | Phase breaks | Side fight held |
+|---|---|---|---|---|---|
+| Gullet, the Millrace Lurker | 2 | **Lurker**: it strikes from under the sluice | `a1_gullet_crown` | `a1_gullet_break1` | — |
+| The Cinder Mother | 3 | **Brood**: she births sparks while the brood lives | `a1_mother_crown` | `a1_mother_break1`, `a1_mother_break2` | `a1_mother_brood_held` (Brann and Dove) |
+| The Sluicewarden | 3 | **Sealwork**: Edda built it to rebuild | `a1_warden_crown` | `a1_warden_break1`, `a1_warden_break2` | `a1_warden_brood_held` (Brann, Dove and Pell hold the serpent's brood) |
+
+The Sluicewarden's side fight is optional. If only the Cinder Mother has one, the barks at its phase breaks still read fine.
+
 ## Loot cards
 
-- **Slackwater, the Weir Serpent** (a Manifest, Water). TCG Design's concept: it grows and deals damage each time you play a Reaction. Story's name and legend are below; the final numbers are Balance's. This is the demo's payoff. It's the first Manifest the player owns, and it asks for a Reaction-heavy Water deck.
+- **Slackwater, the Weir Serpent** (a Manifest, Water; card id `water_slackwater_the_weir_serpent`). TCG Design's concept: it grows and deals damage each time you play a Reaction. Story's name and legend are below; the final numbers are Balance's. This is the demo's payoff. It's the first Manifest the player owns, and it asks for a Reaction-heavy Water deck.
   - **Flavor:** *"It never struck first. It never needed to."*
   - **Legend:** for two centuries it lay under the Brindle weir and struck only at what struck first. The millers called it the Weir Warden and left it eels. Sixty years ago, in a flood year that woke it hungry, Edda Calder bound it rather than kill it, and built the Weir Vault to hold it.
-- **The chained chest** on Millrace Road holds whatever card Game Dev or TCG Design choose (currently `wind_tempest_dragon`). Its story is a hunter who hid it and never came back.
+- **The chained chest** on Millrace Road holds **Tidecaller Shaman** (`water_tidecaller_shaman`, TCG Design's pick): a Water creature that makes a Droplet whenever you play a Reaction, a small taste of what Slackwater wants. Its story is a hunter who hid it and never came back.
 - **Bosses** may also give a Manifest (designer: Manifests come from chests, contracts and story duels). Proposal: Gullet and the Cinder Mother give nothing special; Slackwater is the one.
 
 ## Engine features this demo needs (Game Dev)

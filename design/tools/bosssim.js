@@ -1,5 +1,5 @@
 // Boss-fight prototypes (TCG Design). Plays a player deck against a boss deck with optional boss rules,
-// on an in-memory patched copy of tools/engine.js (nothing on disk changes), and reports fight length and win rate.
+// using the engine's native boss phases (newGame opts.boss, PR #21) plus a few in-memory patches (nothing on disk changes), and reports fight length and win rate.
 //
 //   bash tools/mk.sh
 //   node design/tools/bosssim.js                 # env: N games per config (default 120), LV="3,3" (player,boss AI),
@@ -24,42 +24,33 @@ function patch(find, add, after = true){
 // Set up boss rules right after the players are made.
 patch("  g.P.forEach(p=>drawN(p,5));", `
   if (globalThis.__bossSetup) __bossSetup(g);`, false);
-// Phase break: instead of losing, the boss refills to its next bar.
-patch("function checkWin(){\n  const [a,b] = g.P;", `
-  for (const q of g.P) if (q.life<=0 && q.bars && (q.phase||1) <= q.bars.length){
-    q.life = q.maxLife = q.bars[(q.phase||1) - 1]; q.phase = (q.phase||1) + 1;   // bars is never mutated: AI look-ahead clones share it
-    if (q.clearOnBreak) q.board.length = 0;
-    if (!g.sim) { log(q.name+" enters phase "+q.phase+"!", "big"); if (globalThis.__FMB) __FMB.phase(q, g); }
-  }`);
-// Damage cap per turn.
+// Phases, slow start, board clear and the break breather are native since PR #21 (newGame's opts.boss).
+// Only the rules the engine doesn't have are patched in: extra life, the damage cap.
 patch("function dmgPlayer(p, n, src){\n  if (n<=0) return;", `
   if (p.cap){ n = Math.min(n, p.cap - (p.took||0)); if (n<=0) return; p.took = (p.took||0) + n; }`);
 patch("function startTurn(p){", `
   for (const q of g.P) q.took = 0;`);
-// Boss Energy per turn.
-patch("  p.energy += 3;", `
-  p.energy += p.eByPhase ? p.eByPhase[Math.min((p.phase||1), p.eByPhase.length) - 1] : (p.eMod||0);`);
-// Phase-break reward for the other side: heal and draw (a breather between phases).
-patch("    if (q.clearOnBreak) q.board.length = 0;", `
-    if (q.breakHeal){ const o = g.P[1-q.i]; o.life = Math.min(o.maxLife, o.life + q.breakHeal); drawN(o, 1); }`);
 require("vm").runInThisContext(src, { filename: "engine-boss.js" });
 const S = globalThis.__sim, DK = S.DECK_BY_ID, ids = Object.keys(DK);
 const nEl = id => (S.CONFLUENCE[DK[id].el] || [1]).length;
 const group = g => { const [n, t] = g.split(":"); return ids.filter(i => nEl(i) === +n && DK[i].tier === t); };
 
 let CUR = null, PH = null;
-globalThis.__FMB = { phase(q, g){ PH.push(g.turnNo); } };
+globalThis.onBossPhase = q => { if (PH) PH.push(1); };
 globalThis.__bossSetup = g => {
   const b = g.P[1], p = g.P[0], c = CUR;
   if (c.life) { b.life += c.life; b.maxLife = b.life; }
   if (c.pLife) { p.life += c.pLife; p.maxLife = p.life; }
-  if (c.bars) b.bars = [...c.bars];
-  b.clearOnBreak = !!c.clear;
   if (c.cap) b.cap = c.cap;
-  if (c.eMod) b.eMod = c.eMod;
-  if (c.eByPhase) b.eByPhase = c.eByPhase;
-  if (c.breakHeal) b.breakHeal = c.breakHeal;
 };
+// A config's boss rules in the engine's native shape (opts.boss), or null.
+function nativeBoss(c){
+  const energy = c.eByPhase ? c.eByPhase.map(x => 3 + x) : c.eMod ? [3 + c.eMod] : null;
+  if (!c.bars && !energy) return null;
+  const b = { bars: c.bars ? [...c.bars] : [], clearOnBreak: !!c.clear, breakHeal: c.breakHeal || 0 };
+  if (energy) b.energyByPhase = energy;
+  return b;
+}
 
 const CONFIGS = {
   plain:          {},
@@ -96,9 +87,10 @@ const CONFIGS = {
       PH = [];
       // Player goes first in half the games: headless seat 0 always starts, so swap the boss into seat 0 by
       // mirroring is not possible with seat-based rules; instead the player always starts (bosses act second).
-      const res = await S.newGame(a, b, 15, LV);
+      const boss = nativeBoss(CUR);
+      const res = await S.newGame(a, b, 15, LV, boss ? { boss } : undefined);
       const g = S.getG();
-      R.push({ win: res === "you", rounds: g.turnNo / 2, bossLeft: res === "enemy" ? g.P[1].life + (g.P[1].bars || []).slice((g.P[1].phase || 1) - 1).reduce((s, x) => s + x, 0) : 0, phases: 1 + PH.length });
+      R.push({ win: res === "you", rounds: g.turnNo / 2, bossLeft: res === "enemy" ? g.P[1].life + (g.P[1].boss ? g.P[1].boss.bars.slice(g.P[1].phase - 1) : []).reduce((s, x) => s + x, 0) : 0, phases: 1 + PH.length });
     }
     const rs = R.map(r => r.rounds).sort((x, y) => x - y), q = f => rs[Math.floor(f * (rs.length - 1))];
     const lost = R.filter(r => !r.win);

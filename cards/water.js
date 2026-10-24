@@ -140,6 +140,7 @@ Mf("Font of Wisdom",3,"spell",null,"","play: draw 4; heal 3");
 Mf("Glacier Colossus",4,"creature",[5,11],"skyguard vigilant","static: lord other 1 2");
 Mf("Water Spirit Legion",4,"spell",null,"","play: summon elemental 3");
 Mf("Ocean's Wrath",5,"spell",null,"","play: destroy t; destroy str; draw 1",{tgt:"e"});
-Mf("Moonlit Tide",3,"aura",null,"","static: cost reaction 1 | react: draw 1; dmg face 1");
+// Loot card: the Weir Vault (Act I). Reworked from Moonlit Tide (2026-10-24). Story: "It never struck first. It never needed to."
+Mf("Slackwater, the Weir Serpent",3,"creature",[2,5],"ward","react: buff self 1 1; dmg face 1");
 Mf("Frost Empress Ysil",5,"creature",[6,8],"ward","start: freeze all_e");
 Mf("Rain of Renewal",3,"spell",null,"","play: heal 8; buff own 1 2");
