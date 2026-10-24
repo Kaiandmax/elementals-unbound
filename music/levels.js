@@ -67,5 +67,14 @@ window.EU_LEVELS = {
   "sting-crown":{"enhanced":5.1,"chip":3},
   "sting-crew-win":{"enhanced":-1.9,"chip":-0.8},
   "sting-crew-lose":{"enhanced":-1.8,"chip":-0.7},
-  "sting-hollow":{"enhanced":-4.2,"chip":-2.2}
+  "sting-hollow":{"enhanced":-4.2,"chip":-2.2},
+  "mads":{"chip":-2.4,"enhanced":-3.5},
+  "dove":{"chip":-1.7,"enhanced":-3.9},
+  "thunderhold-cathedral":{"chip":-1,"enhanced":-2},
+  "council-hall":{"chip":-0.2,"enhanced":-0.7},
+  "founding-vault":{"chip":-2,"enhanced":-4},
+  "battle-tournament":{"chip":-0.1,"enhanced":-2.7},
+  "battle-davor":{"chip":1.2,"enhanced":3.3},
+  "battle-kes":{"chip":-0.3,"enhanced":-2.3},
+  "battle-vol":{"chip":-0.6,"enhanced":0.6}
 };
