@@ -62,7 +62,7 @@ Get the current time for `created` with `date +%s%3N`. Board content is written 
 
 ## House rules
 
-- Battles are short on purpose (about 3 turns). Longer, higher-stakes fights come from boss mechanics.
+- Normal battles are short on purpose (under 4 turns a side). Boss fights (crowned monsters, higher-rank monsters, important NPC duels) aim for 6-7 turns through boss mechanics.
 - Never edit generated files: `index.html`, `tools/engine.js`, `cards/winrates.js` (regenerate it with `tools/genwr2.js`).
 - Keep `main` playable. `bash tools/mk.sh && node tools/smoke.js` must pass before any merge.
 - Small PRs beat big ones; two agents touching the same file is the main way work gets lost.
