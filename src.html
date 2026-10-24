@@ -267,6 +267,9 @@ details.rules ul{margin:.5em 0 0;padding-left:1.2em;max-width:80ch;display:grid;
 .dpad [data-pad=up]{grid-area:u}.dpad [data-pad=down]{grid-area:d}.dpad [data-pad=left]{grid-area:l}.dpad [data-pad=right]{grid-area:r}
 .abtn{width:76px;height:76px;border-radius:50%;background:var(--brass);color:#1a1408;font-family:var(--f-display);font-weight:700;font-size:26px}
 .rpg-file{display:inline-block}
+.phases{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--brass);margin-top:4px}
+.phases .pips{display:flex;gap:3px}.phases i{width:16px;height:6px;border-radius:3px;background:var(--bad)}.phases i.gone{background:var(--line)}.phases i.now{box-shadow:0 0 6px var(--bad)}
+.phase-big{font-family:var(--f-display);font-size:34px;color:var(--brass);text-shadow:0 2px 10px rgba(0,0,0,.7)}
 .rpg-drop{display:grid;justify-items:center;gap:8px;text-align:center}
 .rpg-drop-cards{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;padding-top:8px}
 .rpg-ess{color:var(--el);font-weight:700}
@@ -666,7 +669,27 @@ function checkDeaths(){
   }
   checkWin();
 }
+/* Boss phases (design/bosses.md, approved 2026-10-24). A boss is a player with p.boss = { bars:[8,8], slowStart, clearOnBreak, breakHeal }.
+   At 0 life with a bar left it refills to the next bar instead of losing; its creatures can leave play (no Last Gasp);
+   the other side may heal and draw. p.boss is shared by AI look-ahead clones and never mutated; p.phase counts from 1. */
+const bossPhases = p => p.boss ? p.boss.bars.length + 1 : 1;
+function bossEnergyMod(p){
+  const b = p.boss; if (!b) return 0;
+  if (b.energyByPhase) return (b.energyByPhase[Math.min(p.phase, b.energyByPhase.length) - 1] || 3) - 3;
+  return b.slowStart && p.phase === 1 ? -1 : 0;
+}
+function bossBreaks(){
+  for (const q of g.P){
+    if (q.life > 0 || !q.boss || q.phase >= bossPhases(q)) continue;
+    q.life = q.maxLife = q.boss.bars[q.phase - 1]; q.phase++;
+    if (q.boss.clearOnBreak){ for (const c of q.board) if (!c.d.token && !c.d.manifest) q.grave.push(c.d); q.board.length = 0; }
+    const o = g.P[1-q.i];
+    if (q.boss.breakHeal && o.life > 0){ o.life = Math.min(o.maxLife, o.life + q.boss.breakHeal); drawN(o, 1); }
+    if (!g.sim){ log(`${q.name} is broken but rises: phase ${q.phase} of ${bossPhases(q)}!`, "big"); g.phaseFlash = { who:q.name, phase:q.phase, of:bossPhases(q) }; if (globalThis.onBossPhase) onBossPhase(q); }
+  }
+}
 function checkWin(){
+  bossBreaks();
   const [a,b] = g.P;
   if (a.life<=0 || b.life<=0){
     g.over = a.life<=0 && b.life<=0 ? "draw" : (a.life<=0 ? "enemy" : "you");
@@ -884,7 +907,7 @@ function resolveCombat(ap){
 /* Turn flow */
 function startTurn(p){
   g.P.forEach(q=>{ q.played=0; q.spent=false; q.spells=0; });
-  p.energy += 3;
+  p.energy += 3 + bossEnergyMod(p);
   for (const c of p.board){
     if (c.frozen){ c.frozen=false; c.exhausted=true; } else c.exhausted=false;
     c.sick = false;
@@ -1545,10 +1568,12 @@ async function aiTurn(p){
 }
 
 /* ---------------- Game setup ---------------- */
-function newGame(myDeck, enemyDeck, enemyLife, kinds){
+function newGame(myDeck, enemyDeck, enemyLife, kinds, opts){
   g = { id: Math.random(), screen:"game", P:[], active:0, turnNo:0, phase:"main1", ui:{mode:"idle"}, log:[], combat:null, over:null, cfg:{myDeck, enemyDeck, enemyLife} };
   // Each side starts at its element's life; a normal encounter gives the enemy 5 less.
   g.P = [ newPlayer(0, myDeck, "You", HEADLESS, deckLife(myDeck)), newPlayer(1, enemyDeck, "Enemy", true, deckLife(enemyDeck) + ((enemyLife ?? 15) - 15)) ];
+  if (opts && opts.boss){ g.P[1].boss = opts.boss; g.P[1].phase = 1; }
+  if (opts && opts.name) g.P[1].name = opts.name;
   g.P.forEach(p=>drawN(p,5));
   // A coin flip decides who goes first (simulations keep seat 0 first so seats can be alternated).
   const first = HEADLESS ? 0 : (Math.random() < 0.5 ? 0 : 1);
@@ -1585,6 +1610,10 @@ function kwLine(d){
   return k;
 }
 /*__ART__*/
+function bossBarsHTML(p){
+  const n = bossPhases(p), pips = Array.from({length:n}, (_, i) => `<i class="${i < p.phase - 1 ? "gone" : i === p.phase - 1 ? "now" : ""}"></i>`).join("");
+  return `<span class="phases" aria-label="Phase ${p.phase} of ${n}"><span class="pips" aria-hidden="true">${pips}</span>Phase ${p.phase} of ${n}${bossEnergyMod(p) < 0 ? " · waking (2 Energy)" : ""}</span>`;
+}
 function cardHTML(d, opts={}){
   const cls = ["card", "el-"+d.el];
   if (d.manifest) cls.push("manifest");
@@ -1627,7 +1656,7 @@ function chargeHTML(p){
 function sideHTML(p, isTarget){
   const auras = p.auras.length ? `<div class="stat"><span class="lbl">Auras</span><div class="chips">${p.auras.map((a,ai)=>`<span class="aura el-${a.el}" data-aura="${p.i}-${ai}" tabindex="0">${esc(a.name)}</span>`).join("")}</div></div>` : "";
   return `<div class="side ${isTarget?"target":""}" data-pl="${p.i}" ${isTarget?'tabindex="0" role="button"':""}>
-    <div class="who"><span class="lbl">${p.isAI?`Enemy · AI ${levelOf(p)} ${AI_LEVELS[levelOf(p)].name}`:"You"} · ${esc(p.deckName)}</span><span class="life kwt" tabindex="0" data-tip="life" aria-label="Life ${p.life} of ${p.maxLife}">${p.life}<small>/${p.maxLife}</small></span></div>
+    <div class="who"><span class="lbl">${p.isAI?`Enemy · AI ${levelOf(p)} ${AI_LEVELS[levelOf(p)].name}`:"You"} · ${esc(p.deckName)}</span><span class="life kwt" tabindex="0" data-tip="life" aria-label="Life ${p.life} of ${p.maxLife}">${p.life}<small>/${p.maxLife}</small></span>${p.boss ? bossBarsHTML(p) : ""}</div>
     <div class="stat"><span class="lbl">Energy</span><b>${p.energy}</b><span class="muted" style="font-size:12px">banks up to ${bankCap(p)}</span></div>
     <div class="stat"><span class="lbl">Charge</span>${chargeHTML(p)}</div>
     <div class="stat"><span class="lbl">Hand · Deck</span><b>${p.hand.length} · ${p.deck.length}</b></div>
@@ -1724,6 +1753,7 @@ function renderGame(){
   }
 
   if (g.coin) modal += `<div class="flash coinflip" aria-live="polite"><div class="flash-in"><div class="coin ${g.coin.first===0?"you":"foe"}"><span class="face f-you">You</span><span class="face f-foe">Enemy</span></div><span class="flash-lbl">Coin flip: ${g.coin.first===0 ? "you go first" : "the enemy goes first"}</span><span class="muted">${g.coin.first===0 ? "You skip your first draw; the enemy starts with 1 banked Energy." : "The enemy skips its first draw; you start with 1 banked Energy."}</span></div></div>`;
+  if (g.phaseFlash){ modal += `<div class="flash" aria-live="polite"><div class="flash-in"><span class="flash-lbl">${esc(g.phaseFlash.who)} rises</span><span class="phase-big">Phase ${g.phaseFlash.phase} of ${g.phaseFlash.of}</span></div></div>`; const pf = g.phaseFlash; setTimeout(()=>{ if (g && g.phaseFlash===pf){ g.phaseFlash = null; render(); } }, reduceMotion() ? 900 : 1600); }
   if (g.flash) modal += `<div class="flash" aria-live="polite"><div class="flash-in"><span class="flash-lbl">${esc(g.flash.who)}</span>${cardHTML(g.flash.m,{cls:"bigcard"})}</div></div>`;
   return `<div class="top"><h1>Elementals Unbound</h1><div class="row"><span class="muted">Turn ${g.turnNo} · ${myTurn?"Your turn":"Enemy turn"}</span>${RPG.battle ? (g.over ? `<button class="btn primary" data-btn="rpg-return">Continue</button>` : RPG.battle.kind==="wild" ? `<button class="btn" data-btn="rpg-flee">Run away</button>` : "") : `<button class="btn" data-btn="decks">Change decks</button><button class="btn" data-btn="again">Restart</button>`}</div></div>
   <div class="game" style="margin-top:12px">
