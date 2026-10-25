@@ -31,6 +31,12 @@ let bad = 0;
     let unreached = 0; m.rows.forEach((r, y) => [...r].forEach((ch, x) => { if (walk(m, x, y) && !seen.has(x+","+y)) unreached++; }));
     if (unreached) err(id, `${unreached} walkable tiles can't be reached`);
   }
+  // Quests: every step points at a real place; every placed thing in a region can be walked up to.
+  for (const q of S.RPG_QUESTS) for (const st of q.steps) { const a = st.at; if (!a || !M[a.map]) { err("quests", `${q.id}: step '${st.done}' has no place`); continue; }
+    if (!M[a.map].rows[a.y] || a.x >= M[a.map].rows[0].length) err("quests", `${q.id}: step '${st.done}' points off the map`); }
+  for (const [id, m] of Object.entries(M)) if (m.generated) for (const o of [...(m.npcs||[]), ...(m.chests||[]), ...(m.signs||[])])
+    if (![[0,1],[1,0],[-1,0],[0,-1]].some(([dx,dy]) => S.RPG_TILE[(m.rows[o.y+dy]||"")[o.x+dx]])) err(id, `${o.id || o.text} at ${o.x},${o.y} can't be reached`);
+  for (const [id, m] of Object.entries(M)) for (const sp of m.wilds||[]) if (!S.RPG_ENCOUNTERS[sp.table]) err(id, `roaming table ${sp.table} missing`);
   for (const [id, t] of Object.entries(S.RPG_ENCOUNTERS)) for (const e of t.list) if (!S.DECK_BY_ID[e.deck]) err("encounters", `${id}: deck ${e.deck} missing`);
   for (const [id, t] of Object.entries(S.RPG_TRAINERS)) if (!S.DECK_BY_ID[t.deck]) err("trainers", `${id}: deck ${t.deck} missing`);
   // Drops: odds sum to 1, never include a Manifest, and rarer cards are never likelier than commoner ones in the same deck.
