@@ -2,19 +2,26 @@
    A top-down tile map walked on a grid. Battles run on the existing engine through newGame().
    Everything that touches the page is inside functions that only run in the browser, so the
    headless sims (tools/engine.js) load this file without side effects. */
-const RPG_T = 16, RPG_VW = 15, RPG_VH = 11, RPG_STEP_MS = 170, RPG_SAVE_KEY = "eu.save.v1";
-const RPG_TILE = { ".":1, ",":1, "=":1, "f":1, "D":1, "_":1, ">":1, "w":1, "v":1, "S":1, "s":0, "V":0, "#":0, "~":0, "R":0, "H":0, "W":0, "t":0 };
-const RPG_ENC_TILES = { ",":1, "w":1 };   // tall grass and shallow water start wild duels
+const RPG_T = 16, RPG_VW = 21, RPG_VH = 13, RPG_STEP_MS = 170, RPG_SAVE_KEY = "eu.save.v1";
+const RPG_TILE = { ".":1, ",":1, "=":1, "f":1, "D":1, "_":1, ">":1, "w":1, "v":1, "S":1, "+":1, "b":1, "a":1, "A":1, "F":1, ":":1,
+  "s":0, "V":0, "#":0, "~":0, "R":0, "H":0, "W":0, "t":0, "P":0, "o":0, "Q":0, "T":0, "^":0, "|":0 };
+const RPG_ENC_TILES = { ",":1, "w":1, "A":1 };   // tall grass, shallow water and ember grass start wild duels
 const RPG_DIRS = { up:[0,-1], down:[0,1], left:[-1,0], right:[1,0] };
 const RPG = { active:false, save:null, held:[], move:null, turnAt:0, dlg:null, reveal:null, fade:null, battle:null,
-  canvas:null, ctx:null, raf:0, last:0, cam:null, grace:0, eraseArm:false, pad:{}, toast:null, card:null, cue:null, introShown:false };
+  canvas:null, ctx:null, raf:0, last:0, cam:null, grace:0, eraseArm:false, pad:{}, toast:null, card:null, cue:null, introShown:false, mobs:[], mobsMap:null, panel:null, banner:null };
 
 function rpgNewSave(el){
   return { v:1, starter:el, deck:el+"_starter", map:RPG_START.map, x:RPG_START.x, y:RPG_START.y, dir:RPG_START.dir,
-    flags:{}, opened:{}, collection:[], wins:0, losses:0, steps:0, created:Date.now() };
+    flags:{}, opened:{}, collection:[], wins:0, losses:0, steps:0, seen:{}, created:Date.now() };
 }
 function rpgValidSave(s){ return !!s && s.v===1 && RPG_MAPS[s.map] && typeof s.x==="number" && typeof s.y==="number" && typeof s.deck==="string"; }
-function rpgLoad(){ try { const s = JSON.parse(localStorage.getItem(RPG_SAVE_KEY)); return rpgValidSave(s) ? s : null; } catch(e){ return null; } }
+function rpgLoad(){ try { const s = JSON.parse(localStorage.getItem(RPG_SAVE_KEY)); return rpgFixSave(s); } catch(e){ return null; } }
+// Saves from before a map was replaced (e.g. the old small Act I maps) restart at the house, keeping progress.
+function rpgFixSave(s){
+  if (!s || s.v !== 1 || typeof s.deck !== "string") return null;
+  if (!RPG_MAPS[s.map] || !RPG_TILE[rpgTile(RPG_MAPS[s.map], s.x, s.y)]) Object.assign(s, { map:RPG_START.map, x:RPG_START.x, y:RPG_START.y, dir:RPG_START.dir });
+  s.seen = s.seen || {}; return s;
+}
 function rpgStore(){ if (!RPG.save) return; try { localStorage.setItem(RPG_SAVE_KEY, JSON.stringify(RPG.save)); } catch(e){} }
 function rpgMap(){ return RPG_MAPS[RPG.save.map]; }
 function rpgTile(m, x, y){ return (m.rows[y] || "")[x] || "#"; }
@@ -42,9 +49,10 @@ function rpgBegin(el){ RPG.save = rpgNewSave(el); RPG.grace = 2; rpgStore(); RPG
 
 /* ---- Movement ---- */
 function rpgFront(){ const s = RPG.save, d = RPG_DIRS[s.dir]; return [s.x+d[0], s.y+d[1]]; }
-function rpgBusy(){ return !!(RPG.dlg || RPG.reveal || RPG.fade || RPG.battle || RPG.card); }
+function rpgBusy(){ return !!(RPG.dlg || RPG.reveal || RPG.fade || RPG.battle || RPG.card || RPG.panel); }
 function rpgUpdate(dt, now){
   const s = RPG.save; if (!s) return;
+  if (!RPG.fade && !RPG.panel) rpgMobsUpdate(dt, now);
   if (RPG.fade){ RPG.fade.t += dt; if (!RPG.fade.done && RPG.fade.t >= RPG.fade.ms/2){ RPG.fade.done = true; RPG.fade.mid && RPG.fade.mid(); } if (RPG.fade && RPG.fade.t >= RPG.fade.ms) RPG.fade = null; return; }
   if (RPG.move){
     RPG.move.t += dt;
@@ -57,12 +65,14 @@ function rpgUpdate(dt, now){
   if (s.dir !== want){ s.dir = want; RPG.turnAt = now; return; }   // a tap turns; holding walks
   if (now - RPG.turnAt < 90) return;
   const m = rpgMap(), d = RPG_DIRS[want], nx = s.x+d[0], ny = s.y+d[1];
+  const mob = RPG.mobs.find(o => o.x===nx && o.y===ny); if (mob){ rpgMobFight(mob); return; }
   if (rpgWalkable(m, nx, ny)) RPG.move = { fx:s.x, fy:s.y, x:nx, y:ny, t:0 };
   else RPG.bump = now;
 }
 function rpgArrive(){
   const s = RPG.save, m = rpgMap();
   s.steps++; if (RPG.grace > 0) RPG.grace--;
+  rpgReveal(); rpgAreaCheck();
   const w = (m.warps||[]).find(o=>o.x===s.x && o.y===s.y && rpgOk(o));
   if (w){ RPG.held = RPG.held.filter(d=>d===w.dir); return rpgFade(()=>{ s.map = w.to; s.x = w.tx; s.y = w.ty; s.dir = w.dir || s.dir; RPG.cam = null; RPG.grace = Math.max(RPG.grace, 1); rpgStore(); render(); rpgCheckScenes(true); }); }
   rpgStore();
@@ -157,19 +167,20 @@ function rpgDropHTML(){
 function rpgEndBattle(fled){
   const b = RPG.battle, res = fled ? "fled" : (g && g.over), s = RPG.save;
   if (g) g.id = Math.random(); g = null; RPG.battle = null; RPG.grace = b ? b.grace : 2; RPG.cam = null;
+  rpgMobAfter(b, res);
   let msg = null;
   if (res==="you"){ s.wins++; if (b.kind==="trainer" && RPG_TEXT[b.win]) msg = { text:b.win, sets:b.flag }; else if (b.flag) rpgSetFlag(b.flag); }
   else if (res==="enemy" || res==="draw"){
     s.losses++;
-    const m = rpgMap(), h = rpgHealPoint(m);
-    msg = { text: m.lost || "lost" };
+    const m = rpgMap(), a = rpgAreaAt(m, s.x, s.y), h = rpgHealPoint(m, a);
+    msg = { text: (a && a.lost) || m.lost || "lost" };
     s.map = h.map; s.x = h.x; s.y = h.y; s.dir = "down";
   }
   rpgStore(); render(); if (msg) rpgPlay(msg);
 }
 // Where you wake up after losing: the map's heal point ([x, y] on this map, or { map, x, y }), else the start.
-function rpgHealPoint(m){
-  const h = m.heal; if (Array.isArray(h)) return { map:RPG.save.map, x:h[0], y:h[1] };
+function rpgHealPoint(m, a){
+  const h = (a && a.heal) || m.heal; if (Array.isArray(h)) return { map:RPG.save.map, x:h[0], y:h[1] };
   if (h && h.map) return h;
   return { map:RPG_START.map, x:RPG_START.x, y:RPG_START.y };
 }
@@ -193,6 +204,12 @@ const RPG_KEYS = { ArrowUp:"up", ArrowDown:"down", ArrowLeft:"left", ArrowRight:
 function rpgOnKey(e, down){
   if (!RPG.active || g || (!RPG.save && !RPG.card)) return;
   if (e.target && e.target.closest && e.target.closest("input,textarea,select")) return;
+  if (down && !e.repeat && RPG.save && !RPG.card && !RPG.dlg){
+    const k = e.key.toLowerCase();
+    if (k === "j" || k === "m"){ e.preventDefault(); rpgPanel(k === "j" ? "journal" : "map"); return; }
+    if (k === "escape" && RPG.panel){ e.preventDefault(); rpgPanel(null); return; }
+  }
+  if (RPG.panel) return;
   const dir = RPG_KEYS[e.key];
   if (dir){ e.preventDefault(); RPG.held = RPG.held.filter(d=>d!==dir); if (down) RPG.held.push(dir); return; }
   if (down && !e.repeat && (e.key==="Enter" || e.key===" " || e.key==="z" || e.key==="Z" || e.key==="x" || e.key==="X")){
@@ -214,7 +231,7 @@ function rpgPollPad(){
 
 /* ---- Drawing (procedural pixel tiles, no image files) ---- */
 function rpgHash(x, y, k){ let h = (x*374761393 + y*668265263 + (k||0)*2147483647) | 0; h = (h ^ (h >>> 13)) * 1274126177 | 0; return ((h ^ (h >>> 16)) >>> 0) / 4294967296; }
-function rpgDrawTile(c, ch, tx, ty, px, py, now){
+function rpgDrawTile(c, ch, tx, ty, px, py, now, m){
   const T = RPG_T, R = (x,y,w,h,col)=>{ c.fillStyle = col; c.fillRect(px+x, py+y, w, h); };
   const grass = () => { R(0,0,T,T,"#4c8a3f"); for (let i=0;i<3;i++){ const hx = rpgHash(tx,ty,i), hy = rpgHash(ty,tx,i+7); R((hx*14)|0,(hy*14)|0,1,2,"#3f7735"); } };
   switch (ch){
@@ -224,6 +241,19 @@ function rpgDrawTile(c, ch, tx, ty, px, py, now){
       for (let row=0; row<3; row++) for (let i=0;i<4;i++){ const x = i*4 + (row%2?2:0), y = 3 + row*5; R(x+sway,y,1,3,"#2a5a25"); R(x+1+sway,y-1,1,4,"#5fa34c"); R(x+2,y+1,1,2,"#2a5a25"); } break; }
     case "=": R(0,0,T,T,"#c2a26a"); for (let i=0;i<3;i++) R((rpgHash(tx,ty,i+11)*14)|0,(rpgHash(ty,tx,i+13)*14)|0,2,1,"#a88a55"); break;
     case "#": grass(); R(6,10,4,6,"#5a3d22"); c.fillStyle = "#24502a"; c.beginPath(); c.arc(px+8, py+7, 7, 0, Math.PI*2); c.fill(); R(4,3,3,2,"#3a7a3c"); R(9,6,2,2,"#3a7a3c"); break;
+    case "P": grass(); R(7,12,2,4,"#4a3420"); c.fillStyle = "#1d4a35"; c.beginPath(); c.moveTo(px+8,py); c.lineTo(px+15,py+13); c.lineTo(px+1,py+13); c.closePath(); c.fill(); R(6,4,2,2,"#2e6a4c"); R(9,8,2,2,"#2e6a4c"); break;
+    case "Q": grass(); R(6,10,4,6,"#5a3d22"); c.fillStyle = "#3f7a2a"; c.beginPath(); c.arc(px+8, py+7, 6, 0, Math.PI*2); c.fill(); R(4,5,2,2,"#d94a3a"); R(9,8,2,2,"#d94a3a"); R(7,3,2,2,"#e6c23a"); break;
+    case "T": R(0,0,T,T,"#4d3f3a"); R(7,4,3,12,"#2a1d18"); R(4,6,3,1,"#2a1d18"); R(10,3,3,1,"#2a1d18"); R(3,5,1,2,"#2a1d18"); if (Math.sin(now/240 + tx*1.7) > 0.8) R(8,3,1,1,"#ff8a3a"); break;
+    case "o": grass(); c.fillStyle = "#7a7a72"; c.beginPath(); c.ellipse(px+8, py+10, 7, 5, 0, 0, Math.PI*2); c.fill(); R(4,7,4,2,"#9a9a90"); R(9,12,4,1,"#5a5a54"); break;
+    case "^": R(0,0,T,T,"#6b6257"); R(0,0,T,3,"#857b6e"); R(2,5,5,3,"#5a5249"); R(9,9,5,4,"#5a5249"); R(0,T-2,T,2,"#4a433b"); R((tx*5)%12+1,3,2,1,"#9a907f"); break;
+    case "|": grass(); R(0,6,T,2,"#7a5a34"); R(0,11,T,2,"#7a5a34"); R(2,4,2,11,"#5a4024"); R(12,4,2,11,"#5a4024"); break;
+    case "+": R(0,0,T,T,"#9a958c"); for (let yy=0; yy<T; yy+=4) for (let xx=((yy/4)%2)*4; xx<T; xx+=8) R(xx,yy,7,3,"#aaa59a"); break;
+    case "b": { R(0,0,T,T,"#2f6ea8"); const hz = m && (rpgTile(m,tx-1,ty)!=="~" && rpgTile(m,tx-1,ty)!=="w" || rpgTile(m,tx+1,ty)!=="~" && rpgTile(m,tx+1,ty)!=="w");
+      if (hz){ R(0,2,T,12,"#8a6a45"); for (let xx=1; xx<T; xx+=4) R(xx,2,1,12,"#6d5235"); R(0,2,T,1,"#5a4024"); R(0,13,T,1,"#5a4024"); } else { R(2,0,12,T,"#8a6a45"); for (let yy=1; yy<T; yy+=4) R(2,yy,12,1,"#6d5235"); R(2,0,1,T,"#5a4024"); R(13,0,1,T,"#5a4024"); } break; }
+    case "a": R(0,0,T,T,"#4d3f3a"); for (let i=0;i<3;i++) R((rpgHash(tx,ty,i)*14)|0,(rpgHash(ty,tx,i+3)*14)|0,2,1,"#6a5a52"); break;
+    case "A": { R(0,0,T,T,"#4d3f3a"); const gl = Math.sin(now/300 + tx + ty*2) > 0.5; for (let i=0;i<4;i++){ const x = i*4+1; R(x,7,1,7,"#6a3a2a"); R(x+1,9,1,5, gl && i%2 ? "#ff7a2a" : "#8a4a2a"); } break; }
+    case "F": R(0,0,T,T,"#7a6a2a"); for (let yy=1; yy<T; yy+=4) R(0,yy,T,2,"#b49a3a"); break;
+    case ":": R(0,0,T,T,"#d6c38a"); R((tx*3)%13,(ty*5)%13,2,1,"#bfa86e"); break;
     case "v": R(0,0,T,T,"#4a4f57"); R(0,7,T,1,"#3c4047"); R(0,15,T,1,"#3c4047"); R((ty%2)*8+4,0,1,7,"#3c4047"); R((ty%2)*8+12,8,1,7,"#3c4047"); if (rpgHash(tx,ty,3) > .8) R(5,10,3,2,"#2f5f4a"); break;
     case "V": R(0,0,T,T,"#2a2d33"); R(0,0,T,2,"#3a3e46"); R(1,5,6,4,"#33373e"); R(9,10,6,4,"#33373e"); break;
     case "S": R(0,0,T,T,"#4a4f57"); for (let i=0;i<4;i++) R(2,2+i*3,12,2, i%2 ? "#2f3237" : "#5d636c"); break;
@@ -271,7 +301,7 @@ function rpgDraw(now){
   const x0 = Math.floor(cx), y0 = Math.floor(cy);
   for (let ty = y0; ty <= y0 + RPG_VH; ty++) for (let tx = x0; tx <= x0 + RPG_VW; tx++){
     if (tx<0 || ty<0 || tx>=W || ty>=H) continue;
-    rpgDrawTile(c, m.rows[ty][tx], tx, ty, Math.round((tx-cx)*T), Math.round((ty-cy)*T), now);
+    rpgDrawTile(c, m.rows[ty][tx], tx, ty, Math.round((tx-cx)*T), Math.round((ty-cy)*T), now, m);
   }
   const P = (x, y) => [Math.round((x-cx)*T), Math.round((y-cy)*T)];
   const ok = o => rpgOk(o);
@@ -286,9 +316,12 @@ function rpgDraw(now){
   const step = RPG.move ? (RPG.move.t > RPG_STEP_MS/2 ? 0 : ((s.steps % 2) ? 1 : 2)) : 0;
   people.push({ y:fy, draw:()=>{ const [px,py] = P(fx, fy); rpgDrawPerson(c, px, py, s.dir, { shirt, hair:"#3b2a1e" }, step); } });
   people.sort((a,b)=>a.y-b.y).forEach(p=>p.draw());
+  rpgDrawMobs(c, P, now);
   { // tall grass covers the lower half of anyone standing in it
     for (const who of [{x:fx,y:fy}, ...npcs]){ const tx = Math.round(who.x), ty = Math.round(who.y); if (rpgTile(m,tx,ty)!==",") continue; const [px,py] = P(tx,ty); c.fillStyle="#3f7a34"; c.fillRect(px+1,py+11,14,5); c.fillStyle="#5fa34c"; for (let i=1;i<15;i+=3) c.fillRect(px+i,py+10,1,4); }
   }
+  if (RPG.banner){ const t = now - RPG.banner.t; if (t > 2600) RPG.banner = null; else { const al = Math.min(1, t/300, (2600-t)/400); c.globalAlpha = al; c.font = "bold 13px Georgia, serif"; c.textAlign = "center";
+    const w = c.measureText(RPG.banner.text).width + 24; c.fillStyle = "rgba(10,12,16,.75)"; c.fillRect(RPG_VW*T/2 - w/2, 12, w, 22); c.fillStyle = "#f0d58a"; c.fillText(RPG.banner.text, RPG_VW*T/2, 28); c.globalAlpha = 1; c.textAlign = "left"; } }
   if (RPG.fade){ const k = RPG.fade.t / RPG.fade.ms, a = k < .5 ? k*2 : (1-k)*2; c.fillStyle = `rgba(8,10,14,${Math.max(0,Math.min(1,a)).toFixed(3)})`; c.fillRect(0,0,RPG_VW*T,RPG_VH*T); }
 }
 function rpgLoop(now){
@@ -310,12 +343,12 @@ function renderWorld(){
   }
   const m = rpgMap(), dk = DECK_BY_ID[s.deck];
   return `<div class="rpg">
-    <div class="top"><h1>${esc(m.name)}</h1><div class="row"><span class="muted">${rpgRank() ? `<b class="rpg-rank">${esc(rpgRank())}</b> · ` : ""}Deck: ${esc(dk ? dk.name : s.deck)} · ${s.collection.length} found · ${s.wins} wins${Object.entries(s.essence||{}).filter(([,n])=>n>0).map(([e,n])=>` · ${n} ${esc(ELS[e])} essence`).join("")}</span>
+    <div class="top"><h1>${esc(rpgPlaceName())}</h1><div class="row"><button class="btn" data-btn="rpg-journal">Journal (J)</button><button class="btn" data-btn="rpg-map">Map (M)</button><span class="muted">${rpgRank() ? `<b class="rpg-rank">${esc(rpgRank())}</b> · ` : ""}Deck: ${esc(dk ? dk.name : s.deck)} · ${s.collection.length} found · ${s.wins} wins${Object.entries(s.essence||{}).filter(([,n])=>n>0).map(([e,n])=>` · ${n} ${esc(ELS[e])} essence`).join("")}</span>
       <button class="btn" data-btn="rpg-sound" aria-pressed="${rpgSoundOn()}">${rpgSoundOn() ? "Sound on" : "Sound off"}</button><button class="btn" data-btn="rpg-export">Save to file</button><label class="btn rpg-file">Load file<input type="file" accept=".json,application/json" data-rpgimport hidden></label>
       <button class="btn" data-btn="rpg-new">${RPG.eraseArm ? "Click again to erase" : "New adventure"}</button><button class="btn" data-btn="rpg-quit">Playtest menu</button></div></div>
     <div class="rpg-stage"><canvas id="rpgc" width="${RPG_VW*RPG_T}" height="${RPG_VH*RPG_T}" aria-label="Overworld map. Arrow keys or WASD to walk, Enter or Space to talk."></canvas><div id="rpgui"></div></div>
-    <div class="rpg-pad" aria-hidden="true"><div class="dpad"><button data-pad="up">▲</button><button data-pad="left">◀</button><button data-pad="right">▶</button><button data-pad="down">▼</button></div><button class="abtn" data-pad="a">A</button></div>
-    <p class="muted rpg-help">Arrow keys or WASD to walk, Enter, Space or Z to talk and read. A gamepad works too. Progress saves in this browser as you play; "Save to file" makes a copy you can move to another device.${RPG.toast ? " · "+esc(RPG.toast) : ""}</p>
+    <div class="rpg-pad" aria-hidden="true"><div class="dpad"><button data-pad="up">▲</button><button data-pad="left">◀</button><button data-pad="right">▶</button><button data-pad="down">▼</button></div><div class="padx"><button data-pad="j">Journal</button><button data-pad="m">Map</button></div><button class="abtn" data-pad="a">A</button></div>
+    <p class="muted rpg-help">Arrow keys or WASD to walk, Enter, Space or Z to talk and read, J for the journal, M for the map. Monsters roam the wilds and chase you when you get close. A gamepad works too. Progress saves in this browser as you play; "Save to file" makes a copy you can move to another device.${RPG.toast ? " · "+esc(RPG.toast) : ""}</p>
   </div>`;
 }
 function rpgUI(){
@@ -325,25 +358,35 @@ function rpgUI(){
     h += `<div class="rpg-dlg" data-rpgnext role="status" aria-live="polite">${who ? `<b>${esc(who)}</b>` : ""}<span>${esc(txt)}</span><i aria-hidden="true">▼</i></div>`; }
   if (RPG.reveal){ const d = RPG.reveal.card;
     h += `<div class="rpg-reveal" data-rpgnext role="dialog" aria-label="New card"><div class="rays el-${d.el}"></div><div class="rv-in"><span class="lbl">You found a card</span>${cardHTML(d,{cls:"bigcard"})}<span class="muted">Added to your collection. (The deck builder comes next.) Press Enter or tap to continue.</span></div></div>`; }
+  if (RPG.save && !RPG.card && !RPG.panel) h = rpgObjectiveHTML() + h;
+  if (RPG.panel === "journal") h += rpgJournalHTML();
+  if (RPG.panel === "map") h += rpgMapPanelHTML();
   h += rpgCardHTML();
   box.innerHTML = h;
+  if (RPG.panel === "map") rpgDrawRegionMap();
 }
 function rpgMount(){
   rpgUI();
   const cv = document.getElementById("rpgc"); if (!cv) return;
   RPG.canvas = cv; RPG.ctx = cv.getContext("2d"); RPG.ctx.imageSmoothingEnabled = false;
-  RPG.last = 0; rpgMusic(RPG.cue || rpgMap().music);
+  const s = RPG.save;
+  if (RPG.mobsMap !== s.map){ RPG.mobsMap = s.map; rpgSpawnMobs(); rpgReveal(); RPG.areaName = undefined; rpgAreaCheck(); }
+  RPG.last = 0; rpgMusic(RPG.cue || rpgMapMusic());
   if (!RPG.raf) RPG.raf = requestAnimationFrame(rpgLoop);
 }
 function rpgClick(el){
   const ds = el.dataset;
   if (ds.rpgstart){ rpgBegin(ds.rpgstart); return true; }
   if (ds.rpgnext!=null){ rpgAction(); return true; }
+  if (ds.track){ RPG.save.track = ds.track; rpgStore(); rpgUI(); return true; }
   switch (ds.btn){
     case "rpg": rpgOpen(); return true;
     case "rpg-quit": RPG.eraseArm = false; rpgQuit(); return true;
     case "rpg-export": rpgExport(); return true;
     case "rpg-sound": rpgToggleSound(); return true;
+    case "rpg-journal": rpgPanel("journal"); return true;
+    case "rpg-map": rpgPanel("map"); return true;
+    case "rpg-close": rpgPanel(null); return true;
     case "rpg-skip": { const c = RPG.card; RPG.card = null; c && c.then && c.then(); return true; }
     case "rpg-new": if (!RPG.eraseArm){ RPG.eraseArm = true; render(); setTimeout(()=>{ if (RPG.eraseArm){ RPG.eraseArm = false; if (RPG.active && !g) render(); } }, 4000); }
       else { RPG.eraseArm = false; RPG.save = null; try { localStorage.removeItem(RPG_SAVE_KEY); } catch(e){} render(); } return true;
@@ -352,13 +395,14 @@ function rpgClick(el){
   }
   return false;
 }
+function rpgPanel(p){ RPG.panel = RPG.panel === p ? null : p; RPG.held = []; rpgUI(); }
 function rpgInit(){
   document.addEventListener("keydown", e=>rpgOnKey(e, true));
   document.addEventListener("keyup", e=>rpgOnKey(e, false));
   window.addEventListener("blur", ()=>{ RPG.held = []; });
   document.addEventListener("change", e=>{ if (e.target.matches && e.target.matches("[data-rpgimport]") && e.target.files[0]) rpgImport(e.target.files[0]); });
   const padDown = e=>{ const b = e.target.closest && e.target.closest("[data-pad]"); if (!b || !RPG.active) return; e.preventDefault(); const k = b.dataset.pad;
-    if (k==="a") rpgAction(); else RPG.pad = { dir:k, src:"touch" }; };
+    if (k==="a") rpgAction(); else if (k==="j") rpgPanel("journal"); else if (k==="m") rpgPanel("map"); else RPG.pad = { dir:k, src:"touch" }; };
   const padUp = ()=>{ if (RPG.pad.src==="touch") RPG.pad = {}; };
   document.addEventListener("pointerdown", padDown); document.addEventListener("pointerup", padUp); document.addEventListener("pointercancel", padUp);
   // Browsers only start audio after a user gesture.

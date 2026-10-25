@@ -5,6 +5,10 @@ The adventure that wraps the card battler: a walkable tile overworld (Pokemon-st
 | File | What | Owner |
 |---|---|---|
 | `world.js` | Overworld engine: movement, drawing, talking, chests, battles, saves, input | Game Dev |
+| `worldgen.js` | Generates large regions (biomes, rivers, ridges, winding roads, stamped towns) and multi-floor dungeons from a spec | Game Dev |
+| `regions.js` | The regions and dungeons themselves (the Hearthvale, the Weir Vault, the Old Barrow) | Game Dev (Story: geography and names) |
+| `explore.js` | Roaming monsters, named areas, fog of war, the region map (M), the quest journal (J) and the objective pointer | Game Dev |
+| `quests.js` | Quests and their steps | Game Dev (Story: titles and objective lines) |
 | `story.js` | Story engine: flags and when/unless conditions, talk variants, one-time scenes, intro and end cards, rank, music cues | Game Dev |
 | `maps.js` | Map layouts, warps, NPC/sign/chest placement, placeholder words (`RPG_TEXT`) | Game Dev (Story names places and writes all words) |
 | `encounters.js` | Wild encounter tables and trainer decks | Balance |
@@ -24,4 +28,4 @@ Formats are documented at the top of each file. `node tools/smoke.js` checks the
 
 ## Next
 
-The Act I demo (story/demo/act1.md) is fully laid out: Calder Mill, Brindle Ford, its branch hall, the Millrace, Millrace Road, Hollin's Cross, Greyapple Orchard, the Weir Vault gate and its two floors, with Gullet (Lurker crown), the Cinder Mother (Brood crown, Brann and Dove holding the brood) and the Sluicewarden (Sealwork crown). Next: the collection and deck builder (so the Slackwater rebuild lands), then the Forge.
+The Hearthvale is one large generated region (150x104 tiles): Brindle Ford's valley, the Millrace, Hollinwood and the Millrace Road, the Eastern Wilds and the Old Barrow (a two-floor optional dungeon), Hollin's Cross, Greyapple Orchard and the crags of the Weir Vault, whose two generated floors lead down to the Slack Pool. Story gates are signs on the only gaps through ridges and hedges. Monsters roam every wild area. Next: the collection and deck builder, the Forge, and each Act II region as Story maps it.
