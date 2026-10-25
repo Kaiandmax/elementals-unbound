@@ -18,6 +18,7 @@ His elder brother is **Captain Davor Varrane**, an officer in Vexis's relief col
 
 | Act | Beat |
 |---|---|
+| Prologue | Steps off the evening barge an hour after Wren makes Copper, and is unimpressed. |
 | I | Rival duel at Hollin's Cross. Invites himself to the Weir Vault "for the pay". |
 | II | Wants the Highcourt tournament badly, and loses to Aeris with good grace, to everyone's surprise. Tells Kes his secret doesn't matter. |
 | III | **His chapter.** Davor's column is ordered to burn a spring town, and Pell stands against his brother in a duel. Davor disowns him. Pell chooses the Covenant. |

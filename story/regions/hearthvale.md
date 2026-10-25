@@ -1,11 +1,11 @@
 # The Hearthvale
 
-**Element:** mixed; every element's wilds turn up here. **Ranks:** Tin to Iron in Act I; the player returns in every act. **Home.**
+**Element:** mixed; every element's wilds turn up here. **Ranks:** Tin in the Prologue (the demo, `demo/prologue.md`), Copper in Act I. The player returns in every act. **Home.**
 
 ## Look and sound
 
-- River farmland, watermills, apple orchards and market towns.
-- Willows, cart ruts, lanterns strung over the river road at festivals.
+- A long river valley at the edge of wild country. A few walled towns hold it, far apart, with strip fields and lone farms clinging close to their walls.
+- Past the fields: moor, fen and old forest, and the wilds that live there.
 - It's nobody's capital and everybody's road.
 - Music: *Brindle Ford* (home), *Hearthvale Roads*, *Hollin's Cross*, *Homecoming at Dusk*.
 
@@ -13,7 +13,8 @@
 
 | Place | What's there | People |
 |---|---|---|
-| **Brindle Ford** | Calder Mill, the Covenant branch hall, the river ford, the Millrace | Wren's Dad, Mads Orrin (branch master), Tilly, Hesk (keeps a tally of wild sightings) |
+| **Brindle Ford** | A palisaded town of about forty houses at a ford of the River Brindle: Calder Mill, the branch hall, Hesk's yard, the market square | Wren's Dad, Mads Orrin (branch master), Tilly, Hesk (keeps a tally of wild sightings) |
+| **The Ford's country** | South: strip fields, Pruett's Farm, the Lowfen marshes. East: Brennock Heath and the toll bridge at Ketter's Crossing. West: Sallow Wood past the Waymark Stone | Nan and Abel Pruett, Orla Ketter, Captain Davor's column at the bridge |
 | **Millrace Road** | Tall grass, the chained chest, the Weir Vault turn-off | Brann and Dove, on contract |
 | **Hollin's Cross** | A cider market where three roads meet; the hall with Jory Fenn; the landing post | Jory Fenn, Captain Davor Varrane's column, cider sellers |
 | **Greyapple Orchard** | Scorched trees and the small rift | Pim Greyapple |
@@ -37,10 +38,10 @@ The **Weir Vault**, built about sixty years ago by Edda Calder, Wren's great-gra
 
 | Rank | Contract | Notes |
 |---|---|---|
-| Tin | Ember mice in Hesk's woodpile | Hesk: "Again." |
+| Tin | The Prologue's contracts and side contracts | See `demo/prologue.md`. |
 | Copper | The cider seller's wasps | Pays in cider. |
 | Copper | A lost goat on the Millrace Road, gone feral and elemental | It comes back to the Ford in Act II as Tilly's pet. |
-| Iron | River-barge escort to Hollin's Cross | A barge-woman who comes back in Saltmere (II-1). |
+| Copper | River-barge escort to Hollin's Cross | A barge-woman who comes back in Saltmere (II-1). |
 
 ## When the player comes back
 

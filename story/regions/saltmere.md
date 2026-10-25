@@ -1,6 +1,6 @@
 # Saltmere and the League rivers
 
-**Element:** Water. **Ranks:** Iron; the act boss is Steel. **Chapter:** II-1. **Companions:** Isa joins; Kes appears.
+**Element:** Water. **Ranks:** Copper; the boss is Iron, and the **Iron assessment** happens here. **Chapter:** II-1. **Companions:** Isa joins; Kes appears.
 
 ## Look and sound
 
@@ -46,7 +46,7 @@ The **Bellwater Vault**, under the harbor bell.
 
 **The crowned harbor wild** that drowned Lowmere, chased back to Saltmere.
 
-- **Rank:** Steel, against Wren's Iron.
+- **Rank:** Iron, against Wren's Copper. Afterwards, with the river contracts already in the Saltmere ledger, the hall sets the crew's **Iron assessment**: an Iron contract on the canals, witnessed by the Saltmere branch master, then a ceremony in the archive hall.
 - **Crown:** **Tide**. At the end of each round it returns your most expensive creature to your hand. The story reason is the river pulling everything back to sea.
 - **Side fight:** Pell and Brann hold its brood. Dove gets the people off the docks.
 
@@ -54,9 +54,9 @@ The **Bellwater Vault**, under the harbor bell.
 
 | Rank | Contract | Notes |
 |---|---|---|
-| Iron | Canal eels in the counting-house cellars | House Corran pays late. |
-| Iron | A bell-ringer's missing apprentice | Found in the vault's outer locks, singing the cipher wrong. |
-| Steel | Smugglers using a wild to run the river blockade | Who hired them? A Pyrrhen buyer (thread: the war). |
+| Copper | Canal eels in the counting-house cellars | House Corran pays late. |
+| Copper | A bell-ringer's missing apprentice | Found in the vault's outer locks, singing the cipher wrong. |
+| Iron | Smugglers using a wild to run the river blockade | Who hired them? A Pyrrhen buyer (thread: the war). |
 
 ## When the player comes back
 

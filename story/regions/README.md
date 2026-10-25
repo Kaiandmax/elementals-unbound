@@ -13,11 +13,11 @@ One file per region, in the order the player reaches them (see [`../outline.md`]
 
 | File | Region | Element | Act | Ranks |
 |---|---|---|---|---|
-| [hearthvale.md](hearthvale.md) | The Hearthvale (Brindle Ford, Hollin's Cross) | mixed, home | Prologue–I (returns every act) | Tin–Iron |
-| [saltmere.md](saltmere.md) | Saltmere and the League rivers | Water | II-1 | Iron |
-| [deepmoot.md](deepmoot.md) | Deepmoot and the deep roads | Earth | II-2 | Iron–Steel |
-| [highcourt.md](highcourt.md) | Highcourt and the sky-islands | Wind | II-3 | Steel |
+| [hearthvale.md](hearthvale.md) | The Hearthvale (Brindle Ford, Hollin's Cross) | mixed, home | Prologue–I (returns every act) | Tin (Prologue), Copper (Act I) |
+| [saltmere.md](saltmere.md) | Saltmere and the League rivers | Water | II-1 | Copper → Iron |
+| [deepmoot.md](deepmoot.md) | Deepmoot and the deep roads | Earth | II-2 | Iron |
+| [highcourt.md](highcourt.md) | Highcourt and the sky-islands | Wind | II-3 | Iron |
 
 Acts III to V get their files as they come up for building.
 
-**Side contracts.** These are the main source of the extra 20 hours. Each is ranked like the wild it names and resolves within itself (no branching). Many pay off later as a cameo line or a codex entry, never as a fork. Ranks follow the bible: a contract at your own rank is normal, and one rank above is a boss.
+**Side contracts.** These are the main source of the extra 20 hours. Each is ranked like the wild it names and resolves within itself (no branching). Many pay off later as a cameo line or a codex entry, never as a fork. Ranks follow the bible: a contract at your own rank is normal, one rank above is a boss, and ranks rise slowly, by several contracts and an assessment each.
