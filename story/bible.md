@@ -17,7 +17,7 @@ Status: **first draft**. The designer chose the direction on 2026-10-23 (see *Fi
 
 ## Tone in one paragraph
 
-Hopeful, but it costs something. The world is beautiful and busy: market towns, river barges, sky-ports, mountain holds. It also lives with monsters the way coastal towns live with storms. Adventurers are working professionals, not chosen ones. The early game is about small jobs done well: a wolf-thing in the orchard, a flooded mill, a missing courier. The danger is real from the first act, and it climbs with the hero's rank. Humor comes from the people. Weight comes from what the hero chooses to protect. Nobody is evil for its own sake. The final antagonist believes they are saving the world.
+Hopeful, but it costs something. Aster is raw and untamed (designer, 2026-10-24): forests that close over a road in a season, mountains that move, sky-islands, coral forests, volcanoes. Civilization is a handful of great walled cities and a scattering of small, stubborn settlements far apart, pushing back against wild country that wants them gone. People live with monsters the way coastal towns live with storms. Adventurers are working professionals, not chosen ones. The early game is about small jobs done well: ember mice in a woodpile, a fouled well, a courier run, a crew hunt where you mostly carry the bags. The danger is real from the first act, and it climbs with the hero's rank. Humor comes from the people. Weight comes from what the hero chooses to protect. Nobody is evil for its own sake. The final antagonist believes they are saving the world.
 
 Touchstones: **classic BioWare above all** (*Jade Empire*, *Knights of the Old Republic* I and II, *Dragon Age: Origins*, the *Mass Effect* trilogy; designer's favorites, see the next section). Also *Frieren* and *Monster Hunter* for the working-adventurer feel, *Final Fantasy XII* for nations scheming over a crisis, and *Delicious in Dungeon* for dungeons that feel like real places.
 
@@ -54,6 +54,16 @@ What we keep from BioWare, because it's craft rather than choice:
 - **Speaker format.** On screen, a line that starts `Name: ` shows a speaker. Narration and signs never put a colon right after their first words; use a dash or a full stop.
 - **No villain monologues.** Antagonists explain themselves like people.
 - **Every scene ends** with Wren learning something, deciding something, or changing a relationship.
+
+**Dialogue must make sense first (designer, 2026-10-25).** People say things for a reason: to get something, warn someone, hide something, pass the time. Read each line and ask who says it to whom and why, and whether a real person would say it that way.
+
+- **Plain words.** Say what happened. Skip similes unless a character would really reach for one, and never two in a row.
+- **No stock patterns:** "It's not X. It's Y."; "X. Y. Z." three-fragment rhythms; "Something about it..."; answering a question with a cryptic one-liner; everyone being witty. A joke has to come from the character.
+- **No announcing feelings** ("I'm scared", "That means a lot") where an action or a change of subject would show it.
+- **No lore dumps.** A character explains the world only when the listener needs to know, and only as much as they need.
+- **Specific over general:** a named field, a price, a time of day, the thing someone is holding.
+- **People talk past each other.** They interrupt, they misunderstand, they care about their own problems more than the plot.
+- **Each line on its own.** It has to read clearly in a dialogue box with nothing around it.
 
 ## The world: Aster
 
@@ -123,7 +133,19 @@ Rank is the hero's progress. One scale grades both **hunters and wilds**, and it
 | **Adamant** | 8–9 | Triple braids. Crowned-wild hunters. A few dozen alive. | Crowned wilds; a threat to a nation. | Triple common / uncommon |
 | **Exalted** | 10 | The **Seven**: the Covenant's highest binders, its council and its legends. | Primordials; a threat to the world. | Triple rare / archetype |
 
-**Encounter rule (designer, 2026-10-23):** normal encounters are usually the hero's own rank. Bosses are one or two ranks higher, with a crown mechanic on top. In the story, a boss is *always* a wild above your grade: the contract that went wrong, the nest whose mother was bigger than the notice said, the vault guardian no one has survived. Beating one is how a hunter earns promotion. Each rank ends on a boss above it, and the promotion follows. (How "a rank or two" turns into ladder steps and boss numbers is for TCG Design and Balance.)
+**Promotion is slow and it matters (designer, 2026-10-25).** A hunter earns a rank by working it: **several contracts at their rank**, then a formal **assessment** (a contract one rank up, taken under a witness), then the hall's vote and a ceremony where the new token is pinned on. Nobody skips a rank on one good day. The only time a hunter moves up fast is when the world forces it: a long, grueling, story-critical mission where the stakes are too high to wait (the Ford surge in Act II, the rift between two armies in Act III). Even then the promotion costs something and the story treats it as exceptional. Every promotion is a scene, never a line of dialogue.
+
+| Rank | How a hunter gets there |
+|---|---|
+| Tin → Copper | Four or five Tin contracts in the home hall, then a Copper assessment with a witness. |
+| Copper → Iron | Copper contracts in more than one hall, a crew hunt, then an Iron assessment. |
+| Iron → Steel | Iron work across a nation, then a Steel assessment. Or, once in the game, the Ford surge. |
+| Steel → Silver | A Steel record plus the Forge licence exam. |
+| Silver → Gold | Leading a crew, then a Gold assessment. Or, once, the rift between two armies. |
+| Gold → Adamant | Only by deed: a crowned wild brought down. |
+| Adamant → Exalted | A seat falls empty and the Seven vote. |
+
+**Encounter rule (designer, 2026-10-23):** normal encounters are usually the hero's own rank. Bosses are one or two ranks higher, with a crown mechanic on top. In the story, a boss is *always* a wild above your grade: the contract that went wrong, the nest whose mother was bigger than the notice said, the vault guardian no one has survived. An assessment is always a boss above your grade, so each rank ends on a boss above it and the promotion follows, but only after the contracts that come first. (How "a rank or two" turns into ladder steps and boss numbers is for TCG Design and Balance.)
 
 Enemy AI levels 1–5 read as the enemy's skill within their rank: a green Copper hunter, or a veteran one.
 
@@ -202,16 +224,16 @@ Confluence regions sit where two nations' leylines cross (Steam springs on the L
 
 ## Shape of the game: 30–50 hours
 
-A prologue and five acts. The **main story runs about 30 hours**, and contracts, companion quests and optional vaults bring it to **about 50**. Each act covers a rank band and ends on a boss one or two ranks above the party, followed by the promotion. Hours are targets for pacing, not promises.
+A prologue and five acts. The **main story runs about 30 hours**, and contracts, companion quests and optional vaults bring it to **about 50**. Each act covers a rank band. Ranks rise slowly, by several contracts and an assessment each, except where the story's stakes force a fast promotion (see *Promotion is slow and it matters*). Hours are targets for pacing, not promises.
 
 | Act | Ranks | Where | What happens above Wren's head | What happens to Wren | Main / with side content |
 |---|---|---|---|---|---|
-| **Prologue: The Ford** | Tin | Brindle Ford, the Millrace Road | Wild sightings in the Hearthvale double. Nobody important notices. | Licence, a borrowed deck, Mads, the first binding, the chained chest. Ends on a Copper-rank wild at the mill. | 1–2 h / 2 h |
-| **I: Notice Boards** | Copper → Iron | The Hearthvale and its border towns | Pyrrhen "relief columns" start crossing the border. An Exalted (Aeris) passes through a town, there and gone. | Meets Brann and Dove, then rival Pell. Village contracts, the first small rift. Ends at the Weir Vault (first loot card) and a Steel-rank guardian. | 4–5 h / 7 h |
-| **II: The Wider World** | Iron → Steel | Tidewater League, Holdfast, Skyreach | The League sells protection, Holdfast seals its gates, the Skyreach princes bid for champions. The Hollow breaks its first vault. | The crew becomes a party: Isa, Kes, Tamsin, and Pell joins. One nation after another (League, Holdfast, Skyreach), each a self-contained story with its own vault. Ends with the surge at Brindle Ford: Mads dies, and Wren chooses to stay and hold the line. | 7–8 h / 12 h |
-| **III: Fire on the Border** | Silver → Gold | Confluence borderlands; the Pyrrhen Dominion | Vexis marches. War between the Dominion and the League. Corvane Ashe retires. The Seven split over whether to intervene. | Forge licence and the first braid. Fights in the war as a Covenant neutral, protecting civilians on both sides. Pell's choice. Dove dies holding a rift. Ends on a crowned wild that both armies woke. | 8–9 h / 13 h |
-| **IV: Crowns** | Adamant | Stormcourt of Vol; the Primordial vaults | Rift-surges everywhere. The Stormcourt tries to unbind Vol. The nations hand their vaults to Seraphine "for safety". | Fights beside the Exalted as a peer. Triple braids. Tamsin's god, Kes's crown. Halden Mirr tells Wren the truth about Seraphine. | 6–7 h / 10 h |
-| **V: The Seventh Seat** | Exalted | Highcourt, the Covenant's council hall, the last vault | Seraphine gathers the Primordials. Neris sides with her. The council breaks. | Wren takes Corvane's empty seat. Everyone Wren helped across the story answers the call. In the final vault the companions hold the side fights while Wren goes for the heart. The Founding Circle's way of sealing, through Isa. The Primordial bosses, then Seraphine. | 4–5 h / 6 h |
+| **Prologue: The Ford** | Tin | Brindle Ford and the wild country around it | Wild sightings in the Hearthvale double. Steel hunters are called east. Nobody important notices the Ford. | Licence, a borrowed deck, Mads, life as a Tin: four contracts that teach the job, a crew hunt with Brann and Dove, then the Copper assessment at the Calder millrace. **This is the playable demo.** | 2 h / 3 h |
+| **I: Notice Boards** | Copper | Down the river to Hollin's Cross; the orchards; the Weir Vault | Pyrrhen "relief columns" cross into the Hearthvale. An Exalted (Aeris) lands in a market and leaves. | Copper work far from home: rival Pell, the orchard rift (worse than the notice said), the Hollow at the Weir Vault, Edda's pages, Slackwater. Ends still Copper, put up for Iron. | 5 h / 8 h |
+| **II: The Wider World** | Copper → Iron → Steel | Tidewater League, Holdfast, Skyreach | The League sells protection, Holdfast seals its gates, the Skyreach princes bid for champions. The Hollow breaks a vault in each nation. | The Iron assessment in Saltmere. The party forms: Isa, Kes, Tamsin, and Pell joins. One nation after another. Ends with the surge at Brindle Ford, a long night: Mads dies, and the hunters who held the Ford are made Steel by emergency vote. | 8 h / 13 h |
+| **III: Fire on the Border** | Steel → Silver → Gold | Confluence borderlands; the Pyrrhen Dominion | Vexis marches. War between the Dominion and the League. Corvane Ashe retires. The Seven split over whether to intervene. | Silver and the Forge licence after a run of border contracts. Fights in the war as a Covenant neutral. Pell's choice. Dove dies holding a rift. The rift between two armies, a grueling battle that ends in Gold. | 8 h / 13 h |
+| **IV: Crowns** | Gold → Adamant | Stormcourt of Vol; the Primordial vaults | Rift-surges everywhere. The Stormcourt tries to unbind Vol. The nations hand their vaults to Seraphine "for safety". | Fights beside the Exalted. Bringing down half-unbound Vol makes Wren Adamant. Triple braids. Kes's crown. Halden tells Wren the truth about Seraphine. | 6 h / 9 h |
+| **V: The Seventh Seat** | Exalted | Highcourt, the Covenant's council hall, the last vault | Seraphine gathers the Primordials. Neris sides with her. The council breaks. | Wren is voted into Corvane's empty seat. Everyone Wren helped answers the call. In the final vault the companions hold the side fights while Wren goes for the heart. The Primordial bosses, then Seraphine. | 4 h / 5 h |
 
 **JRPG pacing rules for the outline:**
 
@@ -237,7 +259,7 @@ A prologue and five acts. The **main story runs about 30 hours**, and contracts,
 These are the world facts other roles build on. Each will be logged as a board decision.
 
 - **Bosses are crowned wilds or crowned binders. Each crown breaks one named rule** (examples: extra life bars as phases, a second Manifest call, unblockable attacks, the boss calls from your charge). TCG Design designs the mechanic, Balance sets the numbers, and Story gives the reason.
-- **One rank scale for hunters and wilds, mapped to the power ladder** (table above). Normal encounters are the hero's rank; bosses are one or two ranks higher. Each act ends on such a boss, followed by a promotion.
+- **One rank scale for hunters and wilds, mapped to the power ladder** (table above). Normal encounters are the hero's rank; bosses are one or two ranks higher. Promotions come after several contracts and an assessment, or, rarely, after a grueling story-critical mission.
 - **Each companion has a home region, an element and a personal loot card** (see *The party*).
 - **Confluences unlock by Forge licence at Silver rank, and triples at Adamant.** Story supplies the licence moments.
 - **Every dungeon has a loot card with an origin** (who sealed it, why, what guards it).

@@ -17,7 +17,8 @@
 
 | Act | Beat |
 |---|---|
-| I | A friendly duel on the Millrace Road. Brann and Dove hold the brood at the orchard and in the vault. |
+| Prologue | Arrive in the Ford on a Copper contract and take Wren on as their tail. Brann witnesses Wren's Copper assessment. |
+| I | Brann and Dove hold the brood at the orchard and in the vault. |
 | II | **Brann's chapter (Deepmoot).** Homecoming: his mother, his old captain, Dove meets the family. The gates are shut on refugees, and Brann's own people are on the wrong side. Gorran reopens them. |
 | III | Dove dies at the rift between two armies. The party's worst night. |
 | IV | Brann's grief. He thinks about going home to Holdfast, and stays, because someone has to stand behind the others. |

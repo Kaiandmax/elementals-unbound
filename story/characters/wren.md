@@ -20,7 +20,8 @@ Earnest, quick, a little too proud of small wins. Wren talks to bound monsters a
 
 | Act | Beat |
 |---|---|
-| I | Proves Wren can do the job. Finds out the family has a vault. Meets the hero from the cold open, who is everything Wren hoped. |
+| Prologue | Life as a Tin: four contracts and the Copper assessment at the family mill. |
+| I | Copper work away from home. Finds out the family has a vault. Meets the hero from the cold open, who is everything Wren hoped. |
 | II | The world is bigger and worse. Mads dies holding the line, and Wren retakes the oath in Mads's words. |
 | III | Duty costs. Wren protects people on both sides of a war, and Corvane picks apart every certainty Wren has. Dove dies. |
 | IV | The truth from Halden. Hero-worship breaks, and Wren has to find an answer of their own. |
