@@ -279,7 +279,7 @@ details.rules ul{margin:.5em 0 0;padding-left:1.2em;max-width:80ch;display:grid;
 @media (prefers-reduced-motion:reduce){.rpg-card .rc-in{animation:none}}
 .phases{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--brass);margin-top:4px}
 .phases .pips{display:flex;gap:3px}.phases i{width:16px;height:6px;border-radius:3px;background:var(--bad)}.phases i.gone{background:var(--line)}.phases i.now{box-shadow:0 0 6px var(--bad)}
-.crown,.side{display:block;font-size:12px;font-weight:700;color:var(--fire);margin-top:3px;max-width:44ch}.crown .muted,.side .muted{font-weight:400}
+.bossinfo{flex:1 1 100%;display:flex;flex-wrap:wrap;gap:4px 18px;font-size:12px;font-weight:700;color:var(--fire)}.bossinfo .muted{font-weight:400}
 .bark{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:8;width:min(560px,calc(100vw - 32px));background:rgba(16,19,24,.96);border:2px solid var(--fire);border-radius:10px;padding:12px 36px 12px 16px;display:grid;gap:6px;font-size:14px;box-shadow:0 8px 30px rgba(0,0,0,.5)}
 .bark p{margin:0}.bark b{color:var(--brass);font-family:var(--f-display)}.bark-x{position:absolute;top:6px;right:8px;background:none;border:none;color:var(--mute);cursor:pointer;font-size:14px}
 .phase-big{font-family:var(--f-display);font-size:34px;color:var(--brass);text-shadow:0 2px 10px rgba(0,0,0,.7)}
@@ -1655,10 +1655,14 @@ function kwLine(d){
 /*__ART__*/
 function bossBarsHTML(p){
   const n = bossPhases(p), pips = Array.from({length:n}, (_, i) => `<i class="${i < p.phase - 1 ? "gone" : i === p.phase - 1 ? "now" : ""}"></i>`).join("");
-  const cr = bossCrown(p), sd = p.boss.side;
-  return `<span class="phases" aria-label="Phase ${p.phase} of ${n}"><span class="pips" aria-hidden="true">${pips}</span>Phase ${p.phase} of ${n}${bossEnergyMod(p) < 0 ? " · waking (2 Energy)" : ""}</span>`
+  return `<span class="phases" aria-label="Phase ${p.phase} of ${n}"><span class="pips" aria-hidden="true">${pips}</span>Phase ${p.phase} of ${n}${bossEnergyMod(p) < 0 ? " · waking (2 Energy)" : ""}</span>`;
+}
+// Crown and side fight: one line across the bottom of the boss's panel, so the stats row keeps its shape.
+function bossInfoHTML(p){
+  const cr = bossCrown(p), sd = p.boss.side; if (!cr && !sd) return "";
+  return `<div class="bossinfo">`
     + (cr ? `<span class="crown" title="${esc(CROWNS[cr].text)}">Crown: ${esc(CROWNS[cr].name)} <span class="muted">${esc(CROWNS[cr].text)}</span></span>` : "")
-    + (sd ? `<span class="side">${esc(sd.name)} ${"●".repeat(Math.max(0,p.sideHp))}${"○".repeat(Math.max(0,(sd.hp||3)-Math.max(0,p.sideHp)))} <span class="muted">${p.sideHp > 0 ? `${esc(sd.crew || "Your crew")} are holding it` : "held!"}</span></span>` : "");
+    + (sd ? `<span class="sidefight">${esc(sd.name)} ${"●".repeat(Math.max(0,p.sideHp))}${"○".repeat(Math.max(0,(sd.hp||3)-Math.max(0,p.sideHp)))} <span class="muted">${p.sideHp > 0 ? `${esc(sd.crew || "Your crew")} are holding it` : "held!"}</span></span>` : "") + `</div>`;
 }
 function cardHTML(d, opts={}){
   const cls = ["card", "el-"+d.el];
@@ -1707,7 +1711,7 @@ function sideHTML(p, isTarget){
     <div class="stat"><span class="lbl">Charge</span>${chargeHTML(p)}</div>
     <div class="stat"><span class="lbl">Hand · Deck</span><b>${p.hand.length} · ${p.deck.length}</b></div>
     <div class="stat"><span class="lbl">Manifests left (${p.manifests.length})</span>${p.isAI ? `<div class="chips">${p.manifests.map((m,mi)=>`<span class="mchip el-${m.el} ${canAffordManifest(p,m)?"ready":""}" data-emani="${mi}" tabindex="0">✦ ${esc(m.name)} · ${Object.values(m.mcost).reduce((a,b)=>a+b,0)}</span>`).join("") || '<span class="muted">None</span>'}</div>` : `<b>${p.manifests.length}</b>`}</div>
-    ${auras}</div>`;
+    ${auras}${p.boss ? bossInfoHTML(p) : ""}</div>`;
 }
 const PHASE_NAMES = { main1:"Main phase", combat:"Combat", main2:"Second main phase" };
 
