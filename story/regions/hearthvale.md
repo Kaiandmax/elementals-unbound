@@ -20,6 +20,39 @@
 | **Greyapple Orchard** | Scorched trees and the small rift | Pim Greyapple |
 | **The Weir Vault** | Edda Calder's sluice halls under the weir | The Sluicewarden; Slackwater |
 
+## Geography (for the large-region map)
+
+The Hearthvale is one long valley, running north to south, with the **River Brindle** down its middle. It is about three days' walk end to end. Towns sit on the river, far apart. Everything between them is wild.
+
+**North end (the Prologue).** Brindle Ford and its country; details are in [`../demo/prologue.md`](../demo/prologue.md).
+- North of the Ford, the **Millrace Road** follows the river up to the old weir and the **Weir Vault**, then climbs into the **Brindle Hills**, which are rough moor and scree. Wilds come down out of the hills.
+- West is **Sallow Wood**, an old wet forest of willow and alder that runs the length of the valley's west side. Its depths are Steel country and above. There are ruins in it from before the Sundering, and Act I's side contracts go into its edges.
+
+**Middle (Act I).** The river road south from the Ford runs a long day through:
+- **Lowfen**, marsh and reed beds on both banks, with boardwalk causeways. It's Copper country, full of water and grass wilds. A drowned shrine sits on an island in the fen; it's an optional dungeon.
+- **The Greyapple country**, old orchards on terraces above the river's east bank, half run wild. **Greyapple Orchard** is the last one still farmed. The small rift opens in its oldest grove.
+
+**Hollin's Cross** sits where the river road meets two others.
+- **East:** the road over Brennock Heath to Ketter's Crossing and on toward the Dominion border.
+- **West:** a road through a gap in Sallow Wood toward the Holdfast mountains.
+- **The town:** the biggest in the Hearthvale. It's walled, has a weekly market, and holds about two thousand people. The branch hall is run by Jory Fenn, and the sky-skiff landing post is on the hall roof.
+
+**South end (beyond Act I).** Below Hollin's Cross the valley widens into barge country and runs down toward the League rivers and Saltmere. The **Founding Vault**, the last dungeon of the game, lies under Brindle Ford itself (proposed, waiting on the designer); nobody knows that until Act V.
+
+Danger by distance:
+- Roads and fields near any wall hold wilds of the region's working rank (Tin by the Ford, Copper in the middle valley).
+- Off the road it's one rank higher, as roaming monsters you can see.
+- Deep wood, high hills and ruins are higher still, and signposted.
+
+Landmarks:
+- **The Waymark Stone**, at the edge of Sallow Wood.
+- **The carters' hut** on the Millrace Road.
+- **The standing stones** of Brennock Heath.
+- **The drowned shrine** in Lowfen.
+- **The Greyapple terraces.**
+- **The Old Weir**, a broken stone dam above the Ford, with the Vault beneath it.
+- **The Hollin's Cross clock tower.**
+
 ## Politics
 
 The Hearthvale has no army. The nations around it each claim to protect it:
