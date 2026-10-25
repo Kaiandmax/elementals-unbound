@@ -105,17 +105,20 @@ Loot-card test (AI level 3, 120 games each against the ten mono common decks):
 
 It does what a loot card should: little in an unchanged deck, a big payoff once you rebuild. 84% is high against same-rank decks; Balance may trim it, but a big jump is the point of a loot card.
 
-### The next few (sketch, to refine with Story's region order)
+### The vault cards of Acts II-IV (from Story's outline)
 
-| # | Element | Build-around | What you rebuild into | Skill it teaches |
-|---|---|---|---|---|
-| 2 | Earth | Gets +1/+1 for each creature you have with Fortify; your Fortify creatures grow +1 extra | Crystal Growth style: every creature grows each turn | Planning across turns, protecting a board |
-| 3 | Wind | When it arrives, return any number of your other creatures to hand; they cost 1 less this turn | Zephyr Tricks: cheap arrival effects replayed | Sequencing and replay value (Wind's real identity) |
-| 4 | Fire | Ignite: whenever you spend charge, summon an Ember Spark; your tokens have +1/+0 | Ember Swarm with Overcharge cards | Ignite: spending charge on purpose, a burst turn |
-| 5 | Lightning | Costs 1 less charge for each other card you played this turn (min 1) | Spark Storm: many cheap spells in one turn | Chain: playing several cards in one turn |
-| 6+ | Confluences | One per confluence once the Forge opens, each pushing that confluence's archetype | Fused or archetype decks | That archetype |
+Story tied each companion's personal Manifest to the vault of their home chapter (story/characters/). These are the next loot cards after Slackwater. Each one revives an element's signature mechanic, which `design/elements.md` found thin in the current pool. Numbers are proposals for Balance; each will be reworked from a reserve Manifest (see `design/manifests.md`) so the card count stays as designed.
 
-Each of 2-5 deliberately revives an element's signature mechanic, which `design/elements.md` found thin in the current pool.
+| Act | Card (Story's name) | Element | Build-around (proposed text) | You rebuild into | Skill it teaches | Engine |
+|---|---|---|---|---|---|---|
+| II-1 | The Tolling Kraken (Isa) | Water | 4 charge, 4/6. **Whenever the enemy plays a card, deal 1 damage to the enemy.** When played, freeze a creature. | Control that makes every enemy play cost life: freeze, bounce and counters to stretch their turns | Tempo control: making the opponent's plays hurt | New trigger: enemy plays a card |
+| II-2 | The Rootbound Colossus (Brann) | Earth | 4 charge, 3/7, Skyguard. **At the end of your turn, if you didn't attack, this and your other creatures get +1/+1 permanently.** | Stonewall: walls, Vigilant and Fortify; win late with a huge board | Patience: when not to attack | New condition: you didn't attack this turn |
+| II-3 | The Windlord's Roc (Kes) | Wind | 3 charge, 3/4, Airborne. When played, return another basic creature you control to your hand. **Whenever you play another creature, this gets +1/+1 and you gain 1 Energy.** | Zephyr Tricks: cheap creatures with arrival effects, replayed | Sequencing and replay value | Existing card language |
+| III-2 | The Varrane Crest-Drake (Pell) | Fire | 4 charge, 4/4, Airborne, Haste. **Whenever a creature you control attacks alone, it gets +3/+0 and Pierce this turn, and deals 2 damage to the enemy.** | A few big hasty threats and burn instead of a wide board | Committing to one threat | New condition: attacks alone |
+| III-3 | Ash vault card (no companion) | Ash | 3 charge aura. **Whenever a token you control dies, summon a 1/1 Haste Ashling.** Your tokens get +1/+0. | Ash Cinders: tokens that burn out and rise again | Sacrifice and value from dying | Existing (`die` + token filter: check) |
+| IV-1 | The Hymn of Thunderhold (Tamsin) | Lightning | 3 charge aura. **Whenever you play another card, if you played 3+ other cards this turn, deal 2 damage to the enemy and draw a card.** | Spark Storm: many cheap spells in one turn | Chain: playing several cards in one turn | Existing (`card/chain3`) |
+
+The three new rules are for Game Dev to build when Act II starts, along with Balance's numbers.
 
 ## Manifest deck size: 4 for every deck (decided 2026-10-24)
 
