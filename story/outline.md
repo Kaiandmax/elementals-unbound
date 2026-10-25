@@ -75,7 +75,7 @@ The party travels the three nations nearest the Hearthvale, one after another, a
   - **Wren promoted to Steel** after the tournament semi-final.
 - **Vault:** the Galewright Vault inside the oldest island. Inside is **the Windlord's Roc**, sealed by Aeris's teacher.
   - **Loot concept:** a Wind Manifest that rewards returning your own creatures to hand and replaying them, Wind's real identity.
-- **Boss:** a **duel against Aeris Calloway** (exhibition, top AI level, no phases). It's written to be lost: Aeris is an Exalted, Wren is Iron. If the player does win, Aeris gets a different line; nothing else changes.
+- **Boss:** a **duel against Aeris Calloway** (exhibition, top AI level, no phases). It's written to be lost: Aeris is an Exalted, Wren has only just made Steel. If the player does win, Aeris gets a different line; nothing else changes.
   - Then the real fight: the Hollow ground the island, and the party has to stop the fall. Boss: a crowned wind wild, **Unbound** crown (its biggest creature can't be blocked). **Silver** rank, against Wren's Steel.
 - **Camp:** Kes tells the truth to the party. Pell, of all people, is the one who tells him it doesn't matter.
 
