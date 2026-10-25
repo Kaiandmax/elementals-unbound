@@ -20,19 +20,36 @@ These run under every act. Each act moves each thread a step.
 
 | Thread | I | II | III | IV | V |
 |---|---|---|---|---|---|
-| **Seraphine** (the betrayal) | Saves the Ford in the cold open; at the vault gate she asks "was anything taken?" | Saltmere: a town she "couldn't reach in time". She recommends Wren for Steel. | She votes to keep the Covenant out of the war; three border towns fall. Isa finds vault records missing. | Nations hand her their vaults; Halden tells Wren the truth. | The reveal, then the final duel. |
+| **Seraphine** (the betrayal) | Saves the Ford in the cold open; at the vault gate she asks "was anything taken?" | Saltmere: a town she "couldn't reach in time". She sends the council's envoy who promotes the Ford's defenders to Steel. | She votes to keep the Covenant out of the war; three border towns fall. Isa finds vault records missing. | Nations hand her their vaults; Halden tells Wren the truth. | The reveal, then the final duel. |
 | **The Hollow** (the cult) | One cultist at the Weir Vault. | Breaks a vault in each nation. Their leader, the Hollow Mother, is seen. | Uses the war to break border vaults. | Unbinds Vol with the Stormcourt priesthood. | Seraphine has been steering them all along. |
 | **The war** | Pyrrhen "relief columns". | The League sells protection; Holdfast shuts its gates. | Vexis marches; war between the Dominion and the League. | A truce bought with vaults. | Nations line up behind Seraphine, or against her. |
-| **Brindle Ford** | Home, the wheel turning. | The surge: Mads dies, Tilly is apprenticed at the hall. | Refugees; Tilly is Tin rank. | Pyrrhen-occupied, then freed. | Tilly is Copper rank and answers the call. |
+| **Brindle Ford** | Licence, assessment and ceremony; the wheel turning. | The surge: Mads dies, Tilly is apprenticed at the hall. | Refugees; Tilly is Tin rank. | Pyrrhen-occupied, then freed. | Tilly is Copper rank and answers the call. |
 | **Edda Calder** | Her vault, her pages. | Her name in the Saltmere archive. | She sat on the Founding Circle's last council. | Her method of sealing (with Isa). | Wren seals the way Edda would have. |
 
-## Prologue and Act I: Notice Boards (Tin → Iron)
+## Prologue: The Ford (Tin)
 
-Already written as the playable demo: [`demo/act1.md`](demo/act1.md), with all its text in [`data/act1.js`](data/act1.js).
+This is the playable demo: [`demo/prologue.md`](demo/prologue.md), with all its text in [`data/prologue.js`](data/prologue.js). Wren is Tin throughout.
 
-In brief: the cold open; the licence; Gullet (**Copper**); Brann, Dove and Pell; Hollin's Cross and Aeris; the Cinder Mother on a rift (**Iron**); the Hollow at the Weir Vault; the Sluicewarden; **Slackwater**; and Seraphine at the gate.
+- The cold open.
+- Licence day.
+- Four Tin contracts that teach the job: Hesk's ember mice, the Pruett well, a tail on Brann and Dove's gale-hound hunt, and the letters to Ketter's Crossing. The Pyrrhen column is there, and Aeris's skiff passes overhead.
+- The Copper assessment at the Calder millrace (Gullet, Brann witnessing), then the hall vote and the ceremony.
+- Pell arrives on the evening barge.
 
-## Act II: The Wider World (Iron → Steel)
+## Act I: Notice Boards (Copper)
+
+Wren works as a Copper away from home. Wren stays Copper all act, and is put up for Iron at the end.
+
+- **Above:** Pyrrhen relief columns spread through the Hearthvale. An Exalted, Aeris, lands in Hollin's Cross, takes a Gold contract and is gone.
+- **Beats:**
+  - Down the river to **Hollin's Cross** with Pell, the rival who won't admit he's travelling with you. Jory Fenn's hall, several Copper contracts, and a duel with Pell.
+  - **Greyapple Orchard:** a Copper "wasp" contract that turns out to be a small rift and its Cinder Mother (**Iron** boss). Brann and Dove hold the brood.
+  - Back up the river, the **Weir Vault** breach: the Hollow at the gate. Edda's pages reveal she was Wren's great-grandmother. The Sluicewarden (**Steel** boss) guards **Slackwater**. Seraphine at the gate is the first clue.
+- **After:** Jory and Mads put the crew up for Iron. The assessment comes in Saltmere, after more work.
+
+The old first demo ([`demo/act1.md`](demo/act1.md), [`data/act1.js`](data/act1.js)) holds early drafts of these beats. It will be rewritten to the bible's dialogue rules when Act I is built.
+
+## Act II: The Wider World (Copper → Iron → Steel)
 
 The party travels the three nations nearest the Hearthvale, one after another, and grows from three to six. Each nation is a self-contained story. **Tone:** wonder, with the first real costs.
 
@@ -48,7 +65,7 @@ The party travels the three nations nearest the Hearthvale, one after another, a
   - Isa joins, partly to get out of her family's counting house.
 - **Vault:** the Bellwater Vault under the Saltmere harbor. Inside is **the Tolling Kraken**, a great wild that the city's founders bound and built the harbor bell over.
   - **Loot concept:** a Water Manifest that punishes the enemy for casting (it "tolls" whenever they cast something), a control build-around.
-- **Boss:** a crowned harbor wild, **Tide** crown (it returns your biggest creature to hand). **Steel** rank against Wren's Iron.
+- **Boss:** a crowned harbor wild, **Tide** crown (it returns your biggest creature to hand). **Iron** rank, against Wren's Copper. Wren then takes the **Iron assessment** in Saltmere, after a run of river contracts.
 - **Kes:** **Kes Arden** is the sky-courier who flies the party out of the drowned town. He's charming, and he lies about where he's from. He joins to "see the job through".
 - **Camp:** Isa and Pell argue about whether the League is evil or just greedy. Brann settles it with stew.
 
@@ -72,11 +89,11 @@ The party travels the three nations nearest the Hearthvale, one after another, a
 - **Beats:**
   - Kes's past catches up: he is **Prince Kestrel Arden**, disinherited. His uncle, now the ruling prince, offers to buy the whole party.
   - A tournament of Covenant duels (NPC duels at the top AI level). Pell wants to win it, and **Aeris Calloway** is the reigning champion.
-  - **Wren promoted to Steel** after the tournament semi-final.
+  - Tournament duels are Iron and Steel hunters; Pell enters, and so does Wren.
 - **Vault:** the Galewright Vault inside the oldest island. Inside is **the Windlord's Roc**, sealed by Aeris's teacher.
   - **Loot concept:** a Wind Manifest that rewards returning your own creatures to hand and replaying them, Wind's real identity.
-- **Boss:** a **duel against Aeris Calloway** (exhibition, top AI level, no phases). It's written to be lost: Aeris is an Exalted, Wren has only just made Steel. If the player does win, Aeris gets a different line; nothing else changes.
-  - Then the real fight: the Hollow ground the island, and the party has to stop the fall. Boss: a crowned wind wild, **Unbound** crown (its biggest creature can't be blocked). **Silver** rank, against Wren's Steel.
+- **Boss:** a **duel against Aeris Calloway** (exhibition, top AI level, no phases). It's written to be lost: Aeris is an Exalted, and Wren is Iron. If the player does win, Aeris gets a different line; nothing else changes.
+  - Then the real fight: the Hollow ground the island, and the party has to stop the fall. Boss: a crowned wind wild, **Unbound** crown (its biggest creature can't be blocked). **Steel** rank, against Wren's Iron.
 - **Camp:** Kes tells the truth to the party. Pell, of all people, is the one who tells him it doesn't matter.
 
 ### II-4. The Ford Holds (finale)
@@ -84,16 +101,18 @@ The party travels the three nations nearest the Hearthvale, one after another, a
 - **Place:** Brindle Ford.
 - **Beats:**
   - Word comes that a rift-surge is moving down the river. Every hunter is gone east; the Ford has Mads and a hall full of Tins.
+  - It's a long night, fought street by street across the town, and the game's first long, grueling mission.
   - The party races home.
   - The Ford is defended in a sequence of duels across town, and the companions hold the side fights.
   - **Mads dies** at the mill gate holding the last line. Wren's last duel is the surge's heart, **Brood** crown, **Silver** rank.
+- **Emergency promotion:** the council's envoy arrives the next morning and makes every hunter who held the Ford **Steel** by emergency vote. It's the first fast promotion in the game, and the story treats it as exceptional, paid for with Mads.
 - **After:**
   - The wheel turns.
   - Tilly asks to be apprenticed at the hall.
   - Wren chooses to keep the party together and swears the Covenant oath again, in Mads's words.
 - **Music:** Mads's death needs its own cue (flagged to Music).
 
-## Act III: Fire on the Border (Silver → Gold)
+## Act III: Fire on the Border (Steel → Silver → Gold)
 
 War comes. The party fights as Covenant neutrals, protecting people on both sides. **Tone:** the cost of duty, gray choices, the first doubts about the people at the top.
 
@@ -102,7 +121,7 @@ War comes. The party fights as Covenant neutrals, protecting people on both side
 ### III-1. The Forge (Hollin's Cross, then the borderlands)
 
 - **Beats:**
-  - **Forge licence** at Silver, and the first braid (fusion tutorial).
+  - A run of Steel border contracts, then the **Silver assessment** and the **Forge licence** exam, and the first braid (fusion tutorial).
   - **Corvane Ashe** retires from the Seven in disgust at the vote and takes Wren as a student.
   - From here on he is Wren's mentor, the one who questions every ideal.
 
@@ -131,10 +150,10 @@ War comes. The party fights as Covenant neutrals, protecting people on both side
   - The Covenant hunters of both sides have to work together, and the party leads them.
   - **Dove dies** holding the rift's second front so a town can flee. It's written, not a choice, and it's Brann's grief arc.
 - **Boss:** a crowned wild that both armies woke, **Twin Call** crown. **Adamant** rank, against Wren's Gold.
-- **After:** **promoted to Gold**. Isa finds that the Founding seal registers for the border vaults were taken from the archive with Seraphine's seal on the request, though nobody notices yet.
+- **After:** a grueling, two-night battle, after which the hunters who closed the rift are **promoted to Gold**. It's the second fast promotion, and it's justified by the stakes. Isa finds that the Founding seal registers for the border vaults were taken from the archive with Seraphine's seal on the request, though nobody notices yet.
 - **Camp:** the hardest scene in the game. Brann. Everyone.
 
-## Act IV: Crowns (Adamant)
+## Act IV: Crowns (Gold → Adamant)
 
 The world is breaking. Wren fights beside the Exalted as a peer. **Tone:** epic, and the cracks at the top show.
 
@@ -146,7 +165,7 @@ The world is breaking. Wren fights beside the Exalted as a peer. **Tone:** epic,
   - Tamsin's chapter. Her scripture shows that **Vol** is a Primordial sealed under the cathedral, and that the priesthood and the Hollow mean to unbind their god.
   - Tamsin has to choose between faith and duty; she chooses duty, and it is written.
 - **Vault:** the Thunderhold undercroft. **Loot concept:** a Lightning Manifest built around chaining many cards in one turn.
-- **Boss:** half of Vol unbound, the first Primordial fight. **Exalted** rank, fought alongside **Ysil of the White Reach**. Vol is stopped, not sealed. **Promoted to Adamant**.
+- **Boss:** half of Vol unbound, the first Primordial fight. **Exalted** rank, fought alongside **Ysil of the White Reach**. Vol is stopped, not sealed. Adamant comes only by deed, and this is the deed: **promoted to Adamant**.
 
 ### IV-2. The Truce of Vaults (Highcourt)
 
@@ -177,7 +196,7 @@ The world is breaking. Wren fights beside the Exalted as a peer. **Tone:** epic,
 
 ### V-1. The Seventh Seat (Highcourt, the Covenant council hall)
 
-- **Beats:** Wren is raised to **Exalted**, taking Corvane's empty seat. Wren goes to Seraphine as a peer, and the conversation is the reveal.
+- **Beats:** the Seven vote Wren into Corvane's empty seat, making Wren **Exalted**. Wren goes to Seraphine as a peer, and the conversation is the reveal.
 - **Seraphine:** she isn't a monster. She shows Wren the failing seals and the lists of towns. She asks Wren to join her, and Wren refuses.
 - **Above:** the council breaks. Gorran and Ysil stand with Wren, Neris with Seraphine, and Aeris wavers until the last chapter.
 

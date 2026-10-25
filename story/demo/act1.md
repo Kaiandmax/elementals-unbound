@@ -1,4 +1,7 @@
-# Act I demo: "Notice Boards"
+# Act I demo: "Notice Boards" (SUPERSEDED)
+
+> **Superseded on 2026-10-25 by [`prologue.md`](prologue.md).** The designer asked for slower ranks and better dialogue. This file and `data/act1.js` stay only until the maps move to the `pro_` keys. Its Hollin's Cross, orchard and Weir Vault beats are early drafts for Act I proper and will be rewritten.
+
 
 Owner: Story. **Status: ready for Game Dev.** This is the playable demo of the prologue and Act I, the designer's first walk through the world and story. Every word on screen is in [`story/data/act1.js`](../data/act1.js) (keys start with `a1_`). This file is the build spec: maps, beats, triggers, flags and fights.
 

@@ -1,6 +1,6 @@
 # Highcourt and the sky-islands
 
-**Element:** Wind. **Ranks:** Steel; Wren is promoted to Steel here, and the act boss is Silver. **Chapter:** II-3. **Companions:** Kes's past catches up with him.
+**Element:** Wind. **Ranks:** Iron; the boss is Steel. (Steel itself comes later, after the Ford surge.) **Chapter:** II-3. **Companions:** Kes's past catches up with him.
 
 ## Look and sound
 
@@ -30,8 +30,8 @@ The **Skyreach Principalities** buy prestige.
 1. **Arrival.** Kes flies them in and refuses to land at the Court docks. Nobody asks why, yet.
 2. **The tournament.** Covenant duels for patronage, all NPC duels at the top AI level. Pell wants to win it badly.
 3. **Kes unmasked.** Aldric recognizes him: *Prince Kestrel*. He offers to buy the whole party, or to expose Kes as a pretender.
-4. **Semi-final:** Wren is promoted to **Steel**.
-5. **Exhibition against Aeris Calloway.** It's written to be lost: Aeris is an Exalted, Wren is Steel. If the player wins anyway, Aeris gets a different line. He laughs, and so does the crowd.
+4. **Semi-final:** Wren makes the last four, the furthest an Iron has gone in years.
+5. **Exhibition against Aeris Calloway.** It's written to be lost: Aeris is an Exalted, and Wren is Iron. If the player wins anyway, Aeris gets a different line. He laughs, and so does the crowd.
 6. **The fall.** The Hollow cut the Old Island's anchor, and the island starts to fall toward the city. The party dives into the Galewright Vault to reseat the anchor.
 7. **Camp.** Kes tells the truth. Pell, of all people, tells him it doesn't matter.
 
@@ -48,7 +48,7 @@ The **Galewright Vault**, inside the Old Island.
 
 **A crowned wind wild**, risen with the Hollow's breach.
 
-- **Rank:** Silver, against Wren's Steel.
+- **Rank:** Steel, against Wren's Iron.
 - **Crown:** **Unbound**. Its biggest creature can't be blocked. The story reason: you can't wall a storm.
 - **Side fight:** Kes and Brann hold the anchor-chains while Wren fights.
 
@@ -56,9 +56,9 @@ The **Galewright Vault**, inside the Old Island.
 
 | Rank | Contract | Notes |
 |---|---|---|
-| Steel | Courier skiffs going missing on the eastern road | Hollow scouts. Leads to the anchor plot. |
-| Steel | A prince's champion has gone mad from a bad binding | It's a sympathetic duel; the champion appears in Act IV, recovered. |
-| Steel | Wind-chime thieves, an elemental magpie flock | Comic. Pays in chimes. |
+| Iron | Courier skiffs going missing on the eastern road | Hollow scouts. Leads to the anchor plot. |
+| Iron | A prince's champion has gone mad from a bad binding | It's a sympathetic duel; the champion appears in Act IV, recovered. |
+| Iron | Wind-chime thieves, an elemental magpie flock | Comic. Pays in chimes. |
 
 ## When the player comes back
 

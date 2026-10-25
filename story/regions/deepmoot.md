@@ -1,6 +1,6 @@
 # Deepmoot and the deep roads
 
-**Element:** Earth. **Ranks:** Iron to Steel; the act boss is Steel. **Chapter:** II-2. **Companions:** Brann's home chapter; Tamsin joins.
+**Element:** Earth. **Ranks:** Iron; the boss is Steel. **Chapter:** II-2. **Companions:** Brann's home chapter; Tamsin joins.
 
 ## Look and sound
 
@@ -58,7 +58,7 @@ The **Root Vault**, under the Moot-hall.
 |---|---|---|
 | Iron | Crystal mites in the stair-market | A merchant pays in a gem that turns out to be a codex entry. |
 | Iron | Bring supplies out to the refugee camp | Against the law, so Hadda looks the other way. |
-| Steel | A collapsed hold, survivors trapped | One survivor is a Founding Circle scholar's descendant: a codex entry, and a line from Isa in Act V. |
+| Iron | A collapsed hold, survivors trapped | One survivor is a Founding Circle scholar's descendant: a codex entry, and a line from Isa in Act V. |
 
 ## When the player comes back
 

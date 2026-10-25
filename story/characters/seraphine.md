@@ -23,7 +23,7 @@ To get the vaults, she lets border towns fall so that terrified nations will han
 |---|---|
 | Cold open | She arrives exactly when the Ford is half burned, not before. |
 | I | At the Weir Vault: "Was anything taken?" A pause on Edda Calder's name. "Keep it close." |
-| II | Lowmere drowns; she "couldn't reach it in time". She recommends Wren for Steel, which keeps Wren busy and grateful. |
+| II | Lowmere drowns; she "couldn't reach it in time". After the Ford surge she sends the envoy who makes its defenders Steel, which keeps Wren busy and grateful. |
 | III | Her vote keeps the Covenant out of the war. Isa finds the border-vault registers taken out under her seal. |
 | IV | The truce of vaults is her proposal. Halden's silences. |
 | V | The Founding Vault is under the Ford. She was there for the vault, ten years ago. |
