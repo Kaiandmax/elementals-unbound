@@ -17,6 +17,7 @@ One file per tier-1 character (see the bible's *Writing tiers*). Read the file b
 | [tamsin.md](tamsin.md) | Tamsin of Vol | Lightning | Runaway acolyte, companion |
 | [seraphine.md](seraphine.md) | Seraphine Vael | Aurora | The Lantern; the final antagonist |
 | [mads.md](mads.md) | Mads Orrin | — | Branch master, Wren's first mentor |
+| [dad.md](dad.md) | Owen Calder | — | Wren's father, the miller |
 | [corvane.md](corvane.md) | Corvane Ashe | Ash | Exalted who resigns; Wren's second mentor |
 
 **Personal loot cards.** Each companion's home chapter ends on a boss and a Manifest that carries their story. The player can build around it even though the companion never duels. These are story concepts only: TCG Design designs the effect, Balance sets the numbers, and Story names the card.

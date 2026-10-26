@@ -2,6 +2,28 @@
 
 **Fire.** Second son of a Pyrrhen war-house. Gifted, arrogant, and impatient to rise. He's Wren's rival in Act I and a companion from the end of Act I. **Romanceable.**
 
+**Tier 1.** Read this before writing any line of his.
+
+## Who he is
+
+- **Age:** 19. Second son of House Varrane, a Pyrrhen war-house that has sent officers to the Dominion's armies for six generations.
+- **Why he joined the Covenant:** at fourteen he was sent to the war-academy at Cindergate. At sixteen he walked out and took a Covenant licence instead, because the Covenant crosses borders and the army doesn't. His father called it running away, and he isn't entirely wrong.
+- **His brother, Davor,** is everything their father wanted. Pell loves him and can't be in a room with him.
+- **His mother** writes to him every month. He keeps every letter unopened in his pack. He'll open them in Act III.
+
+## What he wants, and what he fears
+
+- **Wants:** to be good enough that nobody can say he ran away. That means fast promotion and a famous contract.
+- **Fears:** that his father was right.
+- **Won't say:** he's lonely, and the party is the first group of people he has chosen and not been born into.
+
+## How he talks
+
+- **Quick, clever, a little too loud.** He talks in comparisons and rankings ("third-best Fire binder in Hollin's Cross, and the other two are old").
+- **Insults in place of thanks; advice disguised as complaint.**
+- **When he's actually hurt,** he goes very polite and formal. That's the war-house manners coming back.
+- **Never:** admits a mistake on the spot. He'll fix it later and pretend he always meant to.
+
 ## Voice
 
 Fast, flashy, defensive. He insults you instead of saying thank you, and gives useful advice disguised as an insult. Never admits he's sulking.
