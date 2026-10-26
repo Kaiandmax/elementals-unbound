@@ -64,7 +64,9 @@ Each base element keeps its 4 Starter Manifests plus **4 to find**, one for each
 
 Changes from the script's pass: out go Volcano God, Infernal Dragon King, Primeval Kraken, Glacier Titan, Bedrock Avatar, Storm Leviathan, Raiden, Lightning Avatar (vanilla bodies, a second answer, or a third copy of the same plan); in come Bonfire Totem, Tide Sovereign Neris, Static Field and the five vault cards. Raiden's slot also retires a real-world god's name, which Story wanted gone.
 
-### Confluences (script's first pass, still to hand-tune)
+### Confluences (script's first pass, reviewed 2026-10-26)
+
+Review: the specials already carry each archetype, so most picks stand. Three swaps: Steam's Bottomless Kettle repeated Library of Mists (draw into damage), so Fog Colossus (a hand-size creature) takes its place; Sand's plain Endless Desert was a near-copy of The Endless Desert, so Sandstorm Sphinx (bounce payoff) takes its place; Mirage's Desert Oasis (generic draw) gives way to Illusory Djinn (silence, Mirage's one answer). Seven triple Manifests summon 8-16 tokens after normalization (a Balance bug, flagged on the board); none of them is in the kept list.
 
 **Volcano** (5)
 
@@ -103,7 +105,7 @@ Changes from the script's pass: out go Volcano God, Infernal Dragon King, Primev
 | 3 | aura | R (special) | Library of Mists | Whenever you draw a card, deal 3 damage to the enemy. Your spells cost 1 less. |
 | 4 | creature | U (special) | Thermal Djinn | Airborne. Ward. Whenever you draw a card, deal 1 damage to a random enemy creature. |
 | 5 | creature | R (special) | Steam Engine Prime | Ward. At the start of your turn, draw a card. Whenever you draw a card, this gets +1/+0 this turn. |
-| 2 | aura | C (special) | Bottomless Kettle | Whenever you draw a card, deal 2 damage to the enemy. |
+| 4 | creature | C (special) | Fog Colossus | Ward. When played, draw 2 cards and this gets +1/+0 for each card in your hand. |
 | 5 | creature | R | Leviathan of Steam | Ward. Drain. |
 
 **Swamp** (5)
@@ -140,7 +142,7 @@ Changes from the script's pass: out go Volcano God, Infernal Dragon King, Primev
 
 | Charge | Type | Rarity | Card | Text |
 |---|---|---|---|---|
-| 3 | aura | R | Endless Desert | At the start of your turn, give the enemy creature with the lowest health -1/-1. Your creatures get +2/+2. |
+| 5 | creature | U (special) | Sandstorm Sphinx | Airborne. When played, return a basic creature to its owner's hand. Whenever an enemy creature returns to its owner's hand, deal 2 damage to the enemy. |
 | 4 | creature | C (special) | Erosion Spirit | Airborne. Whenever this attacks, every enemy creature get -1/+0. |
 | 5 | creature | R (special) | Titan of Dust | Skyguard. When played, every enemy creature get -1/-1. At the start of your turn, every enemy creature get -1/+0. |
 | 2 | aura | C (special) | Dune Shrine | At the start of your turn, give a random enemy creature -1/-1. When played, gain 2 Energy. |
@@ -182,7 +184,7 @@ Changes from the script's pass: out go Volcano God, Infernal Dragon King, Primev
 | 3 | aura | C (special) | Veil of Mirages | Whenever you play a creature, summon a 2/2 Mirror Image. When played, draw 2 cards. |
 | 4 | creature | U (special) | Dreameater | Ward. When played, the enemy discards two random cards and draw 2 cards. |
 | 5 | creature | R (special) | Master of Mirrors | Ward. At the start of your turn, summon a token copy of your creature with the highest attack. |
-| 2 | aura | C | Desert Oasis | At the start of your turn, gain 1 life and draw a card. |
+| 4 | creature | C (special) | Illusory Djinn | Airborne. When played, remove all abilities and keywords from a creature. |
 
 **Aurora** (4)
 
