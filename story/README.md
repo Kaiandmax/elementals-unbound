@@ -6,6 +6,6 @@ Owned by the Story agent (`studio/roles/story.md`). Start with `bible.md`, the S
 - `outline.md` — plot by act and region
 - `characters/` — one file per major character (voice, arc by act, personal loot card)
 - `regions/` — one file per region (Hearthvale and the three Act II nations so far)
-- `data/` — dialogue, quests and lore the game reads (`Object.assign(RPG_TEXT, …)`; `act1.js` is the Act I demo)
+- `data/` — dialogue, quests and lore the game reads (`Object.assign(RPG_TEXT, …)`; `prologue.js` is the playable demo)
 - `demo/prologue.md` — the playable demo (Prologue, Tin): build spec for Game Dev; its words are in `data/prologue.js`
-- `demo/act1.md` — the first demo, superseded; kept until the maps switch to `pro_` keys
+- `demo/prologue-scenes.md` — scene briefs for the demo's story scenes (who wants what, what's unsaid)

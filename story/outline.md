@@ -47,7 +47,7 @@ Wren works as a Copper away from home. Wren stays Copper all act, and is put up 
   - Back up the river, the **Weir Vault** breach: the Hollow at the gate. Edda's pages reveal she was Wren's great-grandmother. The Sluicewarden (**Steel** boss) guards **Slackwater**. Seraphine at the gate is the first clue.
 - **After:** Jory and Mads put the crew up for Iron. The assessment comes in Saltmere, after more work.
 
-The old first demo ([`demo/act1.md`](demo/act1.md), [`data/act1.js`](data/act1.js)) holds early drafts of these beats. It will be rewritten to the bible's dialogue rules when Act I is built.
+These beats will be written to the bible's tier rules (dossiers, scene briefs, a table read) when Act I is built. The first draft is in git history (`story/data/act1.js`, removed 2026-10-26).
 
 ## Act II: The Wider World (Copper → Iron → Steel)
 
@@ -180,7 +180,7 @@ The world is breaking. Wren fights beside the Exalted as a peer. **Tone:** epic,
 - **Beats:**
   - **Halden Mirr**, the Covenant's spymaster, meets Wren in secret and tells the truth: Seraphine's plan to become the one seal. There's the proof Isa found, and the towns she let fall, Lowmere included.
   - Wren's hero-worship breaks.
-- **Camp:** Wren alone with Corvane. *"Rank is a leash the nations let us hold."* Wren finds an answer of their own: the Founding Circle sealed together.
+- **Camp:** Wren alone with Corvane. He tells the story of Merrow, the town he let burn thirty years ago, plainly and once. Wren finds an answer of their own: the Founding Circle sealed together, many hands, nobody choosing who burns.
 
 ### IV-4. Brindle Ford, Occupied
 

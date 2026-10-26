@@ -42,11 +42,11 @@ const RPG_QUESTS = [
   { id:"pro_ewe", kind:"side", title:"Pruett's Lost Ewe (Tin)", start:"gd_board2", steps:[
     { done:"gd_ewe", text:"Find the ewe at the Sallow Wood edge, inside the Waymark Stone.", at:{ map:"hearthvale", x:47, y:74 } },
   ] },
-  { id:"pro_evening", kind:"main", title:"Copper", start:"pro_rank_copper", steps:[
+  { id:"pro_evening", kind:"main", title:"Copper of the Ford", start:"pro_rank_copper", steps:[
     { done:"scene_pell_arrives", text:"Walk down to the river landing.", at:{ map:"hearthvale", x:66, y:60 } },
     { done:"pro_done",           text:"Go home to the mill.", at:{ map:"house", x:4, y:5 } },
   ] },
-  { id:"hv_barrow", kind:"side", title:"The Old Barrow (working name)", start:"scene_met_barrow", steps:[
+  { id:"hv_barrow", kind:"side", title:"The Breathing Barrow", start:"scene_met_barrow", steps:[
     { done:"barrow_c2_found", text:"Something cold breathes out of the barrow in the hills. Find the bottom of it.", at:{ chest:"barrow_c2" } },
   ] },
 ];
