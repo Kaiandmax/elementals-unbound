@@ -35,70 +35,36 @@ They are **not deleted**. They leave the reward pool and the prebuilt decks, and
 
 ## Candidate list (first pass)
 
-**Fire** (8)
+### Base elements, hand-tuned (2026-10-26)
 
-| Charge | Type | Rarity | Card | Text |
+Each base element keeps its 4 Starter Manifests plus **4 to find**, one for each of its four prebuilt decks' plans, so every find pulls toward a different deck. The vault cards (`design/progression.md`) are among the finds; they're reworked from cut Manifests, named in the "from" column, so the card count holds.
+
+| Element | Starter (4) | To find | Rewards in the main deck | Deck it pulls toward |
 |---|---|---|---|---|
-| 3 | spell | Starter | Combustion Burst | Deal 5 damage to a creature. If it dies, deal 2 damage to the enemy. |
-| 4 | spell | Starter | Pyroclastic Surge | Deal 3 damage to every enemy creature. |
-| 4 | aura | Starter | Heart of the Sun | At the start of your turn, deal 2 damage to the enemy. |
-| 5 | creature | Starter | Pyre Phoenix | Haste. Airborne. |
-| 2 | aura | U | Blaze Covenant | Whenever you play a spell, deal 1 damage to the enemy and gain 1 life. |
-| 6 | creature | R | Volcano God | Pierce. Haste. |
-| 5 | creature | R | Infernal Dragon King | Airborne. Haste. When played, deal 2 damage to every enemy creature. |
-| 5 | creature | R | Eternal Phoenix | Airborne. Haste. Last Gasp: summon two 3/3 Airborne Fire Drakes. |
+| Fire | Combustion Burst, Pyroclastic Surge, Heart of the Sun, Pyre Phoenix | **Bonfire Totem** | tokens (Ember Sparks every turn) | Ember Swarm |
+| | | **Blaze Covenant** | spells | Pyromancer |
+| | | **The Varrane Crest-Drake** (vault, III-2; from Volcano God) | one big attacker at a time | Reckless Fury |
+| | | **Eternal Phoenix** | fliers that come back | Inferno Dragons |
+| Water | Wellspring, Mirror Lake, Tidal Wave, Kraken of the Deep | **Slackwater, the Weir Serpent** (vault, Act I) | Reactions | Riptide |
+| | | **The Tolling Kraken** (vault, II-1; from Typhoon Serpent) | freeze and bounce that stretch the enemy's turns | Frostbind |
+| | | **Tide Sovereign Neris** | Drain bodies and Reactions | Tidecaller |
+| | | **Leviathan of the Abyss** | big Drain creatures (the one board answer) | Abyssal Leviathans |
+| Earth | Living Mountain, Worldroot, Tectonic Rise, Avalanche | **The Rootbound Colossus** (vault, II-2; from Bedrock Avatar) | walls and patience | Stonewall |
+| | | **Ancient Colossus** | Fortify | Crystal Growth |
+| | | **Throne of Mountains** | a wide board of permanent buffs | Deep Roots |
+| | | **Earthbinder Gorr** | giants (the one board answer) | Titans |
+| Wind | Second Wind, Skyborne Armada, Eye of the Storm, Sovereign of Gales | **The Windlord's Roc** (vault, II-3; from Roc of the Storm) | creatures replayed for their arrival effects | Zephyr Tricks |
+| | | **Sky Sovereign Zephyra** | many fliers | Sky Sovereigns |
+| | | **Cloud Palace** | a ground deck that takes to the air | Featherflock |
+| | | **Phoenix of the Gale** | hasty fliers | Gale Riders |
+| Lightning | Surge Conduit, Chain Storm, Overload Engine, Raijin | **The Hymn of Thunderhold** (vault, IV-1; from Raiden, Storm God) | three or more cards in one turn | Spark Storm |
+| | | **Storm Conductor** | cheap spells | Overload |
+| | | **Static Field** | holding charge for Attuned | Static Charge |
+| | | **Plasma Phoenix** | haste creatures | Thunder Gods |
 
-**Water** (8)
+Changes from the script's pass: out go Volcano God, Infernal Dragon King, Primeval Kraken, Glacier Titan, Bedrock Avatar, Storm Leviathan, Raiden, Lightning Avatar (vanilla bodies, a second answer, or a third copy of the same plan); in come Bonfire Totem, Tide Sovereign Neris, Static Field and the five vault cards. Raiden's slot also retires a real-world god's name, which Story wanted gone.
 
-| Charge | Type | Rarity | Card | Text |
-|---|---|---|---|---|
-| 3 | spell | Starter | Wellspring | Draw 2 cards and gain 4 life. Your creatures get +0/+2 permanently. |
-| 3 | aura | Starter | Mirror Lake | Your Reactions cost 1 less. At the start of your turn, freeze the enemy creature with the highest attack. |
-| 4 | spell | Starter | Tidal Wave | Return every enemy basic creature to its owner's hand. |
-| 5 | creature | Starter | Kraken of the Deep | When played, freeze every enemy creature. |
-| 2 | aura | C | Reflecting Pool | Whenever you play a Reaction, draw a card and gain 1 life. |
-| 6 | creature | R | Primeval Kraken | Drain. When played, return every enemy basic creature to their owners' hands. |
-| 4 | creature | C | Glacier Titan | Skyguard. When played, freeze a creature. |
-| 5 | creature | R | Leviathan of the Abyss | Drain. When played, freeze every enemy creature. |
-
-**Earth** (8)
-
-| Charge | Type | Rarity | Card | Text |
-|---|---|---|---|---|
-| 3 | creature | Starter | Living Mountain | Fortify 2. |
-| 4 | aura | Starter | Worldroot | At the start of your turn, your creatures get +1/+1. |
-| 4 | spell | Starter | Tectonic Rise | Your creatures get +3/+3 permanently. |
-| 5 | spell | Starter | Avalanche | Destroy the enemy creature with the highest attack. Your creatures get +1/+1 permanently. |
-| 6 | creature | C | Bedrock Avatar | Vigilant. |
-| 3 | aura | R | Throne of Mountains | When played, draw a card and gain 1 Energy. Your creatures get +2/+2. |
-| 4 | creature | R | Ancient Colossus | Ward. Skyguard. Fortify 2. |
-| 5 | creature | R | Earthbinder Gorr | When played, destroy a creature. |
-
-**Wind** (8)
-
-| Charge | Type | Rarity | Card | Text |
-|---|---|---|---|---|
-| 3 | spell | Starter | Second Wind | Return all your basic creatures to your hand. Gain 3 Energy. |
-| 4 | spell | Starter | Skyborne Armada | Summon three 2/2 Airborne Wisps. |
-| 4 | aura | Starter | Eye of the Storm | Your creatures have Airborne. |
-| 5 | creature | Starter | Sovereign of Gales | Airborne. Haste. |
-| 2 | aura | R | Cloud Palace | Your creatures have Airborne. Your creatures get +1/+0. |
-| 6 | creature | R | Storm Leviathan | Airborne. When played, return every enemy basic creature that costs 3 or less to their owners' hands. |
-| 5 | creature | R | Sky Sovereign Zephyra | Airborne. Haste. Your other Airborne creatures get +1/+1. |
-| 4 | creature | R | Phoenix of the Gale | Airborne. Haste. Last Gasp: summon a 3/3 Airborne Gale Roc. |
-
-**Lightning** (8)
-
-| Charge | Type | Rarity | Card | Text |
-|---|---|---|---|---|
-| 4 | spell | Starter | Surge Conduit | Gain 2 Energy and draw 2 cards. |
-| 4 | spell | Starter | Chain Storm | Deal 3 damage to a creature and 2 damage to the enemy. |
-| 5 | aura | Starter | Overload Engine | Your spells cost 1 less. |
-| 6 | creature | Starter | Raijin, Drum of Thunder | Haste. When played, deal damage to the enemy equal to the other cards you played this turn (up to 5). |
-| 3 | creature | U | Storm Conductor | Haste. Whenever you play a spell, deal 1 damage to the enemy. Your spells cost 1 less. |
-| 6 | creature | R | Raiden, Storm God | Haste. Airborne. Whenever you play a spell, deal 2 damage to the enemy. |
-| 5 | creature | R | Plasma Phoenix | Airborne. Haste. Last Gasp: summon two 3/2 Haste Storm Elementals. |
-| 5 | creature | R | Lightning Avatar | Haste. Whenever you play a spell, this gets +1/+1 and deal 1 damage to the enemy. |
+### Confluences (script's first pass, still to hand-tune)
 
 **Volcano** (5)
 
