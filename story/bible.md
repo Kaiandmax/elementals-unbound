@@ -41,7 +41,7 @@ What we keep from BioWare, because it's craft rather than choice:
 - **Loyalty chapters** (from *Mass Effect 2*). Each companion has a written chapter in their home region that resolves their arc. They're part of the main path, not optional.
 - **A gathered army for the finale** (from *Dragon Age: Origins* and *Mass Effect 3*). In Act V the people Wren helped across the story answer the call: branch halls, rivals, a nation or two, even bound great wilds. It's written as a payoff of the main plot, not as a score the player earned.
 - **A final hunt where the crew holds the line** (from *Mass Effect 2*). In the last vault the companions take the side fights while Wren goes for the heart. Who holds where, and what it costs, is written.
-- **A mentor who questions the creed** (from *KOTOR 2*'s Kreia). Corvane Ashe retires from the Seven in Act III and becomes Wren's teacher. He's bitter, brilliant and honest, and he pulls apart the Covenant's ideals in every conversation: "Rank is a leash the nations let us hold." He's right often enough to sting. He doesn't betray Wren. His role is to make Wren's own answer to Seraphine earned, not borrowed.
+- **A mentor who questions the creed** (from *KOTOR 2*'s Kreia). Corvane Ashe retires from the Seven in Act III and becomes Wren's teacher. He once let a town burn to save a province and was made Exalted for it, so he knows Seraphine's arithmetic from the inside. He argues from cases, not slogans ("Name a town the Seven protected this year"), and he's right often enough to sting. See `characters/corvane.md`. He doesn't betray Wren. His role is to make Wren's own answer to Seraphine earned, not borrowed.
 - **The betrayal is planted, then paid off** (as *Jade Empire* did with its master). Seraphine is warm and helpful in every scene before the reveal. Plant clues a second playthrough will catch: towns she "couldn't reach in time", records Isa can't find, Halden's silences. The reveal should make the player re-read the whole game.
 - **Each region is a self-contained story** (KOTOR's planets). It has a town, its own politics, a moral knot that Wren and the companions argue over and the writers resolve, a vault, and consequences that show up in later acts because the plot carries them, not because a flag says so.
 - **Lore the player can dig into.** A codex (the Covenant's bestiary, binder histories, nation dossiers), written in-world. Every wild you bind gets an entry.
@@ -54,6 +54,24 @@ What we keep from BioWare, because it's craft rather than choice:
 - **Speaker format.** On screen, a line that starts `Name: ` shows a speaker. Narration and signs never put a colon right after their first words; use a dash or a full stop.
 - **No villain monologues.** Antagonists explain themselves like people.
 - **Every scene ends** with Wren learning something, deciding something, or changing a relationship.
+
+**Writing tiers (designer, 2026-10-26).** Effort goes where the story lives.
+
+| Tier | Who | What it needs before a line is written |
+|---|---|---|
+| **1, story-centric** | The party, Wren's mentors (Mads, Corvane), Wren's family, the antagonists (Seraphine, Vexis, the Hollow's leaders), Exalted who matter to the plot | A **dossier** in `characters/` (history, want, fear, what they won't say, how they talk, what they never say, sample exchanges). A **scene brief** for every scene they're in. An **independent table read** against the dossier before the scene merges. |
+| **2, mission cast** | Quest-givers and recurring people on main missions (Nan Pruett, Orla Ketter, Captain Davor, Jory Fenn, Hesk) | A short profile in the region or chapter file: what they want from Wren and two notes on how they talk. They should be interesting for the length of their mission. |
+| **3, ambient** | One-off townsfolk, soldiers, signs | One clear line. Simple is right here. |
+
+**Scene briefs.** Before writing a tier-1 scene, write down for each character in it:
+
+- what they want from this conversation;
+- what they're not saying;
+- what changes by the end.
+
+A scene where nobody wants anything is cut. Most of the life in a line is in what's under it: Mads giving Wren two eggs' worth of change from a tin box with too few coins in it says more than a speech about the hall's money.
+
+**Mentors teach by doing, not by lecturing.** Mads gives a rule when it becomes relevant, with a reason from his own life attached, and never as a list. Corvane argues from what happened (a town, a number, a date), not from principles. Neither of them talks in aphorisms.
 
 **Dialogue must make sense first (designer, 2026-10-25).** People say things for a reason: to get something, warn someone, hide something, pass the time. Read each line and ask who says it to whom and why, and whether a real person would say it that way.
 
@@ -175,7 +193,7 @@ A 30–50 hour JRPG needs a travelling party, people whose lives the player lear
 
 Recurring cast who don't travel with the party:
 
-- **Mads Orrin** — a retired Iron hunter with a bad leg who runs the branch hall in Brindle Ford. Gruff, fair, the first person to believe in the hero. He dies at the end of Act II defending the Ford during a surge, and his death is the hero's first real lesson in duty.
+- **Mads Orrin** — a retired Iron hunter with a bad leg who runs the branch hall in Brindle Ford. He survived the fire that killed the Ford's other two hunters, because Wren's dad pulled him out from under a beam. He teaches by making Wren do the job (see `characters/mads.md`). He dies at the end of Act II defending the Ford during a surge, and his death is the hero's first real lesson in duty.
 - **Tilly** — a village kid in the Ford who wants to be Wren the way Wren wanted to be Seraphine. She grows up across the game (the long timeline lets that show) and mirrors the hero's arc from below.
 - **Branch masters, rivals and contract-givers** in each region, who recur as Wren rises, so the world remembers you.
 

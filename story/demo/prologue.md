@@ -9,9 +9,9 @@ Owner: Story. **Status: ready for Game Dev.** This replaces the first demo (`act
 - no Weir Vault in the demo;
 - better dialogue.
 
-Every word on screen is in [`story/data/prologue.js`](../data/prologue.js), with keys starting `pro_`.
+Every word on screen is in [`story/data/prologue.js`](../data/prologue.js), with keys starting `pro_` plus Game Dev's `gd_` gate and sign keys. Scene briefs (what each character wants and hides in each scene) are in [`prologue-scenes.md`](prologue-scenes.md). The dossiers for the tier-1 cast are in `../characters/` (Mads: [`mads.md`](../characters/mads.md)).
 
-`act1.md` and `data/act1.js` stay in the repo only until the maps switch to these keys. Their later parts (Hollin's Cross, the orchard, the Weir Vault) belong to Act I proper, which comes after this demo, and will be rewritten to the same standard when Act I is built.
+The first demo (`act1.md`, `data/act1.js`) is retired. Its later beats (Hollin's Cross, the orchard, the Weir Vault) are in the outline's Act I and will be rewritten to the same standard when Act I is built.
 
 It follows [`story/bible.md`](../bible.md). One fixed story, with no branching.
 
@@ -63,8 +63,8 @@ Optional Tin contracts on the board (`pro_board_2`, from the assessment talk on)
 
 ### 0. Cold open (new game only)
 
-- **`pro_intro`** plays on black with the fire's glow: eight-year-old Wren, the Ford burning, a crowned Fire wild, and Seraphine walking out of the smoke. Then the title card and "Ten years later."
-- The deck pick then reads as Mads lending a deck, using **`pro_pick_deck`**. The gender pick goes here when it's built; the demo text uses no pronouns for Wren.
+- **`pro_intro`** plays on black with the fire's glow: eight-year-old Wren on the mill roof, the Ford burning, a crowned Fire wild. Two of the Ford's three hunters die, and Wren's dad drags the third, Mads, out from under a beam. Then Seraphine walks out of the smoke. Title card, and "Ten years later."
+- The deck pick uses **`pro_pick_deck`**: the hall's shelf of old decks for new hunters. The gender pick goes here when it's built; the demo text uses no pronouns for Wren.
 
 ### 1. Licence Day
 
