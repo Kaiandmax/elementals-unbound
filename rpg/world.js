@@ -3,9 +3,8 @@
    Everything that touches the page is inside functions that only run in the browser, so the
    headless sims (tools/engine.js) load this file without side effects. */
 const RPG_T = 16, RPG_VW = 21, RPG_VH = 13, RPG_STEP_MS = 170, RPG_SAVE_KEY = "eu.save.v1";
-const RPG_TILE = { ".":1, ",":1, "=":1, "f":1, "D":1, "_":1, ">":1, "w":1, "v":1, "S":1, "+":1, "b":1, "a":1, "A":1, "F":1, ":":1,
-  "s":0, "V":0, "#":0, "~":0, "R":0, "H":0, "W":0, "t":0, "P":0, "o":0, "Q":0, "T":0, "^":0, "|":0 };
-const RPG_ENC_TILES = { ",":1, "w":1, "A":1 };   // tall grass, shallow water and ember grass start wild duels
+const RPG_TILE = { ".":1, ",":1, "=":1, "f":1, "D":1, "_":1, ">":1, "w":1, "v":1, "S":1, "+":1, "b":1, "a":1, "A":1, "F":1, ":":1, "h":1,
+  "s":0, "V":0, "#":0, "~":0, "R":0, "H":0, "W":0, "t":0, "P":0, "o":0, "Q":0, "T":0, "^":0, "|":0, "X":0, "I":0, "n":0, "U":0 };
 const RPG_DIRS = { up:[0,-1], down:[0,1], left:[-1,0], right:[1,0] };
 const RPG = { active:false, save:null, held:[], move:null, turnAt:0, dlg:null, reveal:null, fade:null, battle:null,
   canvas:null, ctx:null, raf:0, last:0, cam:null, grace:0, eraseArm:false, pad:{}, toast:null, card:null, cue:null, introShown:false, mobs:[], mobsMap:null, panel:null, banner:null };
@@ -77,13 +76,7 @@ function rpgArrive(){
   if (w){ RPG.held = RPG.held.filter(d=>d===w.dir); return rpgFade(()=>{ s.map = w.to; s.x = w.tx; s.y = w.ty; s.dir = w.dir || s.dir; RPG.cam = null; RPG.grace = Math.max(RPG.grace, 1); rpgStore(); render(); rpgCheckScenes(true); }); }
   rpgStore();
   if (rpgCheckScenes(false)) return;
-  if (RPG_ENC_TILES[rpgTile(m, s.x, s.y)] && RPG.grace<=0){
-    const tbl = RPG_ENCOUNTERS[rpgGrassTable(m)];
-    if (tbl && Math.random() < tbl.rate) rpgWild(tbl);
-  }
 }
-// m.grass is a table key, or a list [{ when, unless, table }] where the first match wins.
-function rpgGrassTable(m){ if (!m.grass || typeof m.grass === "string") return m.grass; const e = m.grass.find(rpgOk); return e && e.table; }
 function rpgFade(mid, ms){ RPG.fade = { t:0, ms: ms || (reduceMotion() ? 120 : 420), mid }; }
 
 /* ---- Talking, signs, chests ---- */
@@ -97,7 +90,7 @@ function rpgAction(){
   if (th.kind==="sign") return rpgPlay(rpgPickLine(th.o.text));
   if (th.kind==="chest"){
     if (th.open) return rpgSay("chest_empty");
-    const c = th.o, d = LIB[rpgList(c.card).find(id=>LIB[id])]; if (!d) return rpgSay(["(This chest's card is missing: "+c.card+")"]);
+    const c = th.o, d = LIB[c.minor ? rpgMinorCard(c) : rpgList(c.card).find(id=>LIB[id])]; if (!d) return rpgSay(["(This chest's card is missing: "+(c.card||c.id)+")"]);
     s.opened[c.id] = true; s.collection.push(d.id); rpgStore();
     rpgSting(c.stinger || "sting-card");
     RPG.reveal = { card:d, t:Date.now() };
@@ -115,7 +108,6 @@ function rpgAction(){
 
 /* ---- Battles ---- */
 function rpgPick(list){ const tot = list.reduce((a,e)=>a+(e.w||1),0); let r = Math.random()*tot; for (const e of list){ r -= (e.w||1); if (r<0) return e; } return list[list.length-1]; }
-function rpgWild(tbl){ const e = rpgPick(tbl.list); RPG.held = []; rpgFade(()=>rpgBattle({ kind:"wild", deck:e.deck, level:e.level, lifeMod:e.lifeMod||0, grace:tbl.grace, music:tbl.music || "battle-wild" }), reduceMotion() ? 150 : 700); }
 function rpgTrainer(n){ const t = RPG_TRAINERS[n.trainer]; if (!t) return; RPG.held = []; rpgFade(()=>rpgBattle({ kind:"trainer", npc:n.id, flag:n.flag, win:n.win || n.id+"_win", deck:t.deck, level:t.level, lifeMod:t.lifeMod||0, boss:t.boss, name:t.name || n.name, music:t.music || n.music || "battle-contract", barks:rpgBarks(n.barks), grace:3 }), reduceMotion() ? 150 : 700); }
 // Boss barks on an NPC: { crown:"key", breaks:["key", ...], held:"key" } -> the lines themselves.
 function rpgBarks(k){ if (!k) return null; const L = key => key && RPG_TEXT[key] ? rpgText(key) : null; return { crown:L(k.crown), breaks:(k.breaks||[]).map(L), held:L(k.held) }; }
@@ -254,6 +246,11 @@ function rpgDrawTile(c, ch, tx, ty, px, py, now, m){
     case "A": { R(0,0,T,T,"#4d3f3a"); const gl = Math.sin(now/300 + tx + ty*2) > 0.5; for (let i=0;i<4;i++){ const x = i*4+1; R(x,7,1,7,"#6a3a2a"); R(x+1,9,1,5, gl && i%2 ? "#ff7a2a" : "#8a4a2a"); } break; }
     case "F": R(0,0,T,T,"#7a6a2a"); for (let yy=1; yy<T; yy+=4) R(0,yy,T,2,"#b49a3a"); break;
     case ":": R(0,0,T,T,"#d6c38a"); R((tx*3)%13,(ty*5)%13,2,1,"#bfa86e"); break;
+    case "X": grass(); for (let xx=1; xx<T; xx+=4){ R(xx,1,3,14,"#7a5634"); R(xx,0,3,2,"#9a7044"); R(xx+1,3,1,10,"#5a3d22"); } break;
+    case "h": grass(); for (let i=0;i<4;i++) R((rpgHash(tx,ty,i+21)*13)|0,(rpgHash(ty,tx,i+23)*13)|0,3,2, i%2 ? "#8a5a9a" : "#a46fb2"); break;
+    case "I": grass(); R(5,1,6,14,"#8a8a80"); R(5,1,6,2,"#a0a096"); R(9,4,2,10,"#6e6e66"); R(4,13,8,3,"rgba(0,0,0,.2)"); break;
+    case "n": grass(); c.fillStyle = "#a33a2a"; c.beginPath(); c.moveTo(px+8,py+1); c.lineTo(px+15,py+14); c.lineTo(px+1,py+14); c.closePath(); c.fill(); R(7,8,2,6,"#2a1a12"); R(7,1,2,2,"#e2c46a"); break;
+    case "U": grass(); c.fillStyle = "#7a7a72"; c.beginPath(); c.arc(px+8,py+9,6,0,Math.PI*2); c.fill(); c.fillStyle = "#1f3f5f"; c.beginPath(); c.arc(px+8,py+9,3.5,0,Math.PI*2); c.fill(); R(2,1,1,8,"#5a3d22"); R(13,1,1,8,"#5a3d22"); R(2,1,12,1,"#5a3d22"); break;
     case "v": R(0,0,T,T,"#4a4f57"); R(0,7,T,1,"#3c4047"); R(0,15,T,1,"#3c4047"); R((ty%2)*8+4,0,1,7,"#3c4047"); R((ty%2)*8+12,8,1,7,"#3c4047"); if (rpgHash(tx,ty,3) > .8) R(5,10,3,2,"#2f5f4a"); break;
     case "V": R(0,0,T,T,"#2a2d33"); R(0,0,T,2,"#3a3e46"); R(1,5,6,4,"#33373e"); R(9,10,6,4,"#33373e"); break;
     case "S": R(0,0,T,T,"#4a4f57"); for (let i=0;i<4;i++) R(2,2+i*3,12,2, i%2 ? "#2f3237" : "#5d636c"); break;

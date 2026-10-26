@@ -6,7 +6,7 @@ assert s.count('/*__CARDS__*/')==1
 s=s.replace('/*__ART__*/', open(os.path.join(d,'art.js')).read())
 # RPG layer: engine and maps, then Balance's encounter tables, then Story's words (story/data/*.js override placeholders).
 assert s.count('/*__RPG__*/')==1
-rpg=[open(os.path.join(d,'rpg',f)).read() for f in ['encounters.js','maps.js','worldgen.js','regions.js','quests.js','world.js','story.js','explore.js']]
+rpg=[open(os.path.join(d,'rpg',f)).read() for f in ['encounters.js','rosters.js','maps.js','worldgen.js','regions.js','quests.js','world.js','story.js','explore.js']]
 sd=os.path.join(d,'story','data')
 if os.path.isdir(sd): rpg+= [open(os.path.join(sd,f)).read() for f in sorted(os.listdir(sd)) if f.endswith('.js')]
 s=s.replace('/*__RPG__*/','\n'.join(rpg))

@@ -17,9 +17,8 @@ let bad = 0;
     for (const o of m.warps||[]) { if (!M[o.to]) err(id, `warp to missing map ${o.to}`); else if (!walk(M[o.to], o.tx, o.ty)) err(id, `warp lands on a solid tile ${o.to} ${o.tx},${o.ty}`); if (!S.RPG_TILE[m.rows[o.y][o.x]]) err(id, `warp at ${o.x},${o.y} is on a solid tile`); }
     for (const n of m.npcs||[]) { keys(`${id} npc ${n.id}`, n.talk); keys(`${id} npc ${n.id}`, n.after); if (n.barks) keys(`${id} npc ${n.id} barks`, [n.barks.crown, ...(n.barks.breaks||[]), n.barks.held].filter(Boolean)); if (n.trainer && !S.RPG_TRAINERS[n.trainer]) err(id, `npc ${n.id} trainer ${n.trainer} missing`); if (!S.rpgSpecKeys(n.talk).length) err(id, `npc ${n.id} has no talk`); }
     for (const sg of m.signs||[]) { keys(`${id} sign`, sg.text); if (!S.rpgSpecKeys(sg.text).length) err(id, `sign at ${sg.x},${sg.y} has no text`); }
-    for (const c of m.chests||[]) { if (![].concat(c.card).some(k => S.LIB[k])) err(id, `chest ${c.id} card ${c.card} missing`); keys(`${id} chest ${c.id}`, c.text && { text:c.text }); }
+    for (const c of m.chests||[]) { if (c.minor ? !S.RPG_ROSTERS[c.minor.roster] || !S.LIB[S.rpgMinorCard(c)] : ![].concat(c.card).some(k => S.LIB[k])) err(id, `chest ${c.id} card ${c.card} missing`); keys(`${id} chest ${c.id}`, c.text && { text:c.text }); }
     for (const sc of m.scenes||[]) { keys(`${id} scene ${sc.id}`, sc.text); if (sc.end) keys(`${id} scene ${sc.id}`, sc.end); if (sc.at && !walk(m, sc.at[0], sc.at[1])) err(id, `scene ${sc.id} is on a solid tile`); }
-    for (const gt of typeof m.grass === "string" ? [m.grass] : (m.grass||[]).map(e => e.table)) if (!S.RPG_ENCOUNTERS[gt]) err(id, `encounter table ${gt} missing`);
     if (m.lost) keys(id, m.lost);
     if (Array.isArray(m.heal) && !walk(m, m.heal[0], m.heal[1])) err(id, "heal point is not walkable");
     if (m.heal && !Array.isArray(m.heal) && (!M[m.heal.map] || !walk(M[m.heal.map], m.heal.x, m.heal.y))) err(id, "heal point is not walkable");
@@ -36,8 +35,11 @@ let bad = 0;
     if (!M[a.map].rows[a.y] || a.x >= M[a.map].rows[0].length) err("quests", `${q.id}: step '${st.done}' points off the map`); }
   for (const [id, m] of Object.entries(M)) if (m.generated) for (const o of [...(m.npcs||[]), ...(m.chests||[]), ...(m.signs||[])])
     if (![[0,1],[1,0],[-1,0],[0,-1]].some(([dx,dy]) => S.RPG_TILE[(m.rows[o.y+dy]||"")[o.x+dx]])) err(id, `${o.id || o.text} at ${o.x},${o.y} can't be reached`);
-  for (const [id, m] of Object.entries(M)) for (const sp of m.wilds||[]) if (!S.RPG_ENCOUNTERS[sp.table]) err(id, `roaming table ${sp.table} missing`);
+  for (const [id, m] of Object.entries(M)) for (const sp of m.wilds||[]) if (sp.roster ? !S.RPG_ROSTERS[sp.roster] || !S.RPG_RANK_DECKS[sp.rank] : !S.RPG_ENCOUNTERS[sp.table]) err(id, `roaming ${sp.roster || sp.table} missing`);
   for (const [id, t] of Object.entries(S.RPG_ENCOUNTERS)) for (const e of t.list) if (!S.DECK_BY_ID[e.deck]) err("encounters", `${id}: deck ${e.deck} missing`);
+  // Rosters: every rank of every roster can build a legal deck.
+  for (const [rid, r] of Object.entries(S.RPG_ROSTERS)) for (const rank of Object.keys(S.RPG_RANK_DECKS)) for (let t = 0; t < 20; t++) {
+    const e = S.rpgRosterPick(rid, rank, Math.random); if (!e || !S.DECK_BY_ID[e.deck]) { err("rosters", `${rid} ${rank}: no deck`); break; } }
   for (const [id, t] of Object.entries(S.RPG_TRAINERS)) if (!S.DECK_BY_ID[t.deck]) err("trainers", `${id}: deck ${t.deck} missing`);
   // Drops: odds sum to 1, never include a Manifest, and rarer cards are never likelier than commoner ones in the same deck.
   const RANK = { s:0, c:0, u:1, r:2 };
