@@ -63,7 +63,8 @@ function rpgMobsUpdate(dt, now){
 }
 function rpgMobFight(o){
   RPG.held = []; RPG.mobFight = o;
-  rpgFade(()=>rpgBattle({ kind:"wild", deck:o.e.deck, level:o.e.level, lifeMod:o.e.lifeMod||0, grace:o.tbl.grace, music:o.tbl.music || "battle-wild", mob:o.id }), reduceMotion() ? 150 : 600);
+  rpgFade(()=>rpgBattle({ kind:"wild", deck:o.e.deck, level:o.e.level, lifeMod:o.e.lifeMod||0, grace:o.tbl.grace, music:o.tbl.music || "battle-wild", mob:o.id,
+    name:`${o.elite ? "Elite wild" : "Wild"} ${(ELS[(DECK_BY_ID[o.e.deck]||{}).el] || "").toLowerCase()} ${o.kind || "monster"}`.replace(/\s+/g," ") }), reduceMotion() ? 150 : 600);
 }
 function rpgMobAfter(b, res){
   if (!b || b.mob == null) return;
