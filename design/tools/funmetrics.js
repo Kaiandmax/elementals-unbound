@@ -27,6 +27,13 @@ patch("async function runCombat(ap, attackers){\n  if (!attackers.length) return
   if (globalThis.__FM && !g.sim) __FM.attack(ap, g, attackers.length);`);
 patch("  p.life -= n;", `
   if (globalThis.__FM && !g.sim) __FM.face(p, g, n);`);
+// KEEPDMG=1: prototype of "damage stays on creatures" (designer, 2026-10-26). Damage isn't cleared at end of turn;
+// when temporary health ends, a damaged creature keeps at least 1 health.
+if (process.env.KEEPDMG){
+  const old = "for (const q of g.P) for (const c of q.board){ c.dmg=0; c.tAtk=0; c.tHp=0;";
+  if (!src.includes(old)) throw new Error("funmetrics: engine changed, can't find the end-of-turn reset");
+  src = src.replace(old, "for (const q of g.P) for (const c of q.board){ c.tAtk=0; c.tHp=0; c.dmg = Math.min(c.dmg, Math.max(0, hpOf(c) - 1));");
+}
 require("vm").runInThisContext(src, { filename: "engine-fm.js" });
 const S = globalThis.__sim;
 
