@@ -53,6 +53,7 @@ function scaleFx(fx, s){
       // Scaling never pushes damage past 6 (or past what the card already dealt): big burn is lethal in a 15-life game.
       if (v==="dmg" && +t[2]>0) t[2] = s>1 ? Math.min(R(t[2]), Math.max(+t[2], 6)) : R(t[2]);
       else if (v==="heal" || v==="maxlife") t[1] = R(t[1]);
+      else if (v==="mend" && t[2]!=="all") t[2] = R(t[2]);
       else if (v==="buff"){ for (const j of [2,3]){ if (+t[j]>0) t[j] = R(t[j]); else if (+t[j]<0) t[j] = -R(-t[j]); } }
       else if (v==="buffs"){ for (const j of [2,3]) if (+t[j]>0) t[j] = R(t[j]); }
       else if ((v==="charge" || v==="energy") && s>=1.5) t[1] = R(t[1]);
@@ -209,6 +210,8 @@ function stealCr(c, p){
 const ATOM = {
   dmg(x,[T,n,sc]){ const v = +n + scaleOf(x, sc) + ((x.ctype==="spell"||x.ctype==="reaction") ? spellPower(x.p) : 0); if (v<=0) return; for (const t of tgtList(x,T)){ if (t.kind==="player") dmgPlayer(t.p, v, x.name); else { dmgCreature(t.c, v); } } },
   heal(x,[n]){ heal(x.p,+n); },
+  // Restore health to creatures (design/mechanics.md). Never above maximum; doesn't count as gaining life.
+  mend(x,[T,n]){ for (const t of tgtList(x,T)) if (t.c && onBoard(t.c) && t.c.dmg > 0){ const c = t.c, k = n==="all" ? c.dmg : Math.min(+n, c.dmg); c.dmg -= k; fxNote("heal", crSel(c), "+"+k); log(`${c.d.name} recovers ${k} health.`); } },
   draw(x,[n]){ drawN(x.p,+n); },
   energy(x,[n]){ gainEnergy(x.p,+n); },
   charge(x,[n]){ gainCharge(x.p, x.el, +n); },
@@ -268,6 +271,7 @@ function atomText(a, d, tgtStr){
     case "fort": return pl(r[0]) ? `${desc(r[0])} gain Fortify ${r[1]}` : r[0]==="self" ? `this gains Fortify ${r[1]}` : `give ${desc(r[0])} Fortify ${r[1]}`;
     case "buffs": { const [T,a,h,sc,tmp] = r; const st = `${sgn(a)}/${sgn(h)}`; const tail = ` for each ${SCALE_TXT[sc]}${tmp?" this turn":""}`; if (T==="self") return `this gets ${st}${tail}`; return pl(T) ? `${desc(T)} get ${st}${tail}` : `give ${desc(T)} ${st}${tail}`; }
     case "heal": return `gain ${r[0]} life`;
+    case "mend": { const [T,n] = r; const D = T==="self" ? "this" : desc(T); return n==="all" ? `restore ${D} to full health` : `restore ${n} health to ${D}`; }
     case "draw": return r[0]==="1" ? "draw a card" : `draw ${r[0]} cards`;
     case "energy": return `gain ${r[0]} Energy`;
     case "charge": return `gain ${r[0]} ${ELS[d.el]} charge`;
