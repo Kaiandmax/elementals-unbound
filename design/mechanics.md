@@ -29,7 +29,7 @@ Today "heal" only gives the player life. Creatures need their own healing:
 
 ### What it changes in play
 
-AI-vs-AI at level 3, 300 games per group, damage reset vs damage kept (a prototype in `design/tools/funmetrics.js` and `bosssim.js`, env `KEEPDMG=1`):
+AI-vs-AI at level 3, 300 games per group, damage reset vs damage kept (measured with a prototype before the engine change; the engine has kept damage since PR #41):
 
 | | Starter | Mono | Dual | Triple |
 |---|---|---|---|---|
@@ -51,4 +51,4 @@ The numbers barely move, because normal battles are short and most damaged creat
 
 - **Game Dev:** engine (keep damage at end of turn; keep at least 1 health when temporary or static health ends; the `mend` atom; health shown as current/max).
 - **Balance:** damage and ping effects are worth more, and healing creatures is new value; retune after the engine change.
-- **TCG Design:** rework some Water and Earth life-gain cards into `mend` cards once the atom exists, keeping the card count.
+- **TCG Design:** rework some Water and Earth life-gain cards into `mend` cards, keeping the card count. First eight done (2026-10-26): Tidepool Healer, Soothing Rain, Bubble Mage, Healing Torrent, Rain of Renewal (Water); Cliffside Watcher, Rampart Elder, Moss Titan (Earth).
