@@ -18,19 +18,23 @@ function rpgAreaCheck(){
 const RPG_MOB_LOOK = { fire:"#e0663a", water:"#3f8fd6", earth:"#a07a45", wind:"#5fc7a9", lightning:"#e8cd47",
   volcano:"#d0552a", wildfire:"#f0a04b", plasma:"#ec6fb2", steam:"#a9c4d6", swamp:"#6f8a4a", ice:"#9fdcf2", storm:"#7b8cf0", sand:"#d8c08a", metal:"#a3acb9", tempest:"#a6e07a" };
 const RPG_MOB_KINDS = ["beast", "bird", "blob", "beast", "golem"];
-function rpgMobFree(m, x, y){ return RPG_TILE[rpgTile(m,x,y)] && !rpgThingAt(m,x,y) && !(m.warps||[]).some(w=>w.x===x&&w.y===y) && !RPG.mobs.some(o=>o.x===x&&o.y===y); }
+const rpgSafeAt = (m, x, y) => { const a = rpgAreaAt(m, x, y); return !!(a && a.safe); };
+function rpgMobFree(m, x, y){ return RPG_TILE[rpgTile(m,x,y)] && !"=+b".includes(rpgTile(m,x,y)) && !rpgSafeAt(m,x,y) && !rpgThingAt(m,x,y) && !(m.warps||[]).some(w=>w.x===x&&w.y===y) && !RPG.mobs.some(o=>o.x===x&&o.y===y); }
+// Roads and their verges stay clear of monsters at spawn time (travel on the road is safe and quick).
+function rpgNearRoad(m, x, y, r){ for (let dy=-r; dy<=r; dy++) for (let dx=-r; dx<=r; dx++) if ("=+b".includes(rpgTile(m,x+dx,y+dy))) return true; return false; }
 function rpgSpawnMobs(){
   const m = rpgMap(), s = RPG.save; RPG.mobs = []; RPG.mobGrace = performance.now() + 1500;
   let uid = 0;
   for (const sp of m.wilds || []){
     if (!rpgOk(sp)) continue;
-    const tbl = RPG_ENCOUNTERS[sp.table]; if (!tbl) continue;
+    const tbl = sp.table ? RPG_ENCOUNTERS[sp.table] : { grace:3, list:null }; if (!tbl) continue;
     const [x0,y0,x1,y1] = sp.area || [0,0,m.rows[0].length-1,m.rows.length-1];
     for (let i = 0, tries = 0; i < (sp.count || 3) && tries < 200; tries++){
       const x = x0 + Math.floor(Math.random()*(x1-x0+1)), y = y0 + Math.floor(Math.random()*(y1-y0+1)), t = rpgTile(m,x,y);
-      if (!rpgMobFree(m,x,y) || "=+b".includes(t) || Math.abs(x-s.x)+Math.abs(y-s.y) < 8) continue;
-      const e = rpgPick(tbl.list), dk = DECK_BY_ID[e.deck], el = dk ? dk.el : "earth";
-      RPG.mobs.push({ id:++uid, x, y, hx:x, hy:y, e, tbl, el, kind: RPG_MOB_KINDS[(x*7+y*3+uid) % RPG_MOB_KINDS.length], move:null, next: performance.now() + 400 + Math.random()*1200, chase:false, area:[x0,y0,x1,y1] });
+      if (!rpgMobFree(m,x,y) || Math.abs(x-s.x)+Math.abs(y-s.y) < 8 || (sp.roster && rpgNearRoad(m, x, y, 2))) continue;
+      const elite = !!sp.roster && Math.random() < (sp.elites == null ? RPG_ELITE_CHANCE : sp.elites);
+      const e = sp.roster ? rpgRosterPick(sp.roster, elite ? rpgRankUp(sp.rank) : sp.rank) : rpgPick(tbl.list), dk = DECK_BY_ID[e.deck], el = dk ? dk.el : "earth";
+      RPG.mobs.push({ id:++uid, x, y, hx:x, hy:y, e, tbl, el, elite, kind: RPG_MOB_KINDS[(x*7+y*3+uid) % RPG_MOB_KINDS.length], move:null, next: performance.now() + 400 + Math.random()*1200, chase:false, area:[x0,y0,x1,y1] });
       i++;
     }
   }
@@ -45,6 +49,7 @@ function rpgMobsUpdate(dt, now){
     if (now < o.next || rpgBusy()) continue;
     let step = null;
     if (o.chase){
+      if (o.elite && RPG.save && dist > 4){ o.next = now + 500; continue; }   // elites are slower to notice you: easier to slip past
       const opts = Math.abs(dx) >= Math.abs(dy) ? [[Math.sign(dx),0],[0,Math.sign(dy)||1],[0,-(Math.sign(dy)||1)]] : [[0,Math.sign(dy)],[Math.sign(dx)||1,0],[-(Math.sign(dx)||1),0]];
       step = opts.find(([ax,ay]) => (ax||ay) && !(o.x+ax===s.x && o.y+ay===s.y) && rpgMobFree(m, o.x+ax, o.y+ay));
       o.next = now + 300;
@@ -69,7 +74,9 @@ function rpgDrawMobs(c, P, now){
   for (const o of RPG.mobs){
     let x = o.x, y = o.y; if (o.move){ const k = Math.min(1, o.move.t/o.move.ms); x = o.move.fx + (o.move.x-o.move.fx)*k; y = o.move.fy + (o.move.y-o.move.fy)*k; }
     const [px, py] = P(x, y), col = RPG_MOB_LOOK[o.el] || "#888";
-    rpgDrawBeast(c, px, py, { shirt:col, hair:"#fff3c4" }, o.kind === "golem" ? "golem" : o.kind, now);
+    if (o.elite){ c.save(); c.translate(px+8, py+14); c.scale(1.35, 1.35); c.translate(-px-8, -py-14); }
+    rpgDrawBeast(c, px, py, { shirt:col, hair: o.elite ? "#ff5a3a" : "#fff3c4" }, o.kind === "golem" ? "golem" : o.kind, now);
+    if (o.elite){ c.restore(); c.fillStyle = "#ff5a3a"; c.fillRect(px+6, py-9, 4, 2); c.fillRect(px+7, py-11, 2, 6); }
     if (o.kind === "bird"){ c.fillStyle = col; c.fillRect(px-1, py+5, 4, 2); c.fillRect(px+13, py+5, 4, 2); }
     if (o.chase){ c.fillStyle = "#ffd84a"; c.fillRect(px+7, py-6, 2, 4); c.fillRect(px+7, py-1, 2, 1); }
   }
@@ -120,7 +127,7 @@ function rpgObjectiveHTML(){
 }
 function rpgJournalHTML(){
   const all = rpgQuests(), act = all.filter(x => !x.done), fin = all.filter(x => x.done), tr = rpgTracked();
-  const item = x => `<li class="${x === tr || (tr && x.q.id === tr.q.id) ? "on" : ""}"><button class="jq" data-track="${esc(x.q.id)}"><b>${esc(x.q.title)}</b><span class="lbl">${x.q.kind === "main" ? "Main story" : "Contract"}</span></button>
+  const item = x => `<li class="${x === tr || (tr && x.q.id === tr.q.id) ? "on" : ""}"><button class="jq" data-track="${esc(x.q.id)}"><b>${esc(x.q.title)}</b><span class="lbl">${x.q.kind === "main" ? "Main story" : x.q.kind === "side" ? "Optional" : "Contract"}</span></button>
     <ol>${x.q.steps.slice(0, x.done ? x.q.steps.length : x.n + 1).map((st, i) => `<li class="${i < (x.done ? 99 : x.n) ? "done" : ""}">${esc(st.text)}${i === x.n && st.at ? ` <span class="muted">· ${esc(RPG_MAPS[st.at.map] ? (rpgAreaAt(RPG_MAPS[st.at.map], st.at.x, st.at.y) || RPG_MAPS[st.at.map]).name : "")}</span>` : ""}</li>`).join("")}</ol></li>`;
   return `<div class="rpg-panel" role="dialog" aria-label="Journal"><div class="rp-head"><h2>Journal</h2><button class="btn" data-btn="rpg-close">Close (J)</button></div>
     <div class="rp-body"><h3 class="lbl">Active</h3><ul class="jlist">${act.map(item).join("") || "<li class='muted'>Nothing on your list.</li>"}</ul>
@@ -128,7 +135,7 @@ function rpgJournalHTML(){
 }
 
 /* ---- The region map (M): the whole region with fog, landmarks, you, and your objective ---- */
-const RPG_MAP_COL = { ".":"#4c8a3f", ",":"#3a6f30", "f":"#5b9446", "=":"#c2a26a", "+":"#a9a49a", "b":"#8a6a45", "#":"#24502a", "P":"#1d4a35", "Q":"#3f7a2a", "T":"#3a2a20",
+const RPG_MAP_COL = { "X":"#7a5634", "h":"#7a5a8a", "I":"#a0a096", "n":"#a33a2a", "U":"#7a7a72", ".":"#4c8a3f", ",":"#3a6f30", "f":"#5b9446", "=":"#c2a26a", "+":"#a9a49a", "b":"#8a6a45", "#":"#24502a", "P":"#1d4a35", "Q":"#3f7a2a", "T":"#3a2a20",
   "o":"#7a7a72", "^":"#6b6257", "|":"#6d5a3a", "~":"#2f6ea8", "w":"#4f8fbf", ":":"#d6c38a", "a":"#5b4a45", "A":"#6a3a2a", "F":"#9a8a3a",
   "R":"#9a4434", "H":"#ddcfae", "D":"#6d4a2c", "s":"#4c8a3f", "_":"#9a7650", "W":"#5d4c3c", "t":"#6a4a2c", ">":"#a34a3a", "v":"#4a4f57", "V":"#2a2d33", "S":"#8a8f97" };
 function rpgRegionOf(id){ const m = RPG_MAPS[id]; return m && m.parent ? m.parent : id; }
@@ -139,7 +146,8 @@ function rpgMapPanelHTML(){
 function rpgDrawRegionMap(){
   const cv = document.getElementById("rpgmapc"); if (!cv) return;
   const s = RPG.save, id = rpgRegionOf(s.map), m = RPG_MAPS[id], W = m.rows[0].length, H = m.rows.length;
-  const box = cv.parentElement.getBoundingClientRect(), k = Math.max(2, Math.floor(Math.min((box.width - 8) / W, (window.innerHeight * 0.62) / H)));
+  const pan = cv.closest(".rpg-panel"), box = pan.getBoundingClientRect(), head = pan.querySelector(".rp-head").getBoundingClientRect().height;
+  const k = Math.max(2, Math.floor(Math.min((box.width - 40) / W, (box.height - head - 64) / H)));
   cv.width = W*k; cv.height = H*k; const c = cv.getContext("2d");
   document.getElementById("rpgmaptitle").textContent = m.name;
   for (let y = 0; y < H; y++) for (let x = 0; x < W; x++){
