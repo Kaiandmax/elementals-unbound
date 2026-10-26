@@ -30,6 +30,12 @@ patch("function dmgPlayer(p, n, src){\n  if (n<=0) return;", `
   if (p.cap){ n = Math.min(n, p.cap - (p.took||0)); if (n<=0) return; p.took = (p.took||0) + n; }`);
 patch("function startTurn(p){", `
   for (const q of g.P) q.took = 0;`);
+// KEEPDMG=1: damage stays on creatures (designer, 2026-10-26), as in design/tools/funmetrics.js.
+if (process.env.KEEPDMG){
+  const old = "for (const q of g.P) for (const c of q.board){ c.dmg=0; c.tAtk=0; c.tHp=0;";
+  if (!src.includes(old)) throw new Error("bosssim: engine changed, can't find the end-of-turn reset");
+  src = src.replace(old, "for (const q of g.P) for (const c of q.board){ c.tAtk=0; c.tHp=0; c.dmg = Math.min(c.dmg, Math.max(0, hpOf(c) - 1));");
+}
 require("vm").runInThisContext(src, { filename: "engine-boss.js" });
 const S = globalThis.__sim, DK = S.DECK_BY_ID, ids = Object.keys(DK);
 const nEl = id => (S.CONFLUENCE[DK[id].el] || [1]).length;
