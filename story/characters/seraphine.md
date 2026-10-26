@@ -2,11 +2,32 @@
 
 **Aurora.** First of the Seven Exalted and the most beloved person on Aster. She saved Brindle Ford when Wren was eight. She is the **final antagonist**, and she believes she is saving the world.
 
+**Tier 1.** Read this before writing any line of hers. Every scene with her gets a scene brief and a table read, and must work twice: once for a first-time player, and once for a player who knows.
+
+## Who she is
+
+- **Age:** 51. A shepherd's daughter from the Skyreach foothills. She bound her first wild at twelve, made Exalted at thirty-four, and became First of the Seven at forty.
+- **What made her:** the Lantern earned the name the year a rift opened under Ashby Fold, a hill village in the foothills. She held it shut for three days alone, and everyone in the village lived. That was the year she understood the seals were failing, and that next time there would be no one to hold them.
+- **What she has done since:** she has read every Founding Circle record that survives, and taken the ones that point to the Primordial vaults (Isa finds the gaps in Act III). She has let towns fall where saving them would have cost her a vault.
+
+## What she wants, and what she fears
+
+- **Wants:** to be the one seal, so that nobody ever has to hold a rift alone for three days again. She believes it, completely.
+- **Fears:** another Sundering, and other people's hesitation.
+- **Won't say:** the number. She keeps a list of every town she let go, and she knows how long it is.
+
+## How she talks
+
+- **Warm, attentive, unhurried.** She remembers names, and something about each person (Pell's mother's letters, Brann's arm).
+- **She asks questions and listens to the answers.** The questions are always slightly more useful to her than they look.
+- **No grand statements.** Even in Act V she talks like someone explaining a hard decision at a kitchen table.
+- **Never:** threatens, raises her voice, monologues, or says she is doing it "for the greater good". She talks about specific towns and people.
+
 ## Voice
 
-Warm, attentive, unhurried. She remembers everyone's name. She never raises her voice. Her light is cold green and gold, like the sky in winter.
+Warm, attentive, unhurried. She remembers everyone's name. She never raises her voice. Her light is green and gold.
 
-- *"You held your ground. That's all any of us can do."* (cold open)
+- *"You kept throwing water the whole time? Good. You can come down now. It's over."* (cold open)
 - *"I remember everyone I couldn't save, and everyone I could. It helps to remember the second kind."*
 - *"Tell me. Was anything taken from the Vault?"* (the first clue)
 - *"I'm not asking you to agree. I'm asking you to count."* (Act V)
