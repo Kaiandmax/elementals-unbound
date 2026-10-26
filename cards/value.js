@@ -18,6 +18,7 @@ function atomValue(a){
     // (decks with more face damage won more than their numbers predicted).
     case "dmg": { const [T,n,sc] = r; const amt = (+n) + (sc ? (VAL_SCALE[sc]||1) : 0); return T==="face" ? 1.3*amt : T==="me" ? -1.0*amt : 1.3*amt*G(T); }
     case "heal": return 0.5*(+r[0]);
+    case "mend": return 0.45*(r[1]==="all" ? 4 : +r[1])*(VAL_GRP[r[0]] ?? 1);   // Game Dev placeholder, Balance to tune
     case "draw": return 2.4*(+r[0]);
     case "energy": return 1.6*(+r[0]);
     case "charge": return 1.4*(+r[0]);

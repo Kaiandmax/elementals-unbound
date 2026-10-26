@@ -603,6 +603,9 @@ function atkOf(c){ return Math.max(0, c.atk + c.tAtk + statSum(c,"atk")); }
 function hpOf(c){ return c.hp + c.tHp + statSum(c,"hp"); }
 function hpLeft(c){ return hpOf(c) - c.dmg; }
 function isDead(c){ return c.dmg >= hpOf(c); }
+// Before a creature leaves play, note who is alive; after, anyone its lord bonus was holding up keeps 1 health.
+function hpSnap(){ const l = []; for (const q of g.P) for (const c of q.board) if (!isDead(c)) l.push(c); return l; }
+function keepAlive(l){ for (const c of l) if (onBoard(c) && isDead(c)) c.dmg = Math.max(0, hpOf(c)-1); }
 function boardPower(p){ return p.board.reduce((s,c)=>s+atkOf(c)+hpOf(c),0); }
 function bankCap(p){ let n = 3; forStatics(p, s=>{ if (s.k==="bank") n += s.n; }); return n; }
 
@@ -673,7 +676,9 @@ function bounce(c){
   if (!onBoard(c)) return;
   const owner = g.P[c.owner];
   fxNote("info", crSel(c), "Returned");
+  const live = c.d.st ? hpSnap() : null;
   owner.board.splice(owner.board.indexOf(c),1);
+  if (live) keepAlive(live);
   c.attacking = false;
   if (c.d.token){ log(`${c.d.name} fades away.`); return; }
   owner.hand.push(c.d);
@@ -692,7 +697,9 @@ function checkDeaths(){
     for (const p of g.P){
       for (const c of [...p.board]){
         if (isDead(c)){
+          const live = c.d.st ? hpSnap() : null;
           p.board.splice(p.board.indexOf(c),1);
+          if (live) keepAlive(live);
           if (!c.d.token) p.grave.push(c.d);
           log(`${c.d.name} is destroyed.`);
           const x = Math.max(0, c.atk + c.tAtk);
@@ -980,7 +987,8 @@ function startTurn(p){
 function endTurn(p){
   hook(p, "end"); checkDeaths();
   if (p.boss) bossEndTurn(p);
-  for (const q of g.P) for (const c of q.board){ c.dmg=0; c.tAtk=0; c.tHp=0; c.tKws=null; c.noBlock=false; }
+  // Damage stays on creatures (design/mechanics.md, designer 2026-10-26). Losing temporary health keeps at least 1.
+  for (const q of g.P) for (const c of q.board){ const was = isDead(c); c.tAtk=0; c.tHp=0; c.tKws=null; c.noBlock=false; if (!was && isDead(c)) c.dmg = Math.max(0, hpOf(c)-1); }
   while (p.hand.length>7){ const d=p.hand.pop(); p.grave.push(d); log(`${p.name} ${p.isAI?"discards":"discard"} ${d.name} (hand limit).`); }
   const cap = bankCap(p);
   if (p.energy>cap) p.energy = cap;
@@ -1115,8 +1123,8 @@ function simulate(fn, pi){
 function sumObj(o){ let s=0; for (const k in o) s+=o[k]; return s; }
 function crVal(c, W){
   const d = c.d;
-  if (hasKw(c,"wall")) return 0.8 + (hpOf(c)-c.tHp)*0.6 + (d.onBlock?1.5:0) + (d.on||d.st?W.engine:0);
-  const a = atkOf(c) - c.tAtk, h = hpOf(c) - c.tHp;
+  if (hasKw(c,"wall")) return 0.8 + Math.max(1, hpOf(c)-c.tHp-c.dmg)*0.6 + (d.onBlock?1.5:0) + (d.on||d.st?W.engine:0);
+  const a = atkOf(c) - c.tAtk, h = Math.max(1, hpOf(c) - c.tHp - c.dmg);
   let v = 0.8 + a*W.atk + h*W.hp;
   if (hasKw(c,"airborne")) v += a*W.air + (W.airBonus||0);
   if (d.kw.includes("pierce")) v += a*0.15;
