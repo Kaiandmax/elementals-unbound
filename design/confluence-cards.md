@@ -88,7 +88,7 @@ The options that were on the table are kept for the record.
 - **Signature recipes** come from the existing named recipes and the parent pairs the current decks use, so known combinations keep a recognizable result.
 - **Batches:** one confluence per PR, about 100 cards, each with its slot, trait pair and signature recipe. Story renames as the world develops; placeholder names are fine until then.
 
-## Rollout (once the designer picks)
+## Rollout
 
 1. **TCG Design:** the slot grid and theme list for all 20 confluences, then the pilot catalogs, **Steam** (dual) and **Aurora** (triple, the worst offender), 100 cards each with signature recipe and slot.
 2. **Balance:** price confluence cards from the mono median × tier factor (dual 1.25, triple 1.6) (`TIERF`/`BAL_MED` in `cards/catalog.js`), then tune the pilot.
