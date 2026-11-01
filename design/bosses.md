@@ -110,3 +110,12 @@ Balance tunes life, AI level and bars so each is about a 40-55% first try (their
 - **Balance:** bar sizes, boss AI level and life per boss.
 - **Story:** the name and reason for each crown, barks for side fights.
 - **Music:** intensity floors per phase, stingers on crown reveal and on each phase break.
+
+## Special duels (Story's outline, Acts IV-V)
+
+Two story duels break the normal shape on purpose. Proposals; Balance sets numbers, Game Dev builds.
+
+**Vexis, the Pyrelord: an escape.** Wren can't win this fight, only live through it. A banner shows "Survive 5 turns". Vexis (AI 5, a top-tier Fire deck, full life) attacks all out. If the player is still alive at the start of their 6th turn, the duel ends as a win ("You escaped"). Reducing Vexis to 0 also wins but should be nearly impossible. The duel teaches defense: blockers, freeze, healing creatures. Engine: a `surviveTurns: 5` boss option that ends the game as a player win at the start of that turn.
+
+**Seraphine, the Lantern: every crown.** The final boss uses the crowns of the bosses the player has already beaten, as callbacks. Three phases (bars +10, +10), slow start, breather heal 5 and draw 1 at each break, AI 5. Phase 1: Lurker. Phase 2 adds Brood, with the companions holding her brood as the side fight. Phase 3 adds Twin Call and Unbound. She names each crown as she takes it ("I learned this from the Sluicewarden"). The breathers and the crew's side fight keep it winnable. Target: 7-8 rounds, about 40-50% for a well-built endgame deck on the first try.
+
