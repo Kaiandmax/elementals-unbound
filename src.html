@@ -170,7 +170,7 @@ table.wr td.wr-self,table.wr td.wr-na{color:var(--mute)}
 .side .who{display:flex;flex-direction:column;min-width:120px}
 .side .who h2{font-size:19px}
 .side.target{outline:2px dashed var(--good);cursor:crosshair}
-.life{font-family:var(--f-display);font-size:30px;line-height:1;color:var(--bad);font-variant-numeric:tabular-nums}
+.life{font-family:var(--f-display);font-size:30px;line-height:1;color:var(--bad);font-variant-numeric:tabular-nums}.life.over{color:#7fe08a}
 .life small{font-size:14px;color:var(--mute);margin-left:2px}
 .hp{font-family:var(--f-body,inherit);font-size:11px;font-weight:700;color:var(--bad);margin-left:6px;white-space:nowrap}
 .dk-meta{display:flex;gap:8px;align-items:baseline}
@@ -398,7 +398,7 @@ const TERM_HELP = {
   reaction:"Can be played at any time, even on the enemy's turn (paid with banked Energy). Counters only work in response to an enemy card.",
   basic:"Any card that isn't a Manifest. Basic creatures can be returned to hand; Manifest creatures can't.",
   steal:"You control that creature from now on.",
-  life:"Starting life depends on the deck's element; a normal encounter gives the enemy 5 less."
+  life:"Starting life depends on the deck's element; a normal encounter gives the enemy 5 less. Gaining life can take you above it."
 };
 const termHelp = k => KW_REMIND[k] || TERM_HELP[k] || "";
 const TERM_RE = /\b(Airborne|Haste|Pierce|Walls?|Ward|Drain|Skyguard|Vigilant|Barrier|Venom|Fortify(?: \d+)?|Ignite|Chain \d+|Attuned \d+|Overcharge \d+|Last Gasp|Desperate \d+|freez(?:e|es|ing)|frozen|silence[sd]?|tokens?|Manifests?|charge|Reactions?|basic|take control)\b/gi;
@@ -649,7 +649,8 @@ function dmgT(t, n){
   if (t.kind==="player") dmgPlayer(t.p, n);
   else if (onBoard(t.c)) { dmgCreature(t.c, n); log(`${t.c.d.name} takes ${n} damage.`); }
 }
-function heal(p, n){ if (n<=0) return; fxNote("heal", lifeSel(p), "+"+n); p.life = Math.min(p.maxLife, p.life+n); log(`${p.name} ${p.isAI?"gains":"gain"} ${n} life.`); react(p, "heal", {n, x:n}); }
+function heal(p, n){ if (n<=0) return; fxNote("heal", lifeSel(p), "+"+n); // Player life has no cap (designer rule, design/mechanics.md): maxLife stays the starting-life mark for "life missing".
+  p.life += n; log(`${p.name} ${p.isAI?"gains":"gain"} ${n} life.`); react(p, "heal", {n, x:n}); }
 // A confluence deck has a single charge type: every charge it gains or spends is that confluence's.
 function chEl(p, el){ return p.chargeAs || el; }
 function gainCharge(p, el, n){ if(n<=0) return; el = chEl(p, el); p.charge[el] = (p.charge[el]||0) + n; react(p, "charge", {n, x:n}); }
@@ -757,7 +758,7 @@ function bossBreaks(){
     if (q.boss.clearOnBreak){ for (const c of q.board) if (c!==keep && !c.d.token && !c.d.manifest) q.grave.push(c.d); q.board.length = 0; }
     if (keep){ const c = makeCreature(keep.d, q), i = q.board.indexOf(keep); if (i >= 0) q.board[i] = c; else q.board.push(c); if (!g.sim) log(`Sealwork: ${keep.d.name} rebuilds.`, "big"); }
     const o = g.P[1-q.i];
-    if (q.boss.breakHeal && o.life > 0){ o.life = Math.min(o.maxLife, o.life + q.boss.breakHeal); drawN(o, 1); }
+    if (q.boss.breakHeal && o.life > 0){ o.life += q.boss.breakHeal; drawN(o, 1); }
     if (!g.sim && g.barks && g.barks.breaks && g.barks.breaks[q.phase-2]) g.bark = { lines: g.barks.breaks[q.phase-2], t: Date.now() };
     if (!g.sim){ log(`${q.name} is broken but rises: phase ${q.phase} of ${bossPhases(q)}!`, "big"); g.phaseFlash = { who:q.name, phase:q.phase, of:bossPhases(q) }; if (globalThis.onBossPhase) onBossPhase(q); }
   }
@@ -1798,7 +1799,7 @@ function chargeHTML(p){
 function sideHTML(p, isTarget){
   const auras = p.auras.length ? `<div class="stat"><span class="lbl">Auras</span><div class="chips">${p.auras.map((a,ai)=>`<span class="aura el-${a.el}" data-aura="${p.i}-${ai}" tabindex="0">${esc(a.name)}</span>`).join("")}</div></div>` : "";
   return `<div class="side ${isTarget?"target":""}" data-pl="${p.i}" ${isTarget?'tabindex="0" role="button"':""}>
-    <div class="who"><span class="lbl">${p.isAI?`Enemy · AI ${levelOf(p)} ${AI_LEVELS[levelOf(p)].name}`:"You"} · ${esc(p.deckName)}</span><span class="life kwt" tabindex="0" data-tip="life" aria-label="Life ${p.life} of ${p.maxLife}">${p.life}<small>/${p.maxLife}</small></span>${p.boss ? bossBarsHTML(p) : ""}</div>
+    <div class="who"><span class="lbl">${p.isAI?`Enemy · AI ${levelOf(p)} ${AI_LEVELS[levelOf(p)].name}`:"You"} · ${esc(p.deckName)}</span><span class="life kwt${p.life>p.maxLife?" over":""}" tabindex="0" data-tip="life" aria-label="Life ${p.life} of ${p.maxLife}${p.life>p.maxLife?", above starting life":""}">${p.life}<small>/${p.maxLife}</small></span>${p.boss ? bossBarsHTML(p) : ""}</div>
     <div class="stat"><span class="lbl">Energy</span><b>${p.energy}</b><span class="muted" style="font-size:12px">banks up to ${bankCap(p)}</span></div>
     <div class="stat"><span class="lbl">Charge</span>${chargeHTML(p)}</div>
     <div class="stat"><span class="lbl">Hand · Deck</span><b>${p.hand.length} · ${p.deck.length}</b></div>
