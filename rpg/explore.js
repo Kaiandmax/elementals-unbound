@@ -136,7 +136,7 @@ function rpgJournalHTML(){
 }
 
 /* ---- The region map (M): the whole region with fog, landmarks, you, and your objective ---- */
-const RPG_MAP_COL = { "X":"#7a5634", "h":"#7a5a8a", "I":"#a0a096", "n":"#a33a2a", "U":"#7a7a72", ".":"#4c8a3f", ",":"#3a6f30", "f":"#5b9446", "=":"#c2a26a", "+":"#a9a49a", "b":"#8a6a45", "#":"#24502a", "P":"#1d4a35", "Q":"#3f7a2a", "T":"#3a2a20",
+const RPG_MAP_COL = { "L":"#d04a1a", "B":"#3a2f2c", "N":"#e3e9f0", "G":"#8d8276", "Z":"#7fb6e8", "K":"#eef5fd", "k":"#9a8f7a", "C":"#e0725a", "c":"#4f94b2", "X":"#7a5634", "h":"#7a5a8a", "I":"#a0a096", "n":"#a33a2a", "U":"#7a7a72", ".":"#4c8a3f", ",":"#3a6f30", "f":"#5b9446", "=":"#c2a26a", "+":"#a9a49a", "b":"#8a6a45", "#":"#24502a", "P":"#1d4a35", "Q":"#3f7a2a", "T":"#3a2a20",
   "o":"#7a7a72", "^":"#6b6257", "|":"#6d5a3a", "~":"#2f6ea8", "w":"#4f8fbf", ":":"#d6c38a", "a":"#5b4a45", "A":"#6a3a2a", "F":"#9a8a3a",
   "R":"#9a4434", "H":"#ddcfae", "D":"#6d4a2c", "s":"#4c8a3f", "_":"#9a7650", "W":"#5d4c3c", "t":"#6a4a2c", ">":"#a34a3a", "v":"#4a4f57", "V":"#2a2d33", "S":"#8a8f97" };
 function rpgRegionOf(id){ const m = RPG_MAPS[id]; return m && m.parent ? m.parent : id; }
