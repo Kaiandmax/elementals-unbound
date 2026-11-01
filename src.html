@@ -44,6 +44,16 @@ h1,h2,h3{font-family:var(--f-display);font-weight:700;margin:0;text-wrap:balance
 .tabs{display:flex;gap:6px;border-bottom:1px solid var(--line)}
 .tab{background:none;border:none;border-bottom:3px solid transparent;padding:8px 14px;font-weight:700;cursor:pointer;color:var(--mute)}
 .tab.on{color:var(--ink);border-bottom-color:var(--brass)}
+.hist{display:grid;gap:14px;padding-top:12px}.hist h3{margin:4px 0;font-size:15px}
+.hsum{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}.hsum>div{display:grid;gap:2px}.hbig{font-size:20px}
+.hist-tbls{display:flex;flex-wrap:wrap;gap:16px}.hist-tbl{flex:1 1 320px;min-width:0;overflow-x:auto}
+.hlist{list-style:none;margin:0;padding:0;display:grid;gap:6px}.hrow{border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.02)}
+.hhead{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;width:100%;text-align:left;background:none;border:none;color:inherit;padding:8px 10px;cursor:pointer;font:inherit}
+.hdecks{flex:1 1 360px}.hmeta{font-size:12px}
+.hres{display:inline-block;min-width:44px;text-align:center;border-radius:6px;padding:2px 6px;font-weight:700;font-size:12px}
+.hres.win{background:#2f6a3a;color:#e6ffe9}.hres.loss{background:#7a2a2a;color:#ffe6e6}.hres.draw{background:#555;color:#eee}.hl-dead{color:var(--bad)}
+.hbody{padding:0 10px 10px;display:grid;gap:10px}.hend{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;font-size:13px}
+.hlog ol{margin:4px 0 0;padding-left:22px;max-height:360px;overflow:auto;font-size:13px;line-height:1.45}.hlog .lt{color:var(--brass);margin-top:6px}.hlog .lb{font-weight:700}.hlog .ld{color:#e9a08a}
 .decks{display:grid;gap:8px}
 .levels{display:grid;gap:6px}
 .lvrow{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
@@ -1009,7 +1019,7 @@ async function runGame(){
     }
   } catch(e){
     if (e===STALE) return;
-    if (e===OVER){ log(g.over==="you"?"Victory!":g.over==="enemy"?"Defeat.":"Draw.", "big"); g.ui={mode:"idle"}; render(); return g.over; }
+    if (e===OVER){ log(g.over==="you"?"Victory!":g.over==="enemy"?"Defeat.":"Draw.", "big"); g.ui={mode:"idle"}; matchRecord(); render(); return g.over; }
     console.error(e); if(g) { log("Engine error: "+(e && e.message), "dmg"); render(); }
     throw e;
   }
@@ -1646,7 +1656,7 @@ function newGame(myDeck, enemyDeck, enemyLife, kinds, opts){
   g.P.forEach(p=>drawN(p,5));
   // A coin flip decides who goes first (simulations keep seat 0 first so seats can be alternated).
   const first = HEADLESS ? 0 : (Math.random() < 0.5 ? 0 : 1);
-  g.active = first; g.P[1-first].energy = 1;
+  g.active = first; g.first = first; g.P[1-first].energy = 1;
   if (!HEADLESS) g.coin = { first };
   const lv = k => typeof k==="number" ? k : 3;
   if (kinds){ g.P[0].level = lv(kinds[0]); g.P[1].level = lv(kinds[1]); }
@@ -1655,8 +1665,64 @@ function newGame(myDeck, enemyDeck, enemyLife, kinds, opts){
   return runGame();
 }
 
+/* ---------------- Match history (Play a fight only; kept in this browser) ----------------
+   Every finished demo fight is saved: result, turns, who went first, both decks, AI level, life left, the boards
+   at the end, and the whole game log. Adventure battles are not recorded here. */
+const MATCH_KEY = "eu.matches.v1", MATCH_MAX = 60;
+function matchLoad(){ try { const a = JSON.parse(localStorage.getItem(MATCH_KEY) || "[]"); return Array.isArray(a) ? a : []; } catch(e){ return []; } }
+function matchSave(a){ try { localStorage.setItem(MATCH_KEY, JSON.stringify(a.slice(0, MATCH_MAX))); return true; } catch(e){ return false; } }
+function matchRecord(){
+  if (HEADLESS || !g || g.sim || g.recorded || !g.over || (typeof RPG !== "undefined" && RPG.battle)) return;
+  g.recorded = true;
+  const side = p => ({ name:p.name, deck:p.deckName, deckId:p.deckId, el:p.el, tier:(DECK_BY_ID[p.deckId]||{}).tier || "", level:p.level || null,
+    life:p.life, maxLife:p.maxLife, hand:p.hand.length, left:p.deck.length, manifestsLeft:p.manifests.length,
+    board:p.board.map(c => ({ n:c.d.name, a:atkOf(c), h:hpLeft(c), m:hpOf(c), man:!!c.d.manifest })), auras:p.auras.map(a => a.name) });
+  const rec = { id:Date.now() + Math.floor(Math.random()*1000), at:new Date().toISOString(), result:g.over, turns:g.turnNo,
+    first:g.first === 0 ? "you" : "enemy", enemyLifeMod:(g.cfg && g.cfg.enemyLife != null) ? g.cfg.enemyLife - 15 : 0,
+    you:side(g.P[0]), enemy:side(g.P[1]), log:[...g.log].reverse().map(l => [l.s, l.cls || ""]) };
+  const a = matchLoad(); a.unshift(rec); g.matchSaved = matchSave(a);
+}
+function matchTally(list){ const t = { you:0, enemy:0, draw:0 }; for (const m of list) t[m.result] = (t[m.result]||0) + 1; return t; }
+function matchRecordText(t){ const n = t.you + t.enemy + t.draw; return n ? `${t.you} won · ${t.enemy} lost${t.draw ? ` · ${t.draw} drawn` : ""} (${Math.round(100*t.you/n)}% wins)` : "No fights yet"; }
+function matchHistoryHTML(){
+  const list = matchLoad(), t = matchTally(list), H = setup.hist;
+  if (!list.length) return `<div class="hist"><p class="muted">No fights recorded yet. Every fight you finish in <b>Play a fight</b> is saved here with both decks, the life left, the boards at the end and the full game log. The history is kept in this browser only.</p></div>`;
+  const by = key => { const m = new Map(); for (const r of list){ const k = r[key].deck; const e = m.get(k) || { el:r[key].el, you:0, enemy:0, draw:0 }; e[r.result]++; m.set(k, e); } return [...m.entries()].sort((a,b)=>(b[1].you+b[1].enemy+b[1].draw)-(a[1].you+a[1].enemy+a[1].draw)); };
+  const tbl = (title, rows) => `<div class="hist-tbl"><h3>${title}</h3><table class="wr"><thead><tr><th>Deck</th><th>Won</th><th>Lost</th><th>Drawn</th><th>Win %</th></tr></thead><tbody>${rows.map(([n,e])=>{ const k = e.you+e.enemy+e.draw;
+    return `<tr><td class="el-${e.el}"><b style="color:var(--el)">${esc(n)}</b></td><td>${e.you}</td><td>${e.enemy}</td><td>${e.draw}</td><td>${Math.round(100*e.you/k)}%</td></tr>`; }).join("")}</tbody></table></div>`;
+  const res = r => r.result==="you" ? `<span class="hres win">Won</span>` : r.result==="enemy" ? `<span class="hres loss">Lost</span>` : `<span class="hres draw">Draw</span>`;
+  const when = r => { try { return new Date(r.at).toLocaleString([], { month:"short", day:"numeric", hour:"numeric", minute:"2-digit" }); } catch(e){ return r.at; } };
+  const life = s => `<span class="${s.life<=0?"hl-dead":""}">♥ ${Math.max(0,s.life)}/${s.maxLife}</span>`;
+  const boardTxt = s => s.board.length ? s.board.map(c=>`${esc(c.n)}${c.man?" ✦":""} ${c.a}/${c.h}${c.h<c.m?`<span class="muted">(of ${c.m})</span>`:""}`).join(", ") : `<span class="muted">no creatures</span>`;
+  const row = r => { const open = H.open === r.id;
+    return `<li class="hrow ${open?"open":""}"><button class="hhead" data-hist="open:${r.id}" aria-expanded="${open}">
+      ${res(r)}<span class="hdecks"><b class="el-${r.you.el}" style="color:var(--el)">${esc(r.you.deck)}</b> ${life(r.you)} <span class="muted">vs.</span> <b class="el-${r.enemy.el}" style="color:var(--el)">${esc(r.enemy.deck)}</b> ${life(r.enemy)} <span class="muted">· AI ${r.enemy.level}${r.enemyLifeMod ? ` · enemy life ${r.enemyLifeMod}` : ""}</span></span>
+      <span class="hmeta muted">${r.turns} turn${r.turns===1?"":"s"} · ${r.first==="you"?"you went first":"enemy went first"} · ${esc(when(r))}</span></button>
+      ${open ? `<div class="hbody">
+        <div class="hend"><div><span class="lbl">Your board at the end</span> ${boardTxt(r.you)}${r.you.auras.length?`<br><span class="lbl">Your auras</span> ${r.you.auras.map(esc).join(", ")}`:""}<br><span class="muted">Hand ${r.you.hand} · deck ${r.you.left} · Manifests left ${r.you.manifestsLeft}</span></div>
+          <div><span class="lbl">Enemy board at the end</span> ${boardTxt(r.enemy)}${r.enemy.auras.length?`<br><span class="lbl">Enemy auras</span> ${r.enemy.auras.map(esc).join(", ")}`:""}<br><span class="muted">Hand ${r.enemy.hand} · deck ${r.enemy.left} · Manifests left ${r.enemy.manifestsLeft}</span></div></div>
+        <div class="hlog"><span class="lbl">Game log</span><ol>${r.log.map(([t,c])=>`<li class="${c==="turn"?"lt":c==="big"?"lb":c==="dmg"?"ld":""}">${esc(t)}</li>`).join("")}</ol></div>
+        <div class="row"><button class="btn" data-hist="rematch:${r.id}">Play this matchup again</button><button class="btn" data-hist="del:${r.id}">Delete this fight</button></div>
+      </div>` : ""}</li>`; };
+  return `<div class="hist">
+    <div class="hsum"><div><span class="lbl">Your record</span><b class="hbig">${matchRecordText(t)}</b><span class="muted">${list.length} fight${list.length===1?"":"s"} saved in this browser (the last ${MATCH_MAX} are kept).</span></div>
+      <button class="btn" data-hist="clear">${H.clearArm ? "Click again to delete all" : "Clear history"}</button></div>
+    <div class="hist-tbls">${tbl("By your deck", by("you"))}${tbl("By enemy deck", by("enemy"))}</div>
+    <h3>Fights, newest first</h3><ul class="hlist">${list.map(row).join("")}</ul></div>`;
+}
+function matchClick(ds){
+  const H = setup.hist, i = ds.hist.indexOf(":"), k = i < 0 ? ds.hist : ds.hist.slice(0, i), v = i < 0 ? "" : ds.hist.slice(i+1);
+  if (k === "open"){ H.open = H.open === +v ? null : +v; H.clearArm = false; render(); return; }
+  if (k === "clear"){ if (H.clearArm){ matchSave([]); H.clearArm = false; H.open = null; } else H.clearArm = true; render(); return; }
+  if (k === "del"){ matchSave(matchLoad().filter(r => r.id !== +v)); H.open = null; render(); return; }
+  if (k === "go"){ if (g){ g.id = Math.random(); g = null; } setup.tab = "hist"; H.open = null; render(); window.scrollTo({ top:0 }); return; }
+  if (k === "rematch"){ const r = matchLoad().find(r => r.id === +v); if (!r || !DECK_BY_ID[r.you.deckId] || !DECK_BY_ID[r.enemy.deckId]) return;
+    setup.my = r.you.deckId; setup.enemy = r.enemy.deckId; setup.level = r.enemy.level || setup.level; setup.life = 15 + (r.enemyLifeMod || 0);
+    newGame(setup.my, setup.enemy, setup.life); return; }
+}
+
 /* ---------------- Rendering ---------------- */
-const setup = { wr:{ lv:"3", view:"el", group:"all", tier:"all", sort:"el", focus:null }, my:"fire_starter", enemy:"water_starter", myEl:"fire", enemyEl:"water", life:15, view:"fire_starter", tab:"play",
+const setup = { hist:{ open:null, clearArm:false }, wr:{ lv:"3", view:"el", group:"all", tier:"all", sort:"el", focus:null }, my:"fire_starter", enemy:"water_starter", myEl:"fire", enemyEl:"water", life:15, view:"fire_starter", tab:"play",
   lib:{ el:"fire", r:"all", type:"all", kind:"all", q:"", limit:120 }, level:3,
   forge:{ conf:"volcano", pick:{}, type:"creature", r:"all", q:"" } };
 function esc(s){ return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
@@ -1823,7 +1889,7 @@ function renderGame(){
   } else if (ui.mode==="respond"){
     modal = `<div class="modal"><div class="box"><h2>Respond to ${esc(ui.card.name)}?</h2><p>${esc(ui.text)}</p><div class="cards">${cardHTML(ui.card)}</div><div class="row">${ui.options.map(i=>`<button class="btn primary" data-btn="opt-${i}">${me.hand[i].counter?"Counter with ":"Play "}${esc(me.hand[i].name)} (${costOf(me.hand[i],me)} Energy)</button>`).join("")}<button class="btn" data-btn="pass">Let it resolve</button></div></div></div>`;
   } else if (g.over){
-    modal = `<div class="modal"><div class="box"><h2>${g.over==="you"?"Victory":g.over==="enemy"?"Defeat":"Draw"}</h2><p>${g.over==="you"?"The enemy is out of life.":"Your life reached 0."} The game lasted ${g.turnNo} turns.</p><div class="row"><button class="btn primary" data-btn="again">Play again</button><button class="btn" data-btn="decks">Change decks</button><button class="btn" data-btn="close">Look at the board</button></div></div></div>`;
+    modal = `<div class="modal"><div class="box"><h2>${g.over==="you"?"Victory":g.over==="enemy"?"Defeat":"Draw"}</h2><p>${g.over==="you"?"The enemy is out of life.":"Your life reached 0."} The game lasted ${g.turnNo} turns.</p><div class="row"><button class="btn primary" data-btn="again">Play again</button><button class="btn" data-btn="decks">Change decks</button><button class="btn" data-hist="go">Match history</button><button class="btn" data-btn="close">Look at the board</button></div>${g.matchSaved===false?`<p class="muted">This browser wouldn't let the fight be saved to your match history.</p>`:""}</div></div>`;
     if (RPG.battle){ rpgSettle(); modal = `<div class="modal"><div class="box"><h2>${g.over==="you"?"Victory":g.over==="enemy"?"Defeat":"Draw"}</h2><p>${g.over==="you"?"The enemy is out of life.":"Your life reached 0."} The duel lasted ${g.turnNo} turns.</p>${rpgDropHTML()}<div class="row"><button class="btn primary" data-btn="rpg-return">Continue</button><button class="btn" data-btn="close">Look at the board</button></div></div></div>`; }
     if (g.closed) modal = "";
   }
@@ -2131,9 +2197,10 @@ function winratesHTML(){
 }
 function renderSetup(){
   const tab = setup.tab;
-  const tabs = `<div class="tabs" role="tablist"><button class="tab ${tab==="play"?"on":""}" data-tab="play" role="tab">Play a fight</button><button class="tab ${tab==="lib"?"on":""}" data-tab="lib" role="tab">Card library</button><button class="tab ${tab==="forge"?"on":""}" data-tab="forge" role="tab">Fusion Forge</button><button class="tab ${tab==="wr"?"on":""}" data-tab="wr" role="tab">Win rates</button></div>`;
+  const tabs = `<div class="tabs" role="tablist"><button class="tab ${tab==="play"?"on":""}" data-tab="play" role="tab">Play a fight</button><button class="tab ${tab==="hist"?"on":""}" data-tab="hist" role="tab">Match history</button><button class="tab ${tab==="lib"?"on":""}" data-tab="lib" role="tab">Card library</button><button class="tab ${tab==="forge"?"on":""}" data-tab="forge" role="tab">Fusion Forge</button><button class="tab ${tab==="wr"?"on":""}" data-tab="wr" role="tab">Win rates</button></div>`;
   let body;
-  if (tab==="forge") body = forgeHTML();
+  if (tab==="hist") body = matchHistoryHTML();
+  else if (tab==="forge") body = forgeHTML();
   else if (tab==="wr") body = winratesHTML();
   else if (tab==="lib"){
     const f = setup.lib;
@@ -2157,6 +2224,7 @@ function renderSetup(){
           <button class="btn ${setup.life===15?"primary":""}" data-life="15">Full: ${deckLife(setup.enemy)} (mirror match)</button>
           <button class="btn ${setup.life===10?"primary":""}" data-life="10">${deckLife(setup.enemy)-5} (normal encounter)</button></div></div>
     </div>
+    <div class="row"><span class="muted">Your record: ${matchRecordText(matchTally(matchLoad()))}</span><button class="btn" data-hist="go">Match history</button></div>
     <div class="row"><button class="btn primary" data-btn="start" style="font-size:16px;padding:10px 22px">Start fight: ${esc(DECK_BY_ID[setup.my].name)} (♥ ${deckLife(setup.my)}) vs. ${esc(DECK_BY_ID[setup.enemy].name)} (♥ ${deckLife(setup.enemy) + (setup.life - 15)})</button></div>
     <div class="decklist">
       <div class="row"><span class="lbl">Decklist</span><b class="el-${d.el}" style="color:var(--el)">${esc(d.name)}</b><span class="tier t-${d.tier}">${TIER_NAME[d.tier]}</span><span class="muted">Starting life ${deckLife(d.id)}. ${esc(d.desc)}</span></div>
@@ -2185,12 +2253,13 @@ function render(){
 }
 
 function onClick(e){
-  const el = e.target.closest("[data-logcard],[data-forge],[data-forgef],[data-recipe],[data-btn],[data-hand],[data-man],[data-cr],[data-pl],[data-tab],[data-pickel],[data-pickdeck],[data-lib],[data-life],[data-level],[data-aura],[data-emani],[data-wr],[data-rpgstart],[data-rpgnext]");
+  const el = e.target.closest("[data-logcard],[data-forge],[data-forgef],[data-recipe],[data-btn],[data-hand],[data-man],[data-cr],[data-pl],[data-tab],[data-pickel],[data-pickdeck],[data-lib],[data-life],[data-level],[data-aura],[data-emani],[data-wr],[data-rpgstart],[data-rpgnext],[data-hist]");
   if (!el) return;
   if (rpgClick(el)) return;
   inspectFrom(el);
   const ds = el.dataset;
   if (ds.tab){ setup.tab=ds.tab; render(); return; }
+  if (ds.hist){ matchClick(ds); return; }
   if (ds.wr!=null){ const i = ds.wr.indexOf(":"), k = ds.wr.slice(0,i), v = ds.wr.slice(i+1); setup.wr[k] = v || null; if (k==="focus" && v) setup.wr.view = "el"; render(); return; }
   if (ds.forge){ const i=ds.forge.indexOf(":"), e=ds.forge.slice(0,i), id=ds.forge.slice(i+1); const f=setup.forge; f.pick[e] = f.pick[e]===id ? null : id; render(); return; }
   if (ds.forgef){ const [k,v]=ds.forgef.split(":"); const f=setup.forge; f[k]=v; if (k==="type" || k==="conf") f.pick={}; render(); return; }
