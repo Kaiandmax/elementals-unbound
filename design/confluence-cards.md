@@ -1,6 +1,6 @@
 # Confluence cards: designed, not fused
 
-Owner: TCG Design. Status: **Proposal** (designer direction, 2026-11-01). The designer has decided to move to bespoke cards; three questions below are theirs to pick. Numbers are Balance's; the Forge code is Game Dev's.
+Owner: TCG Design. Status: **Approved** (designer, 2026-11-01): designed cards, the hybrid Forge (A3), **100 cards per confluence** (B1), and **dual ×1.25, triple ×1.6** of mono's value per Energy. Numbers are Balance's; the Forge code is Game Dev's.
 
 **Designer direction (2026-11-01):** fusion's power curve is too steep. Battles between triple decks can end in a turn or two with little counterplay. Power should rise with progression, but two comparable decks should never stomp each other in a turn or two. Replace "two cards strapped together" with **bespoke dual and triple cards**. They play like mono cards, feel stronger, and **evoke the cards that made them** without being their sum.
 
@@ -59,7 +59,7 @@ No formula fusions. Each confluence has a catalog of designed cards, and the For
 | **Answers at every rarity:** each confluence's commons include blockers and at least one way to deal with a big creature. | Comparable decks can always fight back. |
 | **Stronger means richer, not bigger.** A dual card gets what mono can't: two elements' keywords on one body, or a cross-element effect (freeze plus burn). Raw numbers rise only gently. | Power still grows with progression, but through options. |
 
-**Power curve:** the balance pass prices confluence cards from the **mono median times a tier factor**, not from the fusions' median. Start at **dual ×1.15, triple ×1.3** (today about ×1.4 and ×1.9). Rarity and Manifests carry the rest of the progression. Balance tunes from there.
+**Power curve (decided):** the balance pass prices confluence cards from the **mono median times a tier factor**, not from the fusions' median: **dual ×1.25, triple ×1.6** (today about ×1.4 and ×1.9). In the sims this is about the "dual ×0.92, triple ×0.85" row: triple games over by round 2 drop from 31% to about 13%, at about 3.6 rounds. The design rules above have to do the rest of the work against stomps.
 
 ### 2. Worked examples
 
@@ -71,36 +71,27 @@ No formula fusions. Each confluence has a catalog of designed cards, and the For
 
 The existing named recipes in `cards/fusion.js` (8 for Volcano, and so on) already follow these rules. They are the model.
 
-## Decisions for the designer
+## Decisions (designer, 2026-11-01)
 
-### A. How the Forge picks the result
+The options that were on the table are kept for the record.
 
-| Option | How it works | Good | Bad |
-|---|---|---|---|
-| A1. Named recipes only | Each designed card has one or more listed parent sets. Other combinations make nothing. | Strongest "evokes its parents". Recipes are discoveries. | Most card pairs can't be forged; needs a recipe book in game. |
-| A2. Slot matching | Each designed card has a slot: type, cost band, rarity and a trait tag (Airborne, freeze, burn...). Any pair that fits the slot makes it. | Every pair works; simple. | The result only loosely echoes its parents. |
-| **A3. Hybrid (recommended)** | Each designed card has **one signature recipe** (named parents, a discovery). Every other legal pair makes the catalog card closest to the parents' type, cost, rarity and traits. | Every pair works, results echo the parents, and signature recipes reward exploring. | Two parent pairs can make the same card; fine with a "Forge book" that records discoveries. |
+| Question | Picked | Other options |
+|---|---|---|
+| A. How the Forge picks the result | **A3 hybrid:** each designed card has one signature recipe (named parents, a discovery); every other legal pair makes the catalog card closest to the parents' type, cost, rarity and traits. A "Forge book" records the discoveries. | A1 named recipes only; A2 slot matching |
+| B. Cards per confluence | **100 per dual and per triple (2,000 designed cards).** About 450 exist (specials and named recipes) and get reworked to the rules; about 1,550 are new. | 40 dual / 30 triple; 30 / 20 |
+| C. How much stronger | **Dual ×1.25, triple ×1.6** of mono's value per Energy. | ×1.15 / ×1.3; let Balance decide |
 
-### B. How many cards per confluence
+### How to design 2,000 cards without repeats
 
-Today each confluence lists 100 basic cards (2,000 in total), 1,556 of them formula fusions. Designing 1,600 cards by hand isn't realistic and would repeat itself.
-
-| Option | Dual | Triple | Total designed | Already exist (specials and recipes) |
-|---|---|---|---|---|
-| B1. Keep 100 each | 100 | 100 | 2,000 | about 450 |
-| **B2. 40 dual, 30 triple (recommended)** | 40 | 30 | 700 | about 450 (reworked to the rules above) |
-| B3. 30 dual, 20 triple | 30 | 20 | 500 | about 450 |
-
-B2 keeps each catalog big enough for 3 decks per tier plus an archetype, and every card gets designed. Mono stays at 100 per element, so the collection still grows as you go. Balance should check B2 against the 80-100 hour collection target.
-
-### C. How much stronger
-
-Start at **dual about 15% and triple about 30% more value per Energy than mono**, then tune. The sims say that keeps triple battles near 4 rounds. If tier-ups should feel bigger, the next lever is rarity, not element count.
+- **A slot grid per confluence.** The 100 cards fill a fixed spread of type (about 50 creatures, 25 spells, 13 Reactions, 12 auras; today's catalog weights), cost 1-6 and rarity (C/U/R about 50/30/20). Every slot also names the **trait pair** it evokes (e.g. Steam: "freeze + burn", "Airborne + shield"), so the Forge's nearest-slot match always has an echo of the parents to land on.
+- **Each confluence has 4-5 themes**, not one archetype, so its 100 cards make 3 tier decks plus the archetype deck without the same 20 cards repeating. The 20 specials stay as the archetype's core and get reworked to the rules.
+- **Signature recipes** come from the existing named recipes and the parent pairs the current decks use, so known combinations keep a recognizable result.
+- **Batches:** one confluence per PR, about 100 cards, each with its slot, trait pair and signature recipe. Story renames as the world develops; placeholder names are fine until then.
 
 ## Rollout (once the designer picks)
 
-1. **TCG Design:** rework the existing specials to the rules above, and design the pilot catalogs. **Steam** (dual) and **Aurora** (triple, the worst offender) go first, each card with its signature recipe and slot.
-2. **Balance:** price confluence cards from the mono median × tier factor (`TIERF`/`BAL_MED` in `cards/catalog.js`), then tune the pilot.
+1. **TCG Design:** the slot grid and theme list for all 20 confluences, then the pilot catalogs, **Steam** (dual) and **Aurora** (triple, the worst offender), 100 cards each with signature recipe and slot.
+2. **Balance:** price confluence cards from the mono median × tier factor (dual 1.25, triple 1.6) (`TIERF`/`BAL_MED` in `cards/catalog.js`), then tune the pilot.
 3. **Game Dev:** the Forge picks a catalog card (A3: signature recipe, then nearest slot) instead of calling `fuseParts`. The formula code stays only until every confluence is converted. The deck builder shows the result before forging.
 4. **TCG Design and Balance:** rebuild the pilot decks, measure fun metrics and stomp rate against today, then do the other 18 confluences in batches.
 5. **Story:** names and flavor for the catalog cards as they land (names stay placeholders until then).
