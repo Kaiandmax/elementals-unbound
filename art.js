@@ -134,7 +134,11 @@ const ROLE = [
   ["healer", "healer tender keeper"],
 ];
 const ROLE_MAP = new Map(); for (const [k, ws] of ROLE) for (const w of ws.split(" ")) ROLE_MAP.set(w, k);
+// Tokens whose names match no figure word would otherwise be drawn as a person (an Ice Block looked like a knight).
+const TOKEN_FIG = { tok_iceblock:"wall", tok_droplet:"spirit", tok_stoneling:"golem", tok_spark:"spirit", tok_magmite:"spirit",
+  tok_mudling:"spirit", tok_drone:"golem", tok_ashling:"spirit", tok_blob:"spirit", tok_shard:"crystal", tok_ember:"spirit", tok_cinderbird:"bird" };
 function artSubject(d, words){
+  if (d.token && TOKEN_FIG[d.id]) return { fig: TOKEN_FIG[d.id], role: null };
   let fig = null, role = null;
   for (let i=words.length-1; i>=0; i--){
     const w = words[i];

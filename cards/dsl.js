@@ -442,7 +442,9 @@ function dsl(o){
     d.on = d.on || {};
     d.on.played = x => {
       const c = x.data.card;
-      if (c===d) return;
+      // "Another" means another instance, not another card name: a second copy of this card still counts.
+      // A creature never hears its own arrival (hook() skips data.inst); an aura can't tell its copies apart.
+      if (x.data.inst ? x.data.inst === x.self : (c === d && x.self === d)) return;
       for (const [k, run] of runs){
         if (k==="spell" && c.type!=="spell") continue;
         if (k==="react" && c.type!=="reaction") continue;

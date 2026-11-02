@@ -4,7 +4,9 @@
    headless sims (tools/engine.js) load this file without side effects. */
 const RPG_T = 16, RPG_VW = 21, RPG_VH = 13, RPG_STEP_MS = 170, RPG_SAVE_KEY = "eu.save.v1";
 const RPG_TILE = { ".":1, ",":1, "=":1, "f":1, "D":1, "_":1, ">":1, "w":1, "v":1, "S":1, "+":1, "b":1, "a":1, "A":1, "F":1, ":":1, "h":1,
-  "s":0, "V":0, "#":0, "~":0, "R":0, "H":0, "W":0, "t":0, "P":0, "o":0, "Q":0, "T":0, "^":0, "|":0, "X":0, "I":0, "n":0, "U":0 };
+  "N":1, "k":1, "c":1,
+  "s":0, "V":0, "#":0, "~":0, "R":0, "H":0, "W":0, "t":0, "P":0, "o":0, "Q":0, "T":0, "^":0, "|":0, "X":0, "I":0, "n":0, "U":0,
+  "L":0, "B":0, "G":0, "Z":0, "K":0, "C":0 };
 const RPG_DIRS = { up:[0,-1], down:[0,1], left:[-1,0], right:[1,0] };
 const RPG = { active:false, save:null, held:[], move:null, turnAt:0, dlg:null, reveal:null, fade:null, battle:null,
   canvas:null, ctx:null, raf:0, last:0, cam:null, grace:0, eraseArm:false, pad:{}, toast:null, card:null, cue:null, introShown:false, mobs:[], mobsMap:null, panel:null, banner:null };
@@ -223,9 +225,19 @@ function rpgPollPad(){
 
 /* ---- Drawing (procedural pixel tiles, no image files) ---- */
 function rpgHash(x, y, k){ let h = (x*374761393 + y*668265263 + (k||0)*2147483647) | 0; h = (h ^ (h >>> 13)) * 1274126177 | 0; return ((h ^ (h >>> 16)) >>> 0) / 4294967296; }
+// The ground a scenery tile stands on: its own colour if it is ground, else the nearest neighbour's. Meadow by default.
+const RPG_GROUND_COL = { ".":["#4c8a3f","#3f7735"], ",":["#3f7a34","#2a5a25"], f:["#4c8a3f","#3f7735"], a:["#4d3f3a","#6a5a52"], A:["#4d3f3a","#6a5a52"],
+  N:["#e3e9f0","#c3cedb"], k:["#9a8f7a","#857a66"], ":":["#d6c38a","#bfa86e"], h:["#4c8a3f","#3f7735"], F:["#7a6a2a","#b49a3a"] };
+function rpgGroundCol(m, tx, ty){
+  if (!m) return RPG_GROUND_COL["."];
+  for (const [dx,dy] of [[0,0],[0,1],[1,0],[-1,0],[0,-1],[1,1],[-1,-1],[1,-1],[-1,1]]){
+    const g = RPG_GROUND_COL[rpgTile(m, tx+dx, ty+dy)]; if (g) return g;
+  }
+  return RPG_GROUND_COL["."];
+}
 function rpgDrawTile(c, ch, tx, ty, px, py, now, m){
   const T = RPG_T, R = (x,y,w,h,col)=>{ c.fillStyle = col; c.fillRect(px+x, py+y, w, h); };
-  const grass = () => { R(0,0,T,T,"#4c8a3f"); for (let i=0;i<3;i++){ const hx = rpgHash(tx,ty,i), hy = rpgHash(ty,tx,i+7); R((hx*14)|0,(hy*14)|0,1,2,"#3f7735"); } };
+  const grass = () => { const [bg, fl] = rpgGroundCol(m, tx, ty); R(0,0,T,T,bg); for (let i=0;i<3;i++){ const hx = rpgHash(tx,ty,i), hy = rpgHash(ty,tx,i+7); R((hx*14)|0,(hy*14)|0,1,2,fl); } };
   switch (ch){
     case ".": case "s": grass(); break;
     case "f": grass(); for (let i=0;i<3;i++){ const hx = 2+((rpgHash(tx,ty,i+3)*11)|0), hy = 2+((rpgHash(ty,tx,i+5)*11)|0); R(hx,hy,2,2, i%2 ? "#f2d25a" : "#e8665a"); R(hx,hy+2,1,1,"#2f5f29"); } break;
@@ -243,7 +255,9 @@ function rpgDrawTile(c, ch, tx, ty, px, py, now, m){
     case "b": { R(0,0,T,T,"#2f6ea8"); const hz = m && (rpgTile(m,tx-1,ty)!=="~" && rpgTile(m,tx-1,ty)!=="w" || rpgTile(m,tx+1,ty)!=="~" && rpgTile(m,tx+1,ty)!=="w");
       if (hz){ R(0,2,T,12,"#8a6a45"); for (let xx=1; xx<T; xx+=4) R(xx,2,1,12,"#6d5235"); R(0,2,T,1,"#5a4024"); R(0,13,T,1,"#5a4024"); } else { R(2,0,12,T,"#8a6a45"); for (let yy=1; yy<T; yy+=4) R(2,yy,12,1,"#6d5235"); R(2,0,1,T,"#5a4024"); R(13,0,1,T,"#5a4024"); } break; }
     case "a": R(0,0,T,T,"#4d3f3a"); for (let i=0;i<3;i++) R((rpgHash(tx,ty,i)*14)|0,(rpgHash(ty,tx,i+3)*14)|0,2,1,"#6a5a52"); break;
-    case "A": { R(0,0,T,T,"#4d3f3a"); const gl = Math.sin(now/300 + tx + ty*2) > 0.5; for (let i=0;i<4;i++){ const x = i*4+1; R(x,7,1,7,"#6a3a2a"); R(x+1,9,1,5, gl && i%2 ? "#ff7a2a" : "#8a4a2a"); } break; }
+    case "A": { R(0,0,T,T,"#4d3f3a"); const gl = Math.sin(now/300 + tx + ty*2) > 0.5;
+      for (let i=0;i<4;i++){ const x = i*4+1, y = 4 + ((rpgHash(tx,ty,i+17)*7)|0), h = 5 + ((rpgHash(ty,tx,i+19)*5)|0);
+        R(x,y,1,h,"#6a3a2a"); R(x+1,y+2,1,Math.max(2,h-3), gl && i%2 ? "#ff7a2a" : "#8a4a2a"); } break; }
     case "F": R(0,0,T,T,"#7a6a2a"); for (let yy=1; yy<T; yy+=4) R(0,yy,T,2,"#b49a3a"); break;
     case ":": R(0,0,T,T,"#d6c38a"); R((tx*3)%13,(ty*5)%13,2,1,"#bfa86e"); break;
     case "X": grass(); for (let xx=1; xx<T; xx+=4){ R(xx,1,3,14,"#7a5634"); R(xx,0,3,2,"#9a7044"); R(xx+1,3,1,10,"#5a3d22"); } break;
@@ -263,6 +277,27 @@ function rpgDrawTile(c, ch, tx, ty, px, py, now, m){
     case "W": R(0,0,T,T,"#5d4c3c"); R(0,T-3,T,3,"#493b2e"); break;
     case "t": R(0,0,T,T,"#9a7650"); R(1,3,14,10,"#6a4a2c"); R(2,4,12,7,"#80603f"); break;
     case ">": R(0,0,T,T,"#9a7650"); R(1,2,14,12,"#a34a3a"); R(3,4,10,8,"#c26450"); break;
+    // Volcano country
+    case "L": { const gl = (Math.sin(now/520 + tx*1.3 + ty*0.7)+1)/2;
+      R(0,0,T,T, gl > 0.5 ? "#e05a18" : "#c84812");
+      for (let i=0;i<3;i++){ const hx=(rpgHash(tx,ty,i)*12)|0, hy=(rpgHash(ty,tx,i+5)*12)|0; R(hx,hy,4,3,"#ffc14a"); R(hx+1,hy+1,2,1,"#fff0b4"); }
+      for (let i=0;i<2;i++){ const hx=(rpgHash(ty,tx,i+9)*11)|0, hy=(rpgHash(tx,ty,i+11)*11)|0; R(hx,hy,5,3,"#5a2a18"); R(hx,hy,5,1,"#7a3a22"); } break; }
+    case "B": R(0,0,T,T,"#3a2f2c"); R(1,2,13,11,"#2b2321"); R(2,3,5,4,"#4a3c37"); R(8,8,5,4,"#453832"); R(0,T-2,T,2,"#241d1b"); break;
+    // Mountain crags
+    case "N": R(0,0,T,T,"#e3e9f0"); for (let i=0;i<3;i++) R((rpgHash(tx,ty,i+31)*14)|0,(rpgHash(ty,tx,i+33)*14)|0,2,1,"#c3cedb"); R(0,T-2,T,2,"#cfd8e4"); break;
+    case "G": { R(0,0,T,T,"#6b6257"); c.fillStyle = "#8d8276"; c.beginPath(); c.moveTo(px+8,py); c.lineTo(px+14,py+15); c.lineTo(px+2,py+15); c.closePath(); c.fill();
+      R(6,1,4,3,"#e3e9f0"); R(9,6,2,8,"#5a5249"); break; }
+    // Sky islands
+    case "Z": { R(0,0,T,T,"#7fb6e8"); const o = Math.floor(now/900 + tx) % 5; R((o*4)%T,3,5,1,"#b7d9f6"); R(((o*4)+9)%T,10,4,1,"#a6cdf0"); break; }
+    case "K": { R(0,0,T,T,"#7fb6e8"); c.fillStyle = "#eef5fd"; for (const [ax,ay,ar] of [[5,9,5],[10,8,4],[8,11,5]]){ c.beginPath(); c.arc(px+ax,py+ay,ar,0,Math.PI*2); c.fill(); } R(0,13,T,3,"#cfe4f7"); break; }
+    case "k": { R(0,0,T,T,"#9a8f7a"); const above = rpgTile(m, tx, ty-1); if (above==="Z" || above==="K"){ R(0,0,T,3,"#6f9a53"); R(0,3,T,1,"#5c8245"); }
+      for (let i=0;i<3;i++) R((rpgHash(tx,ty,i+41)*13)|0,4+((rpgHash(ty,tx,i+43)*10)|0),2,1,"#857a66"); break; }
+    // Coral forest
+    case "C": { R(0,0,T,T,"#3f7f9e"); const col = rpgHash(tx,ty,7) > 0.5 ? "#e0725a" : "#d8a03a";
+      R(7,6,2,9,col); R(4,8,2,7,col); R(10,9,2,6,col); R(3,7,3,2,col); R(9,8,3,2,col); R(6,4,4,2,col); R(0,T-1,T,1,"#2e5f78"); break; }
+    case "c": { R(0,0,T,T,"#4f94b2"); const sw = Math.sin(now/700 + tx*0.9 + ty*0.5) > 0 ? 1 : 0;
+      for (let i=0;i<3;i++){ const x = 1+i*5 + ((rpgHash(tx,ty,i+51)*3)|0), y = 5 + ((rpgHash(ty,tx,i+53)*6)|0);
+        R(x+sw,y,1,T-y-1,"#2f7f6a"); R(x+1+sw,y-2,1,4,"#49a88a"); } break; }
     default: R(0,0,T,T,"#000");
   }
 }
