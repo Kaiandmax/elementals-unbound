@@ -9,7 +9,7 @@ const conf = process.argv[2] || "steam";
 const ROOT = path.join(__dirname, "../..");
 vm.runInThisContext(fs.readFileSync(path.join(ROOT, "tools/engine.js"), "utf8"), { filename: "engine.js" });
 const S = globalThis.__sim, L = S.LIB, els = S.CONFLUENCE[conf];
-const TIER = els.length === 2 ? 1.25 : 1.6;
+const TIER = +process.env.TIER || (els.length === 2 ? 1.25 : 1.6);   // TIER=1.2 to measure against another tier factor
 // Mono reference: the median value per Energy of the parent elements' basic cards, by rarity (before the new card enters LIB).
 const med = a => { const s = [...a].sort((x, y) => x - y); return s[Math.floor(s.length / 2)]; };
 const mono = {};
