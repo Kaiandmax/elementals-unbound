@@ -4,7 +4,7 @@ setR("c");
 // Tidecaller: card draw, Drain and big blockers
 Cr("Brook Otter",1,1,2,"","play: draw 1");
 Cr("Kelp Lurker",2,2,5,"drain","");
-Cr("Tidepool Healer",2,2,4,"","play: heal 3");
+Cr("Tidepool Healer",2,2,4,"","play: mend own 2; heal 1");
 Cr("Reef Guardian",3,3,6,"drain","");
 Sp("Flowing Wisdom",2,"play: draw 2; heal 2");
 Cr("Deepwater Scholar",4,4,5,"","play: draw 2");
@@ -30,8 +30,8 @@ Cr("Tide Caller",3,3,4,"","play: bounce t",{tgt:"e:cost<=2"});
 Sp("Ebb and Flow",1,"play: draw 1 | oc2: draw 1");
 Cr("Mist Weaver",2,2,4,"ward","react: buff self 1 1");
 Cr("Coral Crab",1,2,4,"","");
-Sp("Soothing Rain",2,"play: heal 4; draw 1");
-Cr("Bubble Mage",3,3,5,"","play: heal 2; draw 1");
+Sp("Soothing Rain",2,"play: mend own 3; heal 2; draw 1");
+Cr("Bubble Mage",3,3,5,"","play: mend own 2; draw 1");
 Re("Tidal Shield",1,"play: buff t 0 3 temp",{tgt:"o"});
 Cr("Narwhal Lancer",3,4,3,"pierce","");
 
@@ -91,7 +91,7 @@ Cr("Pearlguard Sentinel",2,3,6,"vigilant","");
 Cr("Wavebreaker Champion",4,5,6,"drain","");
 Au("Eternal Winter",3,"start: freeze str; freeze weak");
 Cr("Sea Witch",2,3,3,"","play: freeze t; draw 1",{tgt:"e"});
-Sp("Healing Torrent",2,"play: heal 5; draw 2");
+Sp("Healing Torrent",2,"play: mend own all; heal 3; draw 2");
 Cr("Storm Narwhal",3,5,4,"pierce","play: draw 1");
 Re("Total Denial",3,"",{counter:"any",after:"draw 2"});
 Cr("Deep One Elder",5,6,8,"ward","play: draw 2");
@@ -143,4 +143,4 @@ Mf("Ocean's Wrath",5,"spell",null,"","play: destroy t; destroy str; draw 1",{tgt
 // Loot card: the Weir Vault (Act I). Reworked from Moonlit Tide (2026-10-24). Story: "It never struck first. It never needed to."
 Mf("Slackwater, the Weir Serpent",3,"creature",[2,5],"ward","react: buff self 1 1; dmg face 1");
 Mf("Frost Empress Ysil",5,"creature",[6,8],"ward","start: freeze all_e");
-Mf("Rain of Renewal",3,"spell",null,"","play: heal 8; buff own 1 2");
+Mf("Rain of Renewal",3,"spell",null,"","play: mend own all; heal 4; buff own 1 2");

@@ -18,7 +18,9 @@ function atomValue(a){
     // (decks with more face damage won more than their numbers predicted).
     case "dmg": { const [T,n,sc] = r; const amt = (+n) + (sc ? (VAL_SCALE[sc]||1) : 0); return T==="face" ? 1.3*amt : T==="me" ? -1.0*amt : 1.3*amt*G(T); }
     case "heal": return 0.5*(+r[0]);
-    case "mend": return 0.45*(r[1]==="all" ? 4 : +r[1])*(VAL_GRP[r[0]] ?? 1);   // Game Dev placeholder, Balance to tune
+    // Mend only restores damage that is there: in 3-turn fights a creature rarely carries more than 2-3 damage, so a point
+    // of mend is worth about half a point of life ("all" counts as 2.5 points).
+    case "mend": return 0.25*(r[1]==="all" ? 2.5 : +r[1])*(VAL_GRP[r[0]] ?? 1);
     case "draw": return 2.4*(+r[0]);
     case "energy": return 1.6*(+r[0]);
     case "charge": return 1.4*(+r[0]);
