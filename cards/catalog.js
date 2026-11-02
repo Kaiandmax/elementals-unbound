@@ -77,10 +77,17 @@ const balGroup = d => d.el+"|"+(d.r==="s"?"s":d.r)+"|"+(d.manifest?"M":"B");
 // Resource gains (charge, energy) are never scaled above what the card was written with: the value model prices them
 // low, so the scaling steps used to compound them (a written "charge 4" became "charge 15"). A Manifest never refunds
 // its own cost in charge. Riders the pass adds (charge 1-2 on a card that had none) are kept.
-const RES_RE = /\b(charge|energy) (\d+)/g;
+// Token counts get the same rule: a written "summon mirror 2" stayed 2, not 10 (the board holds 8).
+const RES_RE = /\b(charge|energy) (\d+)/g, SUM_RE = /\bsummon (\w+) (\d+)/g;
+function writtenAmounts(fx){
+  const w = {}; for (const [, k, n] of (fx||"").matchAll(RES_RE)) w[k] = Math.max(w[k]||0, +n);
+  for (const [, t, n] of (fx||"").matchAll(SUM_RE)) w["summon:"+t] = Math.max(w["summon:"+t]||0, +n);
+  return w;
+}
 function clampResources(d, written, mc){
   if (!d.fx) return false;
   let fx = d.fx.replace(RES_RE, (m, k, n) => written[k] != null && +n > written[k] ? k+" "+written[k] : m);
+  fx = fx.replace(SUM_RE, (m, t, n) => { const w = written["summon:"+t]; return w != null && +n > w ? "summon "+t+" "+w : m; });
   if (d.manifest){
     let room = Math.max(0, mc - 1);
     fx = fx.replace(/\bcharge (\d+)/g, (m, n) => { const v = Math.min(+n, room); room -= v; return "charge "+v; });
@@ -92,7 +99,7 @@ function clampResources(d, written, mc){
   respecCard(d, fx); return true;
 }
 function normalizeCard(d, f){
-  const written = {}; for (const [, k, n] of (d.fx||"").matchAll(RES_RE)) written[k] = Math.max(written[k]||0, +n);
+  const written = writtenAmounts(d.fx);
   normalizeCore(d, f);
   const cost = () => d.manifest ? d.mcost[d.el] : d.cost;
   if (!clampResources(d, written, cost())) return;
