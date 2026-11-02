@@ -59,12 +59,16 @@ const RPG_TRAINERS = {
   pro_ewe:       { deck:"earth_starter", level:1, lifeMod:-5 },
   // Act I demo. AI levels by designer rule (d-1792866671427): boss monsters 3-4, NPC duels 3-4, rivals 5.
   // Boss shapes from design/bosses.md; bars, life and level are Balance's to tune.
-  a1_gullet: { name:"Gullet", deck:"water_tide", level:3, lifeMod:0, music:"battle-gullet",
+  // Balance (2026-11-02): Frostbind, not Tidecaller. Vs the five Starters at L3 (400 games): Tidecaller 87% player wins and
+  // 43-100% by element; Frostbind 65%, 30-82%, about 8 rounds.
+  a1_gullet: { name:"Gullet", deck:"water_frost", level:3, lifeMod:0, music:"battle-gullet",
     boss:{ bars:[8], slowStart:true, clearOnBreak:true, crown:"lurker" } },
   a1_brann:  { name:"Brann", deck:"earth_wall", level:3, lifeMod:0, music:"battle-contract" },
   a1_pell:   { name:"Pell", deck:"fire_swarm", level:5, lifeMod:0, music:"battle-rival" },
   a1_mother: { name:"The Cinder Mother", deck:"fire_fury", level:3, lifeMod:0, music:"battle-cinder-mother",
     boss:{ bars:[8,8], slowStart:true, clearOnBreak:true, breakHeal:3, crown:"brood", side:{ name:"The Brood", hp:3, crew:"Brann and Dove", token:"ember" } } },
-  a1_warden: { name:"The Sluicewarden", deck:"earth_titans", level:3, lifeMod:0, music:"battle-sluicewarden",
-    boss:{ bars:[8,8], slowStart:true, clearOnBreak:true, breakHeal:3, crown:"sealwork", side:{ name:"The serpent's brood", hp:3, crew:"Brann, Dove and Pell" } } }
+  // Balance (2026-11-02): bars 8,8 -> 5,5 and 3 less life. An Iron player with commons won 22%; now 34% with commons and
+  // 69% with uncommons.
+  a1_warden: { name:"The Sluicewarden", deck:"earth_titans", level:3, lifeMod:-3, music:"battle-sluicewarden",
+    boss:{ bars:[5,5], slowStart:true, clearOnBreak:true, breakHeal:3, crown:"sealwork", side:{ name:"The serpent's brood", hp:3, crew:"Brann, Dove and Pell" } } }
 };
