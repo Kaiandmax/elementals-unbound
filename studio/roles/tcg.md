@@ -37,8 +37,8 @@ The card files (`cards/fire.js`, `water.js`, `earth.js`, `wind.js`, `lightning.j
 
 ## Fixed points from the designer
 
-- Battles are short (about 3 turns). Longer, higher-stakes fights come from boss mechanics.
-- Mono, dual and triple element decks; mono decks have 5 Manifests, dual 4, triple 3; Manifests cost 2-6 charge.
+- Normal battles are short (under 4 turns a side). Boss fights (crowned monsters, higher-rank monsters, important NPC duels) aim for 6-7 turns, through boss mechanics.
+- Mono, dual and triple element decks; every deck has 4 Manifests; Manifests cost 2-6 charge.
 - Starting life depends on the element.
 - The overworld is a walkable tile map (Pokemon-style) with encounters, towns and dungeons; the game stays web-based.
 

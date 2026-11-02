@@ -44,6 +44,16 @@ h1,h2,h3{font-family:var(--f-display);font-weight:700;margin:0;text-wrap:balance
 .tabs{display:flex;gap:6px;border-bottom:1px solid var(--line)}
 .tab{background:none;border:none;border-bottom:3px solid transparent;padding:8px 14px;font-weight:700;cursor:pointer;color:var(--mute)}
 .tab.on{color:var(--ink);border-bottom-color:var(--brass)}
+.hist{display:grid;gap:14px;padding-top:12px}.hist h3{margin:4px 0;font-size:15px}
+.hsum{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}.hsum>div{display:grid;gap:2px}.hbig{font-size:20px}
+.hist-tbls{display:flex;flex-wrap:wrap;gap:16px}.hist-tbl{flex:1 1 320px;min-width:0;overflow-x:auto}
+.hlist{list-style:none;margin:0;padding:0;display:grid;gap:6px}.hrow{border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.02)}
+.hhead{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;width:100%;text-align:left;background:none;border:none;color:inherit;padding:8px 10px;cursor:pointer;font:inherit}
+.hdecks{flex:1 1 360px}.hmeta{font-size:12px}
+.hres{display:inline-block;min-width:44px;text-align:center;border-radius:6px;padding:2px 6px;font-weight:700;font-size:12px}
+.hres.win{background:#2f6a3a;color:#e6ffe9}.hres.loss{background:#7a2a2a;color:#ffe6e6}.hres.draw{background:#555;color:#eee}.hl-dead{color:var(--bad)}
+.hbody{padding:0 10px 10px;display:grid;gap:10px}.hend{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;font-size:13px}
+.hlog ol{margin:4px 0 0;padding-left:22px;max-height:360px;overflow:auto;font-size:13px;line-height:1.45}.hlog .lt{color:var(--brass);margin-top:6px}.hlog .lb{font-weight:700}.hlog .ld{color:#e9a08a}
 .decks{display:grid;gap:8px}
 .levels{display:grid;gap:6px}
 .lvrow{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
@@ -160,7 +170,7 @@ table.wr td.wr-self,table.wr td.wr-na{color:var(--mute)}
 .side .who{display:flex;flex-direction:column;min-width:120px}
 .side .who h2{font-size:19px}
 .side.target{outline:2px dashed var(--good);cursor:crosshair}
-.life{font-family:var(--f-display);font-size:30px;line-height:1;color:var(--bad);font-variant-numeric:tabular-nums}
+.life{font-family:var(--f-display);font-size:30px;line-height:1;color:var(--bad);font-variant-numeric:tabular-nums}.life.over{color:#7fe08a}
 .life small{font-size:14px;color:var(--mute);margin-left:2px}
 .hp{font-family:var(--f-body,inherit);font-size:11px;font-weight:700;color:var(--bad);margin-left:6px;white-space:nowrap}
 .dk-meta{display:flex;gap:8px;align-items:baseline}
@@ -248,7 +258,7 @@ details.rules ul{margin:.5em 0 0;padding-left:1.2em;max-width:80ch;display:grid;
 .modal .box h2{font-size:22px}
 /* Adventure: overworld */
 .rpg{display:grid;gap:10px}
-.rpg-stage{position:relative;width:100%;max-width:min(960px, calc((100vh - 170px) * 15 / 11));margin:0 auto;aspect-ratio:15/11;background:#0b0d11;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.rpg-stage{position:relative;width:100%;max-width:min(1200px, calc((100vh - 150px) * 21 / 13));margin:0 auto;aspect-ratio:21/13;background:#0b0d11;border:1px solid var(--line);border-radius:8px;overflow:hidden}
 .rpg-stage canvas{display:block;width:100%;height:100%;image-rendering:pixelated;image-rendering:crisp-edges}
 .rpg-dlg{position:absolute;left:3%;right:3%;bottom:4%;background:rgba(16,19,24,.94);border:2px solid var(--brass);border-radius:8px;padding:12px 16px 14px;display:grid;gap:4px;font-size:clamp(14px,2.2vw,19px);cursor:pointer}
 .rpg-dlg b{font-family:var(--f-display);color:var(--brass)}
@@ -267,6 +277,40 @@ details.rules ul{margin:.5em 0 0;padding-left:1.2em;max-width:80ch;display:grid;
 .dpad [data-pad=up]{grid-area:u}.dpad [data-pad=down]{grid-area:d}.dpad [data-pad=left]{grid-area:l}.dpad [data-pad=right]{grid-area:r}
 .abtn{width:76px;height:76px;border-radius:50%;background:var(--brass);color:#1a1408;font-family:var(--f-display);font-weight:700;font-size:26px}
 .rpg-file{display:inline-block}
+.rpg-obj{position:absolute;left:8px;top:8px;max-width:min(62%,460px);display:flex;gap:10px;align-items:center;background:rgba(10,12,16,.82);border:1px solid var(--brass);border-radius:8px;padding:6px 10px;font-size:13px;cursor:pointer;z-index:2}
+.rpg-obj b{display:block;font-family:var(--f-display);color:var(--brass);font-size:12px}
+.rpg-obj small{color:var(--mute)}
+.obj-arrow{font-style:normal;color:#ffd84a;font-size:18px;display:inline-block;line-height:1}
+.rpg-panel{position:absolute;inset:4%;background:rgba(16,19,24,.97);border:2px solid var(--brass);border-radius:10px;display:flex;flex-direction:column;z-index:5;overflow:hidden}
+.rp-head{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line)}
+.rp-head h2{font-size:20px}
+.rp-body{padding:10px 14px;overflow:auto;flex:1}
+.rp-map{display:grid;justify-items:center;gap:6px}.rpg-stage .rp-map canvas{image-rendering:pixelated;width:auto;height:auto;max-width:100%;border:1px solid var(--line)}
+.jlist{list-style:none;margin:6px 0 14px;padding:0;display:grid;gap:8px}
+.jlist>li{border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+.jlist>li.on{border-color:var(--brass);box-shadow:inset 0 0 0 1px var(--brass)}
+.jlist .jq{background:none;border:none;padding:0;cursor:pointer;display:flex;gap:10px;align-items:baseline;width:100%;text-align:left}
+.jlist .jq b{font-family:var(--f-display);font-size:16px;color:var(--ink)}
+.jlist ol{margin:6px 0 0;padding-left:20px;display:grid;gap:3px;font-size:13.5px}
+.jlist ol li.done{color:var(--mute);text-decoration:line-through}
+.jlist.done>li{opacity:.7}
+.padx{display:grid;gap:8px}.padx button{background:var(--raise);border:1px solid var(--line);border-radius:8px;padding:8px 10px;color:var(--ink);font-size:13px}
+.rpg-rank{color:var(--brass);font-family:var(--f-display)}
+.rpg-card{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 80%,#3a1c0e 0,#0b0c10 65%);display:grid;place-items:center;padding:24px;cursor:pointer;text-align:center}
+.rpg-card .rc-in{max-width:52ch;display:grid;gap:10px;animation:rcfade .6s ease-out}
+.rpg-card .rc-in b{font-family:var(--f-display);color:var(--brass);font-size:clamp(15px,2.2vw,20px)}
+.rpg-card .rc-in p{margin:0;font-size:clamp(16px,2.6vw,24px);line-height:1.45;color:var(--ink)}
+.rpg-card .rc-hint{position:absolute;bottom:12px;left:0;right:0;font-size:12px;color:var(--mute)}
+.rpg-card .rc-skip{position:absolute;top:12px;right:12px}
+.rpg-intro{max-width:min(960px,100%)}
+@keyframes rcfade{from{opacity:0;transform:translateY(6px)}}
+@media (prefers-reduced-motion:reduce){.rpg-card .rc-in{animation:none}}
+.phases{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--brass);margin-top:4px}
+.phases .pips{display:flex;gap:3px}.phases i{width:16px;height:6px;border-radius:3px;background:var(--bad)}.phases i.gone{background:var(--line)}.phases i.now{box-shadow:0 0 6px var(--bad)}
+.bossinfo{flex:1 1 100%;display:flex;flex-wrap:wrap;gap:4px 18px;font-size:12px;font-weight:700;color:var(--fire)}.bossinfo .muted{font-weight:400}
+.bark{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:8;width:min(560px,calc(100vw - 32px));background:rgba(16,19,24,.96);border:2px solid var(--fire);border-radius:10px;padding:12px 36px 12px 16px;display:grid;gap:6px;font-size:14px;box-shadow:0 8px 30px rgba(0,0,0,.5)}
+.bark p{margin:0}.bark b{color:var(--brass);font-family:var(--f-display)}.bark-x{position:absolute;top:6px;right:8px;background:none;border:none;color:var(--mute);cursor:pointer;font-size:14px}
+.phase-big{font-family:var(--f-display);font-size:34px;color:var(--brass);text-shadow:0 2px 10px rgba(0,0,0,.7)}
 .rpg-drop{display:grid;justify-items:center;gap:8px;text-align:center}
 .rpg-drop-cards{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;padding-top:8px}
 .rpg-ess{color:var(--el);font-weight:700}
@@ -280,6 +324,9 @@ details.rules ul{margin:.5em 0 0;padding-left:1.2em;max-width:80ch;display:grid;
 
 <div id="app"></div>
 
+<script id="music">
+/*__MUSIC__*/
+</script>
 <script>
 "use strict";
 const HEADLESS = typeof document === "undefined";
@@ -351,7 +398,7 @@ const TERM_HELP = {
   reaction:"Can be played at any time, even on the enemy's turn (paid with banked Energy). Counters only work in response to an enemy card.",
   basic:"Any card that isn't a Manifest. Basic creatures can be returned to hand; Manifest creatures can't.",
   steal:"You control that creature from now on.",
-  life:"Starting life depends on the deck's element; a normal encounter gives the enemy 5 less."
+  life:"Starting life depends on the deck's element; a normal encounter gives the enemy 5 less. Gaining life can take you above it."
 };
 const termHelp = k => KW_REMIND[k] || TERM_HELP[k] || "";
 const TERM_RE = /\b(Airborne|Haste|Pierce|Walls?|Ward|Drain|Skyguard|Vigilant|Barrier|Venom|Fortify(?: \d+)?|Ignite|Chain \d+|Attuned \d+|Overcharge \d+|Last Gasp|Desperate \d+|freez(?:e|es|ing)|frozen|silence[sd]?|tokens?|Manifests?|charge|Reactions?|basic|take control)\b/gi;
@@ -526,7 +573,7 @@ async function fxArrows(pairs, label, ms){
   try { await sleep(reduceMotion() ? Math.min(ms, 500) : ms); } finally { svg.remove(); chip && chip.remove(); }
 }
 function onBoard(c){ return g.P[c.owner].board.includes(c); }
-function baseKw(c, k){ if (k==="barrier") return !!c.shield; return c.d.kw.includes(k) || (c.kws && c.kws.includes(k)) || (c.tKws && c.tKws.includes(k)); }
+function baseKw(c, k){ if (k==="barrier") return !!c.shield; if (k==="ward" && c.lurk && g && c.lurk >= g.turnNo) return true; return c.d.kw.includes(k) || (c.kws && c.kws.includes(k)) || (c.tKws && c.tKws.includes(k)); }
 function addKw(c, k, temp){ if (!onBoard(c)) return; if (k==="barrier"){ c.shield = true; return; } if (temp) c.tKws = [...(c.tKws||[]), k]; else c.kws = [...(c.kws||[]), k]; }
 function stMatch(f, c, src){
   switch (f){
@@ -566,6 +613,9 @@ function atkOf(c){ return Math.max(0, c.atk + c.tAtk + statSum(c,"atk")); }
 function hpOf(c){ return c.hp + c.tHp + statSum(c,"hp"); }
 function hpLeft(c){ return hpOf(c) - c.dmg; }
 function isDead(c){ return c.dmg >= hpOf(c); }
+// Before a creature leaves play, note who is alive; after, anyone its lord bonus was holding up keeps 1 health.
+function hpSnap(){ const l = []; for (const q of g.P) for (const c of q.board) if (!isDead(c)) l.push(c); return l; }
+function keepAlive(l){ for (const c of l) if (onBoard(c) && isDead(c)) c.dmg = Math.max(0, hpOf(c)-1); }
 function boardPower(p){ return p.board.reduce((s,c)=>s+atkOf(c)+hpOf(c),0); }
 function bankCap(p){ let n = 3; forStatics(p, s=>{ if (s.k==="bank") n += s.n; }); return n; }
 
@@ -599,7 +649,8 @@ function dmgT(t, n){
   if (t.kind==="player") dmgPlayer(t.p, n);
   else if (onBoard(t.c)) { dmgCreature(t.c, n); log(`${t.c.d.name} takes ${n} damage.`); }
 }
-function heal(p, n){ if (n<=0) return; fxNote("heal", lifeSel(p), "+"+n); p.life = Math.min(p.maxLife, p.life+n); log(`${p.name} ${p.isAI?"gains":"gain"} ${n} life.`); react(p, "heal", {n, x:n}); }
+function heal(p, n){ if (n<=0) return; fxNote("heal", lifeSel(p), "+"+n); // Player life has no cap (designer rule, design/mechanics.md): maxLife stays the starting-life mark for "life missing".
+  p.life += n; log(`${p.name} ${p.isAI?"gains":"gain"} ${n} life.`); react(p, "heal", {n, x:n}); }
 // A confluence deck has a single charge type: every charge it gains or spends is that confluence's.
 function chEl(p, el){ return p.chargeAs || el; }
 function gainCharge(p, el, n){ if(n<=0) return; el = chEl(p, el); p.charge[el] = (p.charge[el]||0) + n; react(p, "charge", {n, x:n}); }
@@ -618,7 +669,8 @@ function drawN(p, n){
   }
 }
 function makeCreature(d, p){
-  return { uid: uidSeq++, d, owner:p.i, atk:d.atk, hp:d.hp, dmg:0, tAtk:0, tHp:0, tKws:null, kws:null,
+  const lurk = g && p.boss && p.boss.crown==="lurker" ? g.turnNo + 1 : 0;
+  return { lurk, uid: uidSeq++, d, owner:p.i, atk:d.atk, hp:d.hp, dmg:0, tAtk:0, tHp:0, tKws:null, kws:null,
     sick: !d.kw.includes("haste"), exhausted:false, frozen:false, attacking:false, noBlock:false, shield: d.kw.includes("barrier") };
 }
 const BOARD_MAX = 8;   // creatures per side
@@ -635,7 +687,9 @@ function bounce(c){
   if (!onBoard(c)) return;
   const owner = g.P[c.owner];
   fxNote("info", crSel(c), "Returned");
+  const live = c.d.st ? hpSnap() : null;
   owner.board.splice(owner.board.indexOf(c),1);
+  if (live) keepAlive(live);
   c.attacking = false;
   if (c.d.token){ log(`${c.d.name} fades away.`); return; }
   owner.hand.push(c.d);
@@ -654,7 +708,9 @@ function checkDeaths(){
     for (const p of g.P){
       for (const c of [...p.board]){
         if (isDead(c)){
+          const live = c.d.st ? hpSnap() : null;
           p.board.splice(p.board.indexOf(c),1);
+          if (live) keepAlive(live);
           if (!c.d.token) p.grave.push(c.d);
           log(`${c.d.name} is destroyed.`);
           const x = Math.max(0, c.atk + c.tAtk);
@@ -666,7 +722,49 @@ function checkDeaths(){
   }
   checkWin();
 }
+/* Boss phases (design/bosses.md, approved 2026-10-24). A boss is a player with p.boss = { bars:[8,8], slowStart, clearOnBreak, breakHeal }.
+   At 0 life with a bar left it refills to the next bar instead of losing; its creatures can leave play (no Last Gasp);
+   the other side may heal and draw. p.boss is shared by AI look-ahead clones and never mutated; p.phase counts from 1. */
+const bossPhases = p => p.boss ? p.boss.bars.length + 1 : 1;
+/* Crowns (design/bosses.md): a crowned boss breaks one named rule.
+   lurker: its creatures have Ward until the end of your next turn after they arrive.
+   brood: at the start of its turn it summons a token while its side threat lives; the crew wears the threat down 1 a round.
+   sealwork: at each phase break its best creature rebuilds instead of leaving. */
+const CROWNS = {
+  lurker:   { name:"Lurker",   text:"Its creatures can't be targeted until your next turn ends after they arrive." },
+  brood:    { name:"Brood",    text:"While its brood lives, it summons a token at the start of its turn." },
+  sealwork: { name:"Sealwork", text:"At each phase break, its best creature rebuilds." }
+};
+const bossCrown = p => p.boss && p.boss.crown && CROWNS[p.boss.crown] ? p.boss.crown : null;
+function bossStartTurn(p){
+  if (bossCrown(p)==="brood" && p.sideHp > 0){ const t = TOKENS[(p.boss.side && p.boss.side.token) || "ember"]; if (t && summon(p, t)) log(`The brood: ${p.name} summons ${t.name}.`); }
+}
+function bossEndTurn(p){
+  if (!p.boss || !p.boss.side || !(p.sideHp > 0)) return;
+  p.sideHp--;
+  if (!g.sim){ const sd = p.boss.side; log(p.sideHp > 0 ? `${sd.crew || "Your crew"} wear down ${sd.name} (${p.sideHp} left).` : `${sd.crew || "Your crew"} hold ${sd.name}!`, p.sideHp > 0 ? "" : "big"); if (p.sideHp === 0){ if (g.barks && g.barks.held) g.bark = { lines: g.barks.held, t: Date.now() }; if (globalThis.onCrewWin) onCrewWin(p); } }
+}
+function bossEnergyMod(p){
+  const b = p.boss; if (!b) return 0;
+  if (b.energyByPhase) return (b.energyByPhase[Math.min(p.phase, b.energyByPhase.length) - 1] || 3) - 3;
+  return b.slowStart && p.phase === 1 ? -1 : 0;
+}
+function bossBreaks(){
+  for (const q of g.P){
+    if (q.life > 0 || !q.boss || q.phase >= bossPhases(q)) continue;
+    q.life = q.maxLife = q.boss.bars[q.phase - 1]; q.phase++;
+    let keep = null;
+    if (bossCrown(q)==="sealwork") keep = q.board.filter(c=>!c.d.token).sort((a,b)=>(atkOf(b)+hpOf(b))-(atkOf(a)+hpOf(a)))[0] || null;
+    if (q.boss.clearOnBreak){ for (const c of q.board) if (c!==keep && !c.d.token && !c.d.manifest) q.grave.push(c.d); q.board.length = 0; }
+    if (keep){ const c = makeCreature(keep.d, q), i = q.board.indexOf(keep); if (i >= 0) q.board[i] = c; else q.board.push(c); if (!g.sim) log(`Sealwork: ${keep.d.name} rebuilds.`, "big"); }
+    const o = g.P[1-q.i];
+    if (q.boss.breakHeal && o.life > 0){ o.life += q.boss.breakHeal; drawN(o, 1); }
+    if (!g.sim && g.barks && g.barks.breaks && g.barks.breaks[q.phase-2]) g.bark = { lines: g.barks.breaks[q.phase-2], t: Date.now() };
+    if (!g.sim){ log(`${q.name} is broken but rises: phase ${q.phase} of ${bossPhases(q)}!`, "big"); g.phaseFlash = { who:q.name, phase:q.phase, of:bossPhases(q) }; if (globalThis.onBossPhase) onBossPhase(q); }
+  }
+}
 function checkWin(){
+  bossBreaks();
   const [a,b] = g.P;
   if (a.life<=0 || b.life<=0){
     g.over = a.life<=0 && b.life<=0 ? "draw" : (a.life<=0 ? "enemy" : "you");
@@ -777,7 +875,7 @@ async function castManifest(p, mi, t){
   p.manifests.splice(mi,1);
   for (const [el,n] of Object.entries(m.mcost)) spendCharge(p, el, n);
   log(`${p.name} ${p.isAI?"casts":"cast"} the Manifest ${m.name}!`, "big");
-  if (!HEADLESS){ g.inspect = { def:m, where:(p.isAI?"Enemy":"Your")+" Manifest" }; g.flash = { m, who:p.isAI?"The enemy casts a Manifest":"You cast a Manifest" }; render(); await sleep(p.isAI?1900:1100); g.flash = null; }
+  if (!HEADLESS){ g.inspect = { def:m, where:(p.isAI?"Enemy":"Your")+" Manifest" }; g.flash = { m, who:p.isAI?"The enemy casts a Manifest":"You cast a Manifest" }; onManifestCast(p, m); render(); await sleep(p.isAI?1900:1100); g.flash = null; }
   if (t) await fxArrows([[whoSel(p), t.kind==="player" ? lifeSel(t.p) : crSel(t.c)]], m.name, p.isAI ? 900 : 350);
   resolveCard(p, m, t, false);
   render();
@@ -884,7 +982,8 @@ function resolveCombat(ap){
 /* Turn flow */
 function startTurn(p){
   g.P.forEach(q=>{ q.played=0; q.spent=false; q.spells=0; });
-  p.energy += 3;
+  p.energy += 3 + bossEnergyMod(p);
+  if (p.boss) bossStartTurn(p);
   for (const c of p.board){
     if (c.frozen){ c.frozen=false; c.exhausted=true; } else c.exhausted=false;
     c.sick = false;
@@ -898,7 +997,9 @@ function startTurn(p){
 }
 function endTurn(p){
   hook(p, "end"); checkDeaths();
-  for (const q of g.P) for (const c of q.board){ c.dmg=0; c.tAtk=0; c.tHp=0; c.tKws=null; c.noBlock=false; }
+  if (p.boss) bossEndTurn(p);
+  // Damage stays on creatures (design/mechanics.md, designer 2026-10-26). Losing temporary health keeps at least 1.
+  for (const q of g.P) for (const c of q.board){ const was = isDead(c); c.tAtk=0; c.tHp=0; c.tKws=null; c.noBlock=false; if (!was && isDead(c)) c.dmg = Math.max(0, hpOf(c)-1); }
   while (p.hand.length>7){ const d=p.hand.pop(); p.grave.push(d); log(`${p.name} ${p.isAI?"discards":"discard"} ${d.name} (hand limit).`); }
   const cap = bankCap(p);
   if (p.energy>cap) p.energy = cap;
@@ -919,7 +1020,7 @@ async function runGame(){
     }
   } catch(e){
     if (e===STALE) return;
-    if (e===OVER){ log(g.over==="you"?"Victory!":g.over==="enemy"?"Defeat.":"Draw.", "big"); g.ui={mode:"idle"}; render(); return g.over; }
+    if (e===OVER){ log(g.over==="you"?"Victory!":g.over==="enemy"?"Defeat.":"Draw.", "big"); g.ui={mode:"idle"}; matchRecord(); render(); return g.over; }
     console.error(e); if(g) { log("Engine error: "+(e && e.message), "dmg"); render(); }
     throw e;
   }
@@ -1033,8 +1134,8 @@ function simulate(fn, pi){
 function sumObj(o){ let s=0; for (const k in o) s+=o[k]; return s; }
 function crVal(c, W){
   const d = c.d;
-  if (hasKw(c,"wall")) return 0.8 + (hpOf(c)-c.tHp)*0.6 + (d.onBlock?1.5:0) + (d.on||d.st?W.engine:0);
-  const a = atkOf(c) - c.tAtk, h = hpOf(c) - c.tHp;
+  if (hasKw(c,"wall")) return 0.8 + Math.max(1, hpOf(c)-c.tHp-c.dmg)*0.6 + (d.onBlock?1.5:0) + (d.on||d.st?W.engine:0);
+  const a = atkOf(c) - c.tAtk, h = Math.max(1, hpOf(c) - c.tHp - c.dmg);
   let v = 0.8 + a*W.atk + h*W.hp;
   if (hasKw(c,"airborne")) v += a*W.air + (W.airBonus||0);
   if (d.kw.includes("pierce")) v += a*0.15;
@@ -1545,14 +1646,18 @@ async function aiTurn(p){
 }
 
 /* ---------------- Game setup ---------------- */
-function newGame(myDeck, enemyDeck, enemyLife, kinds){
+function newGame(myDeck, enemyDeck, enemyLife, kinds, opts){
   g = { id: Math.random(), screen:"game", P:[], active:0, turnNo:0, phase:"main1", ui:{mode:"idle"}, log:[], combat:null, over:null, cfg:{myDeck, enemyDeck, enemyLife} };
   // Each side starts at its element's life; a normal encounter gives the enemy 5 less.
   g.P = [ newPlayer(0, myDeck, "You", HEADLESS, deckLife(myDeck)), newPlayer(1, enemyDeck, "Enemy", true, deckLife(enemyDeck) + ((enemyLife ?? 15) - 15)) ];
+  if (opts && opts.boss){ g.P[1].boss = opts.boss; g.P[1].phase = 1; if (opts.boss.side) g.P[1].sideHp = opts.boss.side.hp || 3; }
+  if (opts && opts.name) g.P[1].name = opts.name;
+  // Story barks for boss fights: { crown:[lines], breaks:[[lines], ...], held:[lines] } shown at the start, on each break, when the crew wins.
+  if (!HEADLESS && opts && opts.barks){ g.barks = opts.barks; if (opts.barks.crown) g.bark = { lines: opts.barks.crown, t: Date.now() }; }
   g.P.forEach(p=>drawN(p,5));
   // A coin flip decides who goes first (simulations keep seat 0 first so seats can be alternated).
   const first = HEADLESS ? 0 : (Math.random() < 0.5 ? 0 : 1);
-  g.active = first; g.P[1-first].energy = 1;
+  g.active = first; g.first = first; g.P[1-first].energy = 1;
   if (!HEADLESS) g.coin = { first };
   const lv = k => typeof k==="number" ? k : 3;
   if (kinds){ g.P[0].level = lv(kinds[0]); g.P[1].level = lv(kinds[1]); }
@@ -1561,8 +1666,64 @@ function newGame(myDeck, enemyDeck, enemyLife, kinds){
   return runGame();
 }
 
+/* ---------------- Match history (Play a fight only; kept in this browser) ----------------
+   Every finished demo fight is saved: result, turns, who went first, both decks, AI level, life left, the boards
+   at the end, and the whole game log. Adventure battles are not recorded here. */
+const MATCH_KEY = "eu.matches.v1", MATCH_MAX = 60;
+function matchLoad(){ try { const a = JSON.parse(localStorage.getItem(MATCH_KEY) || "[]"); return Array.isArray(a) ? a : []; } catch(e){ return []; } }
+function matchSave(a){ try { localStorage.setItem(MATCH_KEY, JSON.stringify(a.slice(0, MATCH_MAX))); return true; } catch(e){ return false; } }
+function matchRecord(){
+  if (HEADLESS || !g || g.sim || g.recorded || !g.over || (typeof RPG !== "undefined" && RPG.battle)) return;
+  g.recorded = true;
+  const side = p => ({ name:p.name, deck:p.deckName, deckId:p.deckId, el:p.el, tier:(DECK_BY_ID[p.deckId]||{}).tier || "", level:p.level || null,
+    life:p.life, maxLife:p.maxLife, hand:p.hand.length, left:p.deck.length, manifestsLeft:p.manifests.length,
+    board:p.board.map(c => ({ n:c.d.name, a:atkOf(c), h:hpLeft(c), m:hpOf(c), man:!!c.d.manifest })), auras:p.auras.map(a => a.name) });
+  const rec = { id:Date.now() + Math.floor(Math.random()*1000), at:new Date().toISOString(), result:g.over, turns:g.turnNo,
+    first:g.first === 0 ? "you" : "enemy", enemyLifeMod:(g.cfg && g.cfg.enemyLife != null) ? g.cfg.enemyLife - 15 : 0,
+    you:side(g.P[0]), enemy:side(g.P[1]), log:[...g.log].reverse().map(l => [l.s, l.cls || ""]) };
+  const a = matchLoad(); a.unshift(rec); g.matchSaved = matchSave(a);
+}
+function matchTally(list){ const t = { you:0, enemy:0, draw:0 }; for (const m of list) t[m.result] = (t[m.result]||0) + 1; return t; }
+function matchRecordText(t){ const n = t.you + t.enemy + t.draw; return n ? `${t.you} won · ${t.enemy} lost${t.draw ? ` · ${t.draw} drawn` : ""} (${Math.round(100*t.you/n)}% wins)` : "No fights yet"; }
+function matchHistoryHTML(){
+  const list = matchLoad(), t = matchTally(list), H = setup.hist;
+  if (!list.length) return `<div class="hist"><p class="muted">No fights recorded yet. Every fight you finish in <b>Play a fight</b> is saved here with both decks, the life left, the boards at the end and the full game log. The history is kept in this browser only.</p></div>`;
+  const by = key => { const m = new Map(); for (const r of list){ const k = r[key].deck; const e = m.get(k) || { el:r[key].el, you:0, enemy:0, draw:0 }; e[r.result]++; m.set(k, e); } return [...m.entries()].sort((a,b)=>(b[1].you+b[1].enemy+b[1].draw)-(a[1].you+a[1].enemy+a[1].draw)); };
+  const tbl = (title, rows) => `<div class="hist-tbl"><h3>${title}</h3><table class="wr"><thead><tr><th>Deck</th><th>Won</th><th>Lost</th><th>Drawn</th><th>Win %</th></tr></thead><tbody>${rows.map(([n,e])=>{ const k = e.you+e.enemy+e.draw;
+    return `<tr><td class="el-${e.el}"><b style="color:var(--el)">${esc(n)}</b></td><td>${e.you}</td><td>${e.enemy}</td><td>${e.draw}</td><td>${Math.round(100*e.you/k)}%</td></tr>`; }).join("")}</tbody></table></div>`;
+  const res = r => r.result==="you" ? `<span class="hres win">Won</span>` : r.result==="enemy" ? `<span class="hres loss">Lost</span>` : `<span class="hres draw">Draw</span>`;
+  const when = r => { try { return new Date(r.at).toLocaleString([], { month:"short", day:"numeric", hour:"numeric", minute:"2-digit" }); } catch(e){ return r.at; } };
+  const life = s => `<span class="${s.life<=0?"hl-dead":""}">♥ ${Math.max(0,s.life)}/${s.maxLife}</span>`;
+  const boardTxt = s => s.board.length ? s.board.map(c=>`${esc(c.n)}${c.man?" ✦":""} ${c.a}/${c.h}${c.h<c.m?`<span class="muted">(of ${c.m})</span>`:""}`).join(", ") : `<span class="muted">no creatures</span>`;
+  const row = r => { const open = H.open === r.id;
+    return `<li class="hrow ${open?"open":""}"><button class="hhead" data-hist="open:${r.id}" aria-expanded="${open}">
+      ${res(r)}<span class="hdecks"><b class="el-${r.you.el}" style="color:var(--el)">${esc(r.you.deck)}</b> ${life(r.you)} <span class="muted">vs.</span> <b class="el-${r.enemy.el}" style="color:var(--el)">${esc(r.enemy.deck)}</b> ${life(r.enemy)} <span class="muted">· AI ${r.enemy.level}${r.enemyLifeMod ? ` · enemy life ${r.enemyLifeMod}` : ""}</span></span>
+      <span class="hmeta muted">${r.turns} turn${r.turns===1?"":"s"} · ${r.first==="you"?"you went first":"enemy went first"} · ${esc(when(r))}</span></button>
+      ${open ? `<div class="hbody">
+        <div class="hend"><div><span class="lbl">Your board at the end</span> ${boardTxt(r.you)}${r.you.auras.length?`<br><span class="lbl">Your auras</span> ${r.you.auras.map(esc).join(", ")}`:""}<br><span class="muted">Hand ${r.you.hand} · deck ${r.you.left} · Manifests left ${r.you.manifestsLeft}</span></div>
+          <div><span class="lbl">Enemy board at the end</span> ${boardTxt(r.enemy)}${r.enemy.auras.length?`<br><span class="lbl">Enemy auras</span> ${r.enemy.auras.map(esc).join(", ")}`:""}<br><span class="muted">Hand ${r.enemy.hand} · deck ${r.enemy.left} · Manifests left ${r.enemy.manifestsLeft}</span></div></div>
+        <div class="hlog"><span class="lbl">Game log</span><ol>${r.log.map(([t,c])=>`<li class="${c==="turn"?"lt":c==="big"?"lb":c==="dmg"?"ld":""}">${esc(t)}</li>`).join("")}</ol></div>
+        <div class="row"><button class="btn" data-hist="rematch:${r.id}">Play this matchup again</button><button class="btn" data-hist="del:${r.id}">Delete this fight</button></div>
+      </div>` : ""}</li>`; };
+  return `<div class="hist">
+    <div class="hsum"><div><span class="lbl">Your record</span><b class="hbig">${matchRecordText(t)}</b><span class="muted">${list.length} fight${list.length===1?"":"s"} saved in this browser (the last ${MATCH_MAX} are kept).</span></div>
+      <button class="btn" data-hist="clear">${H.clearArm ? "Click again to delete all" : "Clear history"}</button></div>
+    <div class="hist-tbls">${tbl("By your deck", by("you"))}${tbl("By enemy deck", by("enemy"))}</div>
+    <h3>Fights, newest first</h3><ul class="hlist">${list.map(row).join("")}</ul></div>`;
+}
+function matchClick(ds){
+  const H = setup.hist, i = ds.hist.indexOf(":"), k = i < 0 ? ds.hist : ds.hist.slice(0, i), v = i < 0 ? "" : ds.hist.slice(i+1);
+  if (k === "open"){ H.open = H.open === +v ? null : +v; H.clearArm = false; render(); return; }
+  if (k === "clear"){ if (H.clearArm){ matchSave([]); H.clearArm = false; H.open = null; } else H.clearArm = true; render(); return; }
+  if (k === "del"){ matchSave(matchLoad().filter(r => r.id !== +v)); H.open = null; render(); return; }
+  if (k === "go"){ if (g){ g.id = Math.random(); g = null; } setup.tab = "hist"; H.open = null; render(); window.scrollTo({ top:0 }); return; }
+  if (k === "rematch"){ const r = matchLoad().find(r => r.id === +v); if (!r || !DECK_BY_ID[r.you.deckId] || !DECK_BY_ID[r.enemy.deckId]) return;
+    setup.my = r.you.deckId; setup.enemy = r.enemy.deckId; setup.level = r.enemy.level || setup.level; setup.life = 15 + (r.enemyLifeMod || 0);
+    newGame(setup.my, setup.enemy, setup.life); return; }
+}
+
 /* ---------------- Rendering ---------------- */
-const setup = { wr:{ lv:"3", view:"el", group:"all", tier:"all", sort:"el", focus:null }, my:"fire_starter", enemy:"water_starter", myEl:"fire", enemyEl:"water", life:15, view:"fire_starter", tab:"play",
+const setup = { hist:{ open:null, clearArm:false }, wr:{ lv:"3", view:"el", group:"all", tier:"all", sort:"el", focus:null }, my:"fire_starter", enemy:"water_starter", myEl:"fire", enemyEl:"water", life:15, view:"fire_starter", tab:"play",
   lib:{ el:"fire", r:"all", type:"all", kind:"all", q:"", limit:120 }, level:3,
   forge:{ conf:"volcano", pick:{}, type:"creature", r:"all", q:"" } };
 function esc(s){ return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
@@ -1585,6 +1746,17 @@ function kwLine(d){
   return k;
 }
 /*__ART__*/
+function bossBarsHTML(p){
+  const n = bossPhases(p), pips = Array.from({length:n}, (_, i) => `<i class="${i < p.phase - 1 ? "gone" : i === p.phase - 1 ? "now" : ""}"></i>`).join("");
+  return `<span class="phases" aria-label="Phase ${p.phase} of ${n}"><span class="pips" aria-hidden="true">${pips}</span>Phase ${p.phase} of ${n}${bossEnergyMod(p) < 0 ? " · waking (2 Energy)" : ""}</span>`;
+}
+// Crown and side fight: one line across the bottom of the boss's panel, so the stats row keeps its shape.
+function bossInfoHTML(p){
+  const cr = bossCrown(p), sd = p.boss.side; if (!cr && !sd) return "";
+  return `<div class="bossinfo">`
+    + (cr ? `<span class="crown" title="${esc(CROWNS[cr].text)}">Crown: ${esc(CROWNS[cr].name)} <span class="muted">${esc(CROWNS[cr].text)}</span></span>` : "")
+    + (sd ? `<span class="sidefight">${esc(sd.name)} ${"●".repeat(Math.max(0,p.sideHp))}${"○".repeat(Math.max(0,(sd.hp||3)-Math.max(0,p.sideHp)))} <span class="muted">${p.sideHp > 0 ? `${esc(sd.crew || "Your crew")} are holding it` : "held!"}</span></span>` : "") + `</div>`;
+}
 function cardHTML(d, opts={}){
   const cls = ["card", "el-"+d.el];
   if (d.manifest) cls.push("manifest");
@@ -1627,12 +1799,12 @@ function chargeHTML(p){
 function sideHTML(p, isTarget){
   const auras = p.auras.length ? `<div class="stat"><span class="lbl">Auras</span><div class="chips">${p.auras.map((a,ai)=>`<span class="aura el-${a.el}" data-aura="${p.i}-${ai}" tabindex="0">${esc(a.name)}</span>`).join("")}</div></div>` : "";
   return `<div class="side ${isTarget?"target":""}" data-pl="${p.i}" ${isTarget?'tabindex="0" role="button"':""}>
-    <div class="who"><span class="lbl">${p.isAI?`Enemy · AI ${levelOf(p)} ${AI_LEVELS[levelOf(p)].name}`:"You"} · ${esc(p.deckName)}</span><span class="life kwt" tabindex="0" data-tip="life" aria-label="Life ${p.life} of ${p.maxLife}">${p.life}<small>/${p.maxLife}</small></span></div>
+    <div class="who"><span class="lbl">${p.isAI?`Enemy · AI ${levelOf(p)} ${AI_LEVELS[levelOf(p)].name}`:"You"} · ${esc(p.deckName)}</span><span class="life kwt${p.life>p.maxLife?" over":""}" tabindex="0" data-tip="life" aria-label="Life ${p.life} of ${p.maxLife}${p.life>p.maxLife?", above starting life":""}">${p.life}<small>/${p.maxLife}</small></span>${p.boss ? bossBarsHTML(p) : ""}</div>
     <div class="stat"><span class="lbl">Energy</span><b>${p.energy}</b><span class="muted" style="font-size:12px">banks up to ${bankCap(p)}</span></div>
     <div class="stat"><span class="lbl">Charge</span>${chargeHTML(p)}</div>
     <div class="stat"><span class="lbl">Hand · Deck</span><b>${p.hand.length} · ${p.deck.length}</b></div>
     <div class="stat"><span class="lbl">Manifests left (${p.manifests.length})</span>${p.isAI ? `<div class="chips">${p.manifests.map((m,mi)=>`<span class="mchip el-${m.el} ${canAffordManifest(p,m)?"ready":""}" data-emani="${mi}" tabindex="0">✦ ${esc(m.name)} · ${Object.values(m.mcost).reduce((a,b)=>a+b,0)}</span>`).join("") || '<span class="muted">None</span>'}</div>` : `<b>${p.manifests.length}</b>`}</div>
-    ${auras}</div>`;
+    ${auras}${p.boss ? bossInfoHTML(p) : ""}</div>`;
 }
 const PHASE_NAMES = { main1:"Main phase", combat:"Combat", main2:"Second main phase" };
 
@@ -1718,12 +1890,15 @@ function renderGame(){
   } else if (ui.mode==="respond"){
     modal = `<div class="modal"><div class="box"><h2>Respond to ${esc(ui.card.name)}?</h2><p>${esc(ui.text)}</p><div class="cards">${cardHTML(ui.card)}</div><div class="row">${ui.options.map(i=>`<button class="btn primary" data-btn="opt-${i}">${me.hand[i].counter?"Counter with ":"Play "}${esc(me.hand[i].name)} (${costOf(me.hand[i],me)} Energy)</button>`).join("")}<button class="btn" data-btn="pass">Let it resolve</button></div></div></div>`;
   } else if (g.over){
-    modal = `<div class="modal"><div class="box"><h2>${g.over==="you"?"Victory":g.over==="enemy"?"Defeat":"Draw"}</h2><p>${g.over==="you"?"The enemy is out of life.":"Your life reached 0."} The game lasted ${g.turnNo} turns.</p><div class="row"><button class="btn primary" data-btn="again">Play again</button><button class="btn" data-btn="decks">Change decks</button><button class="btn" data-btn="close">Look at the board</button></div></div></div>`;
+    modal = `<div class="modal"><div class="box"><h2>${g.over==="you"?"Victory":g.over==="enemy"?"Defeat":"Draw"}</h2><p>${g.over==="you"?"The enemy is out of life.":"Your life reached 0."} The game lasted ${g.turnNo} turns.</p><div class="row"><button class="btn primary" data-btn="again">Play again</button><button class="btn" data-btn="decks">Change decks</button><button class="btn" data-hist="go">Match history</button><button class="btn" data-btn="close">Look at the board</button></div>${g.matchSaved===false?`<p class="muted">This browser wouldn't let the fight be saved to your match history.</p>`:""}</div></div>`;
     if (RPG.battle){ rpgSettle(); modal = `<div class="modal"><div class="box"><h2>${g.over==="you"?"Victory":g.over==="enemy"?"Defeat":"Draw"}</h2><p>${g.over==="you"?"The enemy is out of life.":"Your life reached 0."} The duel lasted ${g.turnNo} turns.</p>${rpgDropHTML()}<div class="row"><button class="btn primary" data-btn="rpg-return">Continue</button><button class="btn" data-btn="close">Look at the board</button></div></div></div>`; }
     if (g.closed) modal = "";
   }
 
   if (g.coin) modal += `<div class="flash coinflip" aria-live="polite"><div class="flash-in"><div class="coin ${g.coin.first===0?"you":"foe"}"><span class="face f-you">You</span><span class="face f-foe">Enemy</span></div><span class="flash-lbl">Coin flip: ${g.coin.first===0 ? "you go first" : "the enemy goes first"}</span><span class="muted">${g.coin.first===0 ? "You skip your first draw; the enemy starts with 1 banked Energy." : "The enemy skips its first draw; you start with 1 banked Energy."}</span></div></div>`;
+  if (g.phaseFlash){ modal += `<div class="flash" aria-live="polite"><div class="flash-in"><span class="flash-lbl">${esc(g.phaseFlash.who)} rises</span><span class="phase-big">Phase ${g.phaseFlash.phase} of ${g.phaseFlash.of}</span></div></div>`; const pf = g.phaseFlash; setTimeout(()=>{ if (g && g.phaseFlash===pf){ g.phaseFlash = null; render(); } }, reduceMotion() ? 900 : 1600); }
+  if (g.bark && !g.over){ modal += `<div class="bark" role="status" aria-live="polite"><button class="bark-x" data-btn="bark-x" aria-label="Dismiss">✕</button>${g.bark.lines.map(l=>{ const [w,t] = rpgSpeaker(l); return `<p>${w ? `<b>${esc(w)}:</b> ` : ""}${esc(t)}</p>`; }).join("")}</div>`;
+    const bk = g.bark; setTimeout(()=>{ if (g && g.bark===bk){ g.bark = null; render(); } }, 4000 + 2200*bk.lines.length); }
   if (g.flash) modal += `<div class="flash" aria-live="polite"><div class="flash-in"><span class="flash-lbl">${esc(g.flash.who)}</span>${cardHTML(g.flash.m,{cls:"bigcard"})}</div></div>`;
   return `<div class="top"><h1>Elementals Unbound</h1><div class="row"><span class="muted">Turn ${g.turnNo} · ${myTurn?"Your turn":"Enemy turn"}</span>${RPG.battle ? (g.over ? `<button class="btn primary" data-btn="rpg-return">Continue</button>` : RPG.battle.kind==="wild" ? `<button class="btn" data-btn="rpg-flee">Run away</button>` : "") : `<button class="btn" data-btn="decks">Change decks</button><button class="btn" data-btn="again">Restart</button>`}</div></div>
   <div class="game" style="margin-top:12px">
@@ -1746,7 +1921,7 @@ function rulesHTML(){
   <li>Each player starts with 5 cards and the life total of their deck's element (about 15; the deck list shows it). A coin flip decides who goes first; that player skips their first draw, and the player going second starts with 1 banked Energy.</li>
   <li>You gain 3 Energy each turn. Unspent Energy banks, up to 3 (Quarry Shaman raises the cap).</li>
   <li>Each basic card gives 1 charge of its element when it resolves. Countered cards give none.</li>
-  <li>Manifests are cast from your Manifest deck by spending charge, during your main phase, once per game. Mono decks get 5 Manifests.</li>
+  <li>Manifests are cast from your Manifest deck by spending charge, during your main phase, once per game. Every deck has 4 Manifests.</li>
   <li>Creatures can't attack the turn they arrive unless they have Haste. As in Magic, attacking taps a creature and it stays tapped until the start of your next turn, so it can't block on the enemy's turn. Blocking doesn't tap. Every attack is a choice between pressure and defense.</li>
   <li>The defender picks blockers. Several creatures can gang-block one attacker; the attacker's damage goes to the first blocker until it would die, then the next.</li>
   <li>Airborne creatures can only be blocked by Airborne. Pierce sends excess damage to the player. Walls can't attack.</li>
@@ -2023,9 +2198,10 @@ function winratesHTML(){
 }
 function renderSetup(){
   const tab = setup.tab;
-  const tabs = `<div class="tabs" role="tablist"><button class="tab ${tab==="play"?"on":""}" data-tab="play" role="tab">Play a fight</button><button class="tab ${tab==="lib"?"on":""}" data-tab="lib" role="tab">Card library</button><button class="tab ${tab==="forge"?"on":""}" data-tab="forge" role="tab">Fusion Forge</button><button class="tab ${tab==="wr"?"on":""}" data-tab="wr" role="tab">Win rates</button></div>`;
+  const tabs = `<div class="tabs" role="tablist"><button class="tab ${tab==="play"?"on":""}" data-tab="play" role="tab">Play a fight</button><button class="tab ${tab==="hist"?"on":""}" data-tab="hist" role="tab">Match history</button><button class="tab ${tab==="lib"?"on":""}" data-tab="lib" role="tab">Card library</button><button class="tab ${tab==="forge"?"on":""}" data-tab="forge" role="tab">Fusion Forge</button><button class="tab ${tab==="wr"?"on":""}" data-tab="wr" role="tab">Win rates</button></div>`;
   let body;
-  if (tab==="forge") body = forgeHTML();
+  if (tab==="hist") body = matchHistoryHTML();
+  else if (tab==="forge") body = forgeHTML();
   else if (tab==="wr") body = winratesHTML();
   else if (tab==="lib"){
     const f = setup.lib;
@@ -2049,6 +2225,7 @@ function renderSetup(){
           <button class="btn ${setup.life===15?"primary":""}" data-life="15">Full: ${deckLife(setup.enemy)} (mirror match)</button>
           <button class="btn ${setup.life===10?"primary":""}" data-life="10">${deckLife(setup.enemy)-5} (normal encounter)</button></div></div>
     </div>
+    <div class="row"><span class="muted">Your record: ${matchRecordText(matchTally(matchLoad()))}</span><button class="btn" data-hist="go">Match history</button></div>
     <div class="row"><button class="btn primary" data-btn="start" style="font-size:16px;padding:10px 22px">Start fight: ${esc(DECK_BY_ID[setup.my].name)} (♥ ${deckLife(setup.my)}) vs. ${esc(DECK_BY_ID[setup.enemy].name)} (♥ ${deckLife(setup.enemy) + (setup.life - 15)})</button></div>
     <div class="decklist">
       <div class="row"><span class="lbl">Decklist</span><b class="el-${d.el}" style="color:var(--el)">${esc(d.name)}</b><span class="tier t-${d.tier}">${TIER_NAME[d.tier]}</span><span class="muted">Starting life ${deckLife(d.id)}. ${esc(d.desc)}</span></div>
@@ -2073,15 +2250,17 @@ function render(){
   if (open) app.querySelector("details.rules").open = true;
   const ol = app.querySelector(".log ol"); if (ol) ol.scrollTop = scrollLog;
   if (FX.q.length) requestAnimationFrame(fxPlay);
+  if (g && RPG.battle) rpgBattleMusic();
 }
 
 function onClick(e){
-  const el = e.target.closest("[data-logcard],[data-forge],[data-forgef],[data-recipe],[data-btn],[data-hand],[data-man],[data-cr],[data-pl],[data-tab],[data-pickel],[data-pickdeck],[data-lib],[data-life],[data-level],[data-aura],[data-emani],[data-wr],[data-rpgstart],[data-rpgnext]");
+  const el = e.target.closest("[data-logcard],[data-forge],[data-forgef],[data-recipe],[data-btn],[data-hand],[data-man],[data-cr],[data-pl],[data-tab],[data-pickel],[data-pickdeck],[data-lib],[data-life],[data-level],[data-aura],[data-emani],[data-wr],[data-rpgstart],[data-rpgnext],[data-hist]");
   if (!el) return;
   if (rpgClick(el)) return;
   inspectFrom(el);
   const ds = el.dataset;
   if (ds.tab){ setup.tab=ds.tab; render(); return; }
+  if (ds.hist){ matchClick(ds); return; }
   if (ds.wr!=null){ const i = ds.wr.indexOf(":"), k = ds.wr.slice(0,i), v = ds.wr.slice(i+1); setup.wr[k] = v || null; if (k==="focus" && v) setup.wr.view = "el"; render(); return; }
   if (ds.forge){ const i=ds.forge.indexOf(":"), e=ds.forge.slice(0,i), id=ds.forge.slice(i+1); const f=setup.forge; f.pick[e] = f.pick[e]===id ? null : id; render(); return; }
   if (ds.forgef){ const [k,v]=ds.forgef.split(":"); const f=setup.forge; f[k]=v; if (k==="type" || k==="conf") f.pick={}; render(); return; }
@@ -2095,6 +2274,7 @@ function onClick(e){
   if (ds.btn==="decks"){ if(g) g.id = Math.random(); g = null; render(); return; }
   if (!g) return;
   if (ds.btn==="close"){ g.closed=true; render(); return; }
+  if (ds.btn==="bark-x"){ g.bark=null; render(); return; }
   const ui = g.ui, me = g.P[0];
   switch (ui.mode){
     case "main":
@@ -2143,6 +2323,7 @@ function onClick(e){
   }
 }
 /*__RPG__*/
+rpgBuildWorld();
 if (!HEADLESS){
   rpgInit();
   document.addEventListener("click", onClick);

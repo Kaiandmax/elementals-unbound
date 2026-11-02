@@ -16,7 +16,7 @@ The best cards ask you to build around them. Finding one should make you open th
 
 ### 2. Short battles, real decisions
 
-Normal battles last about 3 turns a side (designer decision). Because there are so few turns, each one must matter.
+Normal battles last under 4 turns a side; boss fights (crowned monsters, higher-rank monsters, important NPC duels) aim for 6-7 (designer decisions). Because there are so few turns, each one must matter.
 
 - Every turn should offer at least two sensible plays, and the right one should depend on the board.
 - No dead turns: you should almost never have nothing to do.
@@ -27,7 +27,7 @@ Normal battles last about 3 turns a side (designer decision). Because there are 
 Manifests are the payoff of the charge system and the "monster arrives" beat of the RPG.
 
 - In a normal battle, each side should usually reach at least one Manifest, and it should matter when it lands.
-- 2-4 charge Manifests are the everyday payoff; 5-6 charge ones belong to boss fights and long games.
+- 2-4 charge Manifests are the everyday payoff; 5-6 charge ones belong to boss fights, which run 6-7 turns.
 - A Manifest should feel like a monster or a miracle: big, readable, worth a sound cue.
 
 ### 4. Elements play differently, not just look different
@@ -71,7 +71,7 @@ Every new or reworked card, mechanic or deck must pass these before it goes to B
 
 | Pillar | Metric | Draft target | Now (L3, ladder decks) |
 |---|---|---|---|
-| 2 | Rounds per battle (each side's turns) | about 3, rarely over 5 | 3.8 (mono 4.3, dual 3.4, triple 3.0) |
+| 2 | Rounds per battle (each side's turns) | under 4 (bosses 6-7) | 3.8 (mono 4.3, dual 3.4, triple 3.0) |
 | 2 | Battles over by round 2 | under 10% | 12.6% (triple 28%) |
 | 2 | Turns with 2+ playable options | over 85% | 90% (triple 77%) |
 | 2 | Turns with nothing to play | under 2% | 1.8% (triple 5.7%) |

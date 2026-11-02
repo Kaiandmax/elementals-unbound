@@ -39,8 +39,8 @@
            chords: "1 6 2 1 1 2 2 1" },
     } });
 
-  B({ id: "battle-crowned", name: "Crowned Wild", sound: "earth", tonic: "F#3", mode: "harmonic", bpm: 150,
-    desc: "Act-end bosses: wilds that swallowed a rift's heart and break one rule. Raise intensity at each phase.",
+  B({ id: "battle-crowned", name: "Crowned Wild", sound: "main", tonic: "F#3", mode: "harmonic", bpm: 150,
+    desc: "Crowned wilds of any element (bosses without a theme of their own): element-neutral, heavy and relentless. Raise intensity at each phase.",
     p1: { duty: .25, env: { vol: 13, dir: -1, step: 6 }, vib: { delay: .2, rate: 6, cents: 14 } },
     p2: { style: "arp", div: 16, duty: .125, env: { vol: 6, dir: -1, step: 1 } }, bass: { style: "drive", wave: "saw" },
     drums: "k.k.s..kk.k.s.s.", drums2: "hhhhhhhhhhhhhhhh",
@@ -86,11 +86,11 @@
     } });
 
   B({ id: "battle-seraphine", name: "The Lantern", sound: "main", tonic: "D3", mode: "harmonic", bpm: 156,
-    desc: "The final duel against Seraphine Vael. A: her version of the motif, darkened and stopping short. B: Wren's answer in major, reaching the octave.",
+    desc: "The final duel against Seraphine Vael. A: her Lantern leitmotif turned to harmonic minor. B: Wren's answer, the Unbound motif in major, reaching the octave.",
     p2: { style: "arp", div: 16, duty: .125, env: { vol: 6, dir: -1, step: 1 } }, drums2: "..h...h...h.h.h.",
     sections: {
-      A: { mel: "1:1 5:1 4:.5 3:.5 4:1 | 5:.5 6:.5 5:1 7:2 | 8:1 7:.5 6:.5 5:1 4:1 | 3:1.5 2:.5 0:2 | 1:1 5:1 4:.5 3:.5 4:1 | 5:.5 6:.5 8:1 9:2 | 10:1 9:.5 8:.5 7:1 9:1 | 8:4",
-           chords: "1 5 6 5 1 6 5 1" },
+      A: { mel: "5:1.5 8:.5 7:2 | 6:1 5:1 3:2 | 4:1.5 5:.5 6:1 9:1 | 7:4 | 5:1.5 8:.5 7:2 | 6:1 5:1 10:2 | 9:1.5 8:.5 7:2 | 8:4",
+           chords: "1 6 4 5 1 6 5 1" },
       B: { mode: "ionian", mel: "1:1 5:1 4:.5 3:.5 4:1 | 5:.5 6:.5 5:1 8:2 | 8:1 9:.5 10:.5 11:1 12:1 | 12:2 10:2 | 1:1 5:1 4:.5 3:.5 4:1 | 5:.5 6:.5 8:1 9:2 | 10:1 11:1 9:1 7:1 | 8:4",
            chords: "1 4 5 6 1 2 5 1" },
     } });
@@ -109,4 +109,27 @@
   S({ id: "sting-rankup", name: "Promotion", sound: "main", tonic: "D3", mode: "ionian", bpm: 132,
     desc: "A new Covenant rank: a short fanfare on the motif that ends a full octave up.",
     sections: { A: { mel: "1:.5 5:.5 8:1 7:.5 8:.5 9:1 | 10:2 9:1 12:1 | 15:4", chords: "1 5 1" } } });
+  // battle moments (TCG Design, board 2026-10-24) and story cues
+  S({ id: "sting-manifest", name: "A Manifest Called", sound: "main", tonic: "D2", mode: "mixolydian", bpm: 132, pad: true,
+    desc: "A great binding arrives: the motif's leap stacked to the top, with a drum hit. Separate from Card Found.",
+    p2: { style: "counter", duty: .25, env: { vol: 9, dir: -1, step: 10 } }, drums: "k...k...k.k.kkkk",
+    sections: { A: { mel: "1:.5 5:.5 8:1 5:.5 8:.5 12:1 | 15:4", chords: "1 1" } } });
+  S({ id: "sting-phase", name: "Phase Break", sound: "earth", tonic: "A2", mode: "harmonic", bpm: 120, pad: true,
+    desc: "A boss's life bar breaks: a falling line onto the leading-tone chord, then home, with a snare roll.",
+    p2: { style: "counter", duty: .5, env: { vol: 8, dir: -1, step: 8 } }, drums: "k.......s.s.ssss",
+    sections: { A: { mel: "8:1 7:1 6:1 5:1 | 1:4", chords: "5 1" } } });
+  S({ id: "sting-crown", name: "The Crown Speaks", sound: "lightning", tonic: "C#3", mode: "phrygian", bpm: 84, zap: false, pad: true,
+    desc: "A boss names the rule its crown breaks: a slow Phrygian half-step and a low drop.",
+    p2: { style: "echo", delay: .5, duty: .25, env: { vol: 6, dir: -1, step: 8 } }, drums: "k...............",
+    sections: { A: { mel: "1:1 2:1 1:2 | -2:4", chords: "1 5" } } });
+  S({ id: "sting-crew-win", name: "Crew Holds", sound: "main", tonic: "G3", mode: "ionian", bpm: 140,
+    desc: "Companions win their side fight in a boss battle: a quick bright bark.",
+    sections: { A: { mel: "5:.5 6:.5 8:1 r:2", chords: "1" } } });
+  S({ id: "sting-crew-lose", name: "Crew Falls Back", sound: "main", tonic: "G3", mode: "aeolian", bpm: 120,
+    desc: "Companions lose their side fight: a short falling bark.",
+    sections: { A: { mel: "5:.5 4:.5 2:1 r:2", chords: "1" } } });
+  S({ id: "sting-hollow", name: "The Hollow", sound: "water", tonic: "D3", mode: "phrygian", bpm: 80, pad: true,
+    desc: "Cult figures at a broken vault: the motif with its notes missing, ending on the flat second.",
+    p2: { style: "echo", delay: .75, duty: .25, env: { vol: 5, dir: -1, step: 8 } },
+    sections: { A: { mel: "1:1 r:1 4:.5 r:.5 4:1 | r:1 6:.5 r:.5 r:1 2:1", chords: "1 2" } } });
 })(typeof window !== "undefined" ? window : globalThis);

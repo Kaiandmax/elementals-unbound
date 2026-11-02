@@ -25,7 +25,7 @@ Be upfront about the limits: this is synthesized music, closer to a polished chi
 ## What the game needs, roughly in this order
 
 1. The palette and the main theme.
-2. Battle music: battles last about 3 turns, so short loops that build intensity as life drops, with victory and defeat stingers.
+2. Battle music: normal battles last under 4 turns a side (bosses 6-7), so short loops that build intensity as life drops, with victory and defeat stingers.
 3. The overworld and dungeon themes, one per region as Story defines them.
 4. Boss themes that shift with the boss's phases.
 5. Sound effects for the card game (play, attack, block, damage, Manifest).

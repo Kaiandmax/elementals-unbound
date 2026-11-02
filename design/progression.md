@@ -47,7 +47,7 @@ What already exists and these options build on:
 | Starting deck | A Starter deck. |
 | Owning cards | As A (bound). |
 | Deck size and copies | 20 cards, up to 2 copies; any mix of base elements. |
-| Elements | Mix any elements freely; each card gives its own element's charge and each Manifest costs its own element's charge. (The Purity bonus this option leaned on was removed on 2026-10-24.) Confluences become a bonus layer on top. |
+| Elements | Mix any elements freely; each card gives its own element's charge and each Manifest costs its own element's charge. Confluences become a bonus layer on top. |
 | Rebuilding | Any time outside battle. |
 
 **Why:** the most freedom; a loot card from any element slots into any deck.
@@ -92,21 +92,37 @@ What already exists and these options build on:
 
 **Risks to test:** the AI's Reaction timing (a reaction deck piloted badly by the AI looks weak in sims); stalls (Water already has the longest games; the Warden's 1 face damage per Reaction is there to keep it closing games); whether 2/5 Ward is too safe a body.
 
-### The next few (sketch, to refine with Story's region order)
+**Built (2026-10-24):** `water_slackwater_the_weir_serpent`, Slackwater, the Weir Serpent (Story's name), in `cards/water.js`. It reworks the unused rare Manifest Moonlit Tide, so the card count is unchanged. Proposed numbers: 3 Water charge, 2/5, Ward; Balance sets the final ones.
 
-| # | Element | Build-around | What you rebuild into | Skill it teaches |
-|---|---|---|---|---|
-| 2 | Earth | Gets +1/+1 for each creature you have with Fortify; your Fortify creatures grow +1 extra | Crystal Growth style: every creature grows each turn | Planning across turns, protecting a board |
-| 3 | Wind | When it arrives, return any number of your other creatures to hand; they cost 1 less this turn | Zephyr Tricks: cheap arrival effects replayed | Sequencing and replay value (Wind's real identity) |
-| 4 | Fire | Ignite: whenever you spend charge, summon an Ember Spark; your tokens have +1/+0 | Ember Swarm with Overcharge cards | Ignite: spending charge on purpose, a burst turn |
-| 5 | Lightning | Costs 1 less charge for each other card you played this turn (min 1) | Spark Storm: many cheap spells in one turn | Chain: playing several cards in one turn |
-| 6+ | Confluences | One per confluence once the Forge opens, each pushing that confluence's archetype | Fused or archetype decks | That archetype |
+Loot-card test (AI level 3, 120 games each against the ten mono common decks):
 
-Each of 2-5 deliberately revives an element's signature mechanic, which `design/elements.md` found thin in the current pool.
+| Deck | Wins | Slackwater cast |
+|---|---|---|
+| Water Starter, unchanged | 58% | — |
+| Water Starter, Slackwater swapped in for Kraken of the Deep | 47% | 68% of games |
+| Rebuilt around Reactions (Chill, Deflect, Tidal Shield, Icy Grip, Riptide Counter + the Starter's three), no Slackwater | 56% | — |
+| Rebuilt around Reactions, with Slackwater | **84%** | 98% of games |
+
+It does what a loot card should: little in an unchanged deck, a big payoff once you rebuild. 84% is high against same-rank decks; Balance may trim it, but a big jump is the point of a loot card.
+
+### The vault cards of Acts II-IV (from Story's outline)
+
+Story tied each companion's personal Manifest to the vault of their home chapter (story/characters/). These are the next loot cards after Slackwater. Each one revives an element's signature mechanic, which `design/elements.md` found thin in the current pool. Numbers are proposals for Balance; each will be reworked from a reserve Manifest (see `design/manifests.md`) so the card count stays as designed.
+
+| Act | Card (Story's name) | Element | Build-around (proposed text) | You rebuild into | Skill it teaches | Engine |
+|---|---|---|---|---|---|---|
+| II-1 | The Tolling Kraken (Isa) | Water | 4 charge, 4/6. **Whenever the enemy plays a card, deal 1 damage to the enemy.** When played, freeze a creature. | Control that makes every enemy play cost life: freeze, bounce and counters to stretch their turns | Tempo control: making the opponent's plays hurt | New trigger: enemy plays a card |
+| II-2 | The Rootbound Colossus (Brann) | Earth | 4 charge, 3/7, Skyguard. **At the end of your turn, if you didn't attack, this and your other creatures get +1/+1 permanently.** | Stonewall: walls, Vigilant and Fortify; win late with a huge board | Patience: when not to attack | New condition: you didn't attack this turn |
+| II-3 | The Windlord's Roc (Kes) | Wind | 3 charge, 3/4, Airborne. When played, return another basic creature you control to your hand. **Whenever you play another creature, this gets +1/+1 and you gain 1 Energy.** | Zephyr Tricks: cheap creatures with arrival effects, replayed | Sequencing and replay value | Existing card language |
+| III-2 | The Varrane Crest-Drake (Pell) | Fire | 4 charge, 4/4, Airborne, Haste. **Whenever a creature you control attacks alone, it gets +3/+0 and Pierce this turn, and deals 2 damage to the enemy.** | A few big hasty threats and burn instead of a wide board | Committing to one threat | New condition: attacks alone |
+| III-3 | Ash vault card (no companion) | Ash | 3 charge aura. **Whenever a token you control dies, summon a 1/1 Haste Ashling.** Your tokens get +1/+0. | Ash Cinders: tokens that burn out and rise again | Sacrifice and value from dying | Existing (`die` + token filter: check) |
+| IV-1 | The Hymn of Thunderhold (Tamsin) | Lightning | 3 charge aura. **Whenever you play another card, if you played 3+ other cards this turn, deal 2 damage to the enemy and draw a card.** | Spark Storm: many cheap spells in one turn | Chain: playing several cards in one turn | Existing (`card/chain3`) |
+
+The three new rules are for Game Dev to build when Act II starts, along with Balance's numbers.
 
 ## Manifest deck size: 4 for every deck (decided 2026-10-24)
 
-The old 5 / 4 / 3 by element count (the Purity bonus) made mono decks keep up with duals and triples. The designer wants players to move through the elements as the journey goes, so every deck now carries **4 Manifests**.
+Every deck carries **4 Manifests**, whatever its element count. Nothing rewards staying with fewer elements: the designer wants players to move through the elements as the journey goes.
 
 Why 4 (mono decks, AI level 3, 760 games per size):
 
@@ -145,6 +161,46 @@ The first pass of the change (PR: tcg/four-manifests) cut one Manifest from each
 | Static Charge | Thunder Golem | Overload | Lightning Lance |
 | Thunder Gods | Judgment Bolt | | |
 
+## The Forge (spec, 2026-10-24)
+
+Designer decisions this builds on: the Forge is fueled by the **essence of the confluence being forged**, which only enemies of that confluence drop; forged cards **can't be rarer than the hunter rank allows** (d-1792823280932); each win against a dual or triple enemy gives about **one forge's worth** of essence (d-1792823762489). Goal: mono rares can't be turned into a rare triple deck the day triples unlock, and later monsters stay worth fighting.
+
+### What you can forge
+
+- Two base cards of the same type, one from each element of a dual confluence, make that confluence's card (the existing fusion rules). A dual card plus a base card of the missing element makes a triple card. Named recipes (special cards) work the same way.
+- You need to own the parts. Forging **doesn't use them up**, matching "bound cards": you keep them, and the forged card joins your collection.
+- Manifests can't be forged (they never fuse), so they stay the hand-placed treasures.
+- The forged card's rarity is the fusion's own (the average of its parts, rounded down).
+
+### Rank cap
+
+| Hunter rank | Ladder steps | Forge |
+|---|---|---|
+| Tin to Steel | 1-4 | Closed |
+| Silver | 5-6 | Dual, Common and Uncommon |
+| Gold | 7 | Dual, any rarity |
+| Adamant | 8-9 | Also triple, Common and Uncommon |
+| Exalted | 10 | Anything |
+
+Same-rarity cards can still **drop** from enemies above the cap (a rare from a strong enemy is a real prize); the cap only limits what the Forge makes.
+
+### Essence
+
+One kind per confluence (20 kinds), shown as "Volcano essence". Costs and drops use the same scale, so one win pays for about one forge of that enemy's rarity:
+
+| | Common | Uncommon | Rare |
+|---|---|---|---|
+| Forge a dual card | 2 | 3 | 5 |
+| Forge a triple card | 3 | 5 | 8 |
+| A win against a dual deck of that rarity | 2 | 3 | 5 |
+| A win against a triple deck of that rarity | 3 | 5 | 8 |
+
+- Boss monsters of a confluence give 3x their deck's amount.
+- A triple enemy gives only its triple's essence. Duals and triples stay separate economies, so triple cards come from fighting triple enemies.
+- Archetype (special-card) enemy decks count as rare.
+
+Game Dev: `RPG_DROPS.essence` becomes a table by element count and rarity (`{ dual:{c:2,u:3,r:5}, triple:{c:3,u:5,r:8}, bossMult:3 }`), and the Forge needs the cost table, the rank cap and a "you need N essence" line. Balance: tune the amounts against the 80-100 hour collection target.
+
 ## Not yet covered
 
-Shops and currencies, trading, card upgrades (the doc's "Pure cards grow at milestones"), enemy decks per region and what each teaches, boss mechanics. These come after the designer picks a rule set.
+Shops and other currencies, trading, card upgrades, enemy decks per region and what each teaches, boss mechanics. These come after the designer picks a rule set.

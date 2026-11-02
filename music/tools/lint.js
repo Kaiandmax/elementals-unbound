@@ -4,7 +4,7 @@ const path = require("path"), root = path.join(__dirname, "..");
 const ORDER = require(path.join(root, "tracks", "order.json"));
 ORDER.forEach((f) => require(path.join(root, f)));
 const { EUSynth, EU_TRACKS } = globalThis;
-const GROUPS = ["element", "dual", "triple", "zone", "battle", "stinger"];
+const GROUPS = ["element", "dual", "triple", "zone", "scene", "battle", "stinger"];
 let errors = 0, warn = 0;
 const err = (id, m) => { errors++; console.log("ERROR " + id + ": " + m); };
 const seen = new Set();
@@ -23,7 +23,7 @@ for (const t of EU_TRACKS) {
   }
   const ms = C.lead.map((n) => n.m), lo = Math.min(...ms), hi = Math.max(...ms);
   if (lo < 48 || hi > 88) err(t.id, `lead range ${lo}-${hi} outside 48-88 (C3-E6)`);
-  if (C.seconds < 4 || C.seconds > 90) { warn++; console.log(`warn ${t.id}: loop is ${C.seconds.toFixed(1)} s`); }
+  if ((!C.once && C.seconds < 4) || C.seconds > 90) { warn++; console.log(`warn ${t.id}: loop is ${C.seconds.toFixed(1)} s`); }
 }
 const by = {}; EU_TRACKS.forEach((t) => (by[t.group] = (by[t.group] || 0) + 1));
 console.log(`${EU_TRACKS.length} tracks (${Object.entries(by).map(([k, v]) => v + " " + k).join(", ")}): ${errors} errors, ${warn} warnings`);

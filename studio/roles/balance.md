@@ -24,7 +24,7 @@
 - Power ladder: Starter 1; mono common/uncommon/rare 2/3/4; dual 5/6/7; triple 8/9/10. Each step wins about 55-65% against the step below at AI level 5. A 10 beats a 1 nearly always and a 2 or 3 in 90%+ of games.
 - Decks with the same element count and rarity: no matchup past 70/30 where avoidable.
 - Every card within about 20% of its element and rarity's median value.
-- Battles last about 3 turns. Triple decks get 3 Manifests, duals 4, monos 5. Manifests cost 2-6 charge.
+- Normal battles last under 4 turns a side; boss fights aim for 6-7. Every deck has 4 Manifests. Manifests cost 2-6 charge.
 
 ## How you work
 
