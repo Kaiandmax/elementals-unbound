@@ -2,7 +2,7 @@
    Fire + Water. 100 designed cards that replace Steam's formula fusions (design/confluence-cards.md, design/confluence-slots.md).
    NOT loaded by build.py yet: it goes in once Balance has priced it and Game Dev's Forge reads catalogs.
    Each card: o.th = theme, o.tr = trait pair (Fire trait + Water trait; the Forge's nearest-match key), o.sig = signature recipe [Fire card, Water card].
-   Themes: pressure (archetype: a full hand fuels everything), scald (heavy hitters that burn as they attack, with Drain to win races), fog (Ward and ambush),
+   Themes: pressure (archetype: a full hand fuels everything), scald (heavy hitters that burn as they attack; Pierce and Drain to get through blockers and win races), fog (Ward and ambush),
    boil (freeze, then burn), vent (return your own creatures to replay their arrival).
    Rules: one keyword and one effect (or two small ones); "cards in hand" checks are thresholds, never per-card scaling;
    a basic card deals at most its cost +1 to a player on the turn it's played; board-wide damage at most 2. */
@@ -46,14 +46,14 @@ const STEAM_CATALOG = [];
 
   /* ---- Scald (20) ---- */
   setR("c");
-  add(Cr("Scalding Crab",2,3,4,"","attack: zaps 1 1",S("scald","burn+shell",["Molten Hatchling","Coral Crab"])));
+  add(Cr("Scalding Crab",2,3,3,"pierce","attack: zaps 1 1",S("scald","burn+shell",["Molten Hatchling","Coral Crab"])));
   add(Cr("Kelp Brander",2,3,4,"drain","attack: buff self 1 0 tmp",S("scald","burn+wall",["Brimstone Guard","Rime Watcher"])));
-  add(Cr("Steam Vent Guard",3,4,6,"","play: dmg all_e 1",S("scald","burn+wall",["Bonfire Keeper","Reef Guardian"])));
+  add(Cr("Steam Vent Guard",3,4,5,"pierce","play: dmg all_e 1",S("scald","burn+wall",["Bonfire Keeper","Reef Guardian"])));
   add(Cr("Boiling Reef",6,7,9,"drain","attack: zaps 1 2",S("scald","burn+drain",["Magma Golem","Sea Serpent"])));
   add(Cr("Scorchshell Turtle",2,4,4,"ward","hurt: buff self 1 0",S("scald","fury+ward",["Apprentice Pyromancer","Mist Weaver"])));
-  add(Cr("Geyser Sentinel",5,6,8,"","play: dmg all_e 1 | start: mend self all",S("scald","burn+wall",["Kiln Golem","Shiver Elemental"])));
+  add(Cr("Geyser Sentinel",5,6,7,"pierce","play: dmg all_e 1",S("scald","burn+wall",["Kiln Golem","Shiver Elemental"])));
   add(Sp("Scalding Splash",2,"play: dmg t 3; mend own 2",S("scald","burn+mend",["Scorch","Soothing Rain"],{tgt:"e"})));
-  add(Re("Scalding Shield",1,"play: buff t 0 3 tmp; dmg str 1",S("scald","burn+shield",["Ember Shield","Tidal Shield"],{tgt:"o"})));
+  add(Re("Scalding Shield",1,"play: buff t 2 0 tmp; kw t pierce tmp",S("scald","burn+shield",["Ember Shield","Tidal Shield"],{tgt:"oatk"})));
   add(Re("Steam Burn",2,"play: dmg t 4",S("scald","burn+tide",["Wild Surge","Icy Grip"],{tgt:"eatk"})));
   add(Au("Hot Springs",2,"start: buff ostr 2 0 tmp",S("scald","warmth+mend",["Kindling Hearth","Tidal Archive"])));
   setR("u");
