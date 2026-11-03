@@ -59,7 +59,7 @@ No formula fusions. Each confluence has a catalog of designed cards, and the For
 | **Answers at every rarity:** each confluence's commons include blockers and at least one way to deal with a big creature. | Comparable decks can always fight back. |
 | **Stronger means richer, not bigger.** A dual card gets what mono can't: two elements' keywords on one body, or a cross-element effect (freeze plus burn). Raw numbers rise only gently. | Power still grows with progression, but through options. |
 
-**Power curve (decided):** the balance pass prices confluence cards from the **mono median times a tier factor**, not from the fusions' median: **dual ×1.25, triple ×1.6** (today about ×1.4 and ×1.9). In the sims this is about the "dual ×0.92, triple ×0.85" row: triple games over by round 2 drop from 31% to about 13%, at about 3.6 rounds. The design rules above have to do the rest of the work against stomps.
+**Power curve (decided):** the balance pass prices confluence cards from the **mono median times a tier factor**, not from the fusions' median: **dual ×1.25, triple ×1.5** (fusions were about ×1.4 and ×1.9). Creature stats move at most +25% in normalization, so the factor mostly nudges costs and effect numbers; the real power comes from the designs. The design rules above do the rest of the work against stomps.
 
 ### 2. Worked examples
 
@@ -79,7 +79,7 @@ The options that were on the table are kept for the record.
 |---|---|---|
 | A. How the Forge picks the result | **A3 hybrid:** each designed card has one signature recipe (named parents, a discovery); every other legal pair makes the catalog card closest to the parents' type, cost, rarity and traits. A "Forge book" records the discoveries. | A1 named recipes only; A2 slot matching |
 | B. Cards per confluence | **100 per dual and per triple (2,000 designed cards).** About 450 exist (specials and named recipes) and get reworked to the rules; about 1,550 are new. | 40 dual / 30 triple; 30 / 20 |
-| C. How much stronger | **Dual ×1.25, triple ×1.6** of mono's value per Energy. | ×1.15 / ×1.3; let Balance decide |
+| C. How much stronger | **Dual ×1.25, triple ×1.5** of mono's value per Energy (triple was ×1.6 until 2026-11-03; see below). | ×1.15 / ×1.3; let Balance decide |
 
 ### How to design 2,000 cards without repeats
 
@@ -87,6 +87,20 @@ The options that were on the table are kept for the record.
 - **Each confluence has 4-5 themes**, not one archetype, so its 100 cards make 3 tier decks plus the archetype deck without the same 20 cards repeating. The 20 specials stay as the archetype's core and get reworked to the rules.
 - **Signature recipes** come from the existing named recipes and the parent pairs the current decks use, so known combinations keep a recognizable result.
 - **Batches:** one confluence per PR, about 100 cards, each with its slot, trait pair and signature recipe. Story renames as the world develops; placeholder names are fine until then.
+
+## Power by element count and rarity (designer, 2026-11-03)
+
+**More elements must mean more power.** Balance's pilot sims (AI level 3, theme decks of commons) confirm it holds in play: against the same mono rare decks, Aurora (triple) commons win about 80% and Steam (dual) commons about 50%, and Aurora commons beat dual rares about 65% (the ladder's 55-65% step). With stats capped at +25%, Aurora plays the same at ×1.2, ×1.4 and ×1.5, so the designer's ×1.5 is the factor.
+
+**Rarity unlocks abilities more than it adds budget.** The value gap between rarities stays small; what changes is what a card is allowed to do:
+
+| Rarity | Can do |
+|---|---|
+| Common | One keyword. Effects that fire once (when played, attacking, blocking, dying, at the start or end of your turn) or that only grow the card itself. Threshold checks ("if you have 5+ cards in hand", "Chain 2", "if you've cast a Manifest"). |
+| Uncommon | Everything a common can, plus **engines**: "whenever you draw / play a spell / gain charge / cast a Manifest..." that hit other things, and **static effects** (your creatures get +1/+0). Destroy effects. |
+| Rare | Everything an uncommon can, plus **rule-benders**: Energy bank, cost reduction, granting a keyword to all your creatures, double attack, take control, return all your creatures; and two keywords. |
+
+`design/tools/catalogcheck.js` enforces this. In the pilots it moved 9 engine cards from common to uncommon (swapping in simple uncommons of the same type and theme), rewrote 6 common auras as start- or end-of-turn effects, and moved Refracted Strike (double attack) to rare.
 
 ## Rollout
 
