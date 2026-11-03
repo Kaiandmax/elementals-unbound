@@ -40,7 +40,7 @@ Every theme has to pass these checks:
 | Theme | Plays like | Fire trait | Water trait | Size |
 |---|---|---|---|---|
 | **Pressure** (archetype) | A full hand fuels everything: effects count cards in hand, draws trigger burn | burn | draw | 25 |
-| **Scald** | Ward blockers that burn whatever touches them | damage on block | Wall, Ward | 20 |
+| ~~Scald~~ | Folded into Pressure (+10) and Boil (+10) after eight pilot runs: as Ward blockers, as attackers with Pierce and Drain, and as a support theme, it stayed 25-40 points under the band and dragged mixed decks down | | | 0 |
 | **Fog** | Hidden threats: Ward, can't be targeted the turn they arrive, Reactions | ambush, Haste | Ward, Reactions | 20 |
 | **Boil** | Freeze then burn: damage that grows on frozen creatures | burn | freeze | 20 |
 | **Vent** | Return your own creatures to replay their arrival effects | arrival damage | self-bounce | 15 |
@@ -70,6 +70,7 @@ Airborne is Wind's keyword and Aurora has no Wind, so the Airborne on today's Au
 
 ### Lessons from the pilots (Balance's theme sims, five runs)
 
+- **If a theme stays under the band after two reworks, fold its slots into the themes that work** rather than tuning it again (Steam's Scald: 8 runs, never above 40%).
 - **Every theme needs a way to win on its own**, not just a way to survive. Battles last about 4 turns a side, so a theme that only reacts (Steam's first Scald: "burn whatever hits it"; Aurora's Shimmer) loses races. Defensive themes get a finisher at common, or are built to sit inside another theme's deck (say which in the table).
 - **Common power comes from bodies and one-shot effects**, never engines (the rarity rule in `confluence-cards.md`). Cheap Haste bodies plus a cheap buff spell is the hottest pattern found so far (Aurora's Prism); keep Haste off 1-2 cost commons unless the body is small.
 - **Charge acceleration at common is what makes Manifests early**, which is what makes games swingy. A recurring charge source is at least 4 Energy at common, or uncommon.
