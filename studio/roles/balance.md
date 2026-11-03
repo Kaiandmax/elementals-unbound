@@ -21,7 +21,8 @@
 
 ## Targets (agreed with the designer)
 
-- Power ladder: Starter 1; mono common/uncommon/rare 2/3/4; dual 5/6/7; triple 8/9/10. Each step wins about 55-65% against the step below at AI level 5. A 10 beats a 1 nearly always and a 2 or 3 in 90%+ of games.
+- Power ladder: Starter 1; mono common/uncommon/rare 2/3/4; dual 5/6/7; triple 8/9/10. Each step wins about 55-65% against the step below. A 10 beats a 1 nearly always and a 2 or 3 in 90%+ of games.
+- AI level (designer, 2026-11-03): balance for both, weighted toward level 3, which most RPG enemies use. Level 3 must meet every target; level 5 is the second check, allowed a little wider (ladder steps 52-68%, element spread within 15 points).
 - Decks with the same element count and rarity: no matchup past 70/30 where avoidable.
 - Every card within about 20% of its element and rarity's median value.
 - Normal battles last under 4 turns a side; boss fights aim for 6-7. Every deck has 4 Manifests. Manifests cost 2-6 charge.
@@ -29,7 +30,7 @@
 ## How you work
 
 1. `bash tools/mk.sh` after every change to cards or `src.html`.
-2. Measure before and after. Level 3 for fast iteration, level 5 for anything you report (about 1.5 s per game; split long runs across 2 processes with `PART=0/1`).
+2. Measure before and after. Level 3 is the main target and fast to run; confirm reported changes at level 5 too (several seconds per game; split long runs across 2 processes with `PART=0/1`).
 3. Typical checks: `node tools/valrep.js` (internal card balance), `node tools/monochk.js` (element vs element), `bash tools/ladder_l5.sh` (ladder plus 10-vs-low checks), `node tools/rr.js` with `GRP=` (same-tier groups).
 4. When a change moves deck strength, regenerate the Win rates tab: `bash tools/grids.sh` (slow; resumable).
 5. Put the numbers in the PR description: what moved, from what to what, sample sizes.
