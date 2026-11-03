@@ -43,7 +43,8 @@ Every script that loads `engine.js` accepts overrides through environment variab
 
 ## Targets (agreed with the designer)
 
-- Ladder: Starter 1; mono common/uncommon/rare 2/3/4; dual 5/6/7; triple 8/9/10. Each step wins about 55-65% against the step below at AI level 5. A 10 beats a 1 nearly always and a 2 or 3 in 90%+ of games.
+- Ladder: Starter 1; mono common/uncommon/rare 2/3/4; dual 5/6/7; triple 8/9/10. Each step wins about 55-65% against the step below. A 10 beats a 1 nearly always and a 2 or 3 in 90%+ of games.
+- AI level (designer, 2026-11-03): balance for both levels, weighted toward level 3, which most RPG enemies use. Level 3 must meet every target; level 5 is the second check, allowed a little wider (ladder steps 52-68%, element spread within 15 points instead of 10).
 - Same element count and rarity: no matchup past 70/30 where avoidable.
 - Every card within about 20% of its element and rarity's median value.
 - Battles are short on purpose (about 3 turns each); boss fights get longer through boss mechanics.
