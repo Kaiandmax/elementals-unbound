@@ -2,7 +2,7 @@
    Fire + Water. 100 designed cards that replace Steam's formula fusions (design/confluence-cards.md, design/confluence-slots.md).
    NOT loaded by build.py yet: it goes in once Balance has priced it and Game Dev's Forge reads catalogs.
    Each card: o.th = theme, o.tr = trait pair (Fire trait + Water trait; the Forge's nearest-match key), o.sig = signature recipe [Fire card, Water card].
-   Themes: pressure (archetype: a full hand fuels everything), scald (heavy hitters that burn as they attack; Pierce and Drain to get through blockers and win races), fog (Ward and ambush),
+   Themes: pressure (archetype: a full hand fuels everything), scald (support theme: burn removal and Pierce attackers that sit inside Pressure or Boil decks), fog (Ward and ambush),
    boil (freeze, then burn), vent (return your own creatures to replay their arrival).
    Rules: one keyword and one effect (or two small ones); "cards in hand" checks are thresholds, never per-card scaling;
    a basic card deals at most its cost +1 to a player on the turn it's played; board-wide damage at most 2. */
