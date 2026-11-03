@@ -172,24 +172,45 @@ function normalizeCore(d, f){
     return;
   }
 }
+/* ---- Designed confluence catalogs (design/confluence-cards.md; designer, 2026-11-01 and 2026-11-03) ----
+   A confluence whose basic cards come from a designed catalog (cards carry d.catalog) is priced from its parents, not from
+   fusions: its median value per Energy is the parent elements' mono median x CONF_FACTOR (dual 1.25, triple 1.5).
+   The normalization pass may then move a designed creature's attack and health at most 25% either way from how it was
+   written, so designs stay close to their text (cost and effect steps still apply). TIERF does not apply to these groups:
+   the factor is their anchor. */
+const CONF_FACTOR = Object.assign({ dual:1.25, tri:1.5 }, globalThis.CONFF_OVR||{});
+const DESIGNED_BODY = 0.25;
+function normalizeDesigned(d, f){
+  const a0 = d.atk, h0 = d.hp;
+  normalizeCard(d, f);
+  if (d.type!=="creature" || a0==null) return;
+  const lo = x => x===0 ? 0 : Math.max(1, Math.ceil(x*(1-DESIGNED_BODY) - 1e-9)), hi = x => Math.max(1, Math.floor(x*(1+DESIGNED_BODY) + 1e-9));
+  d.atk = Math.min(hi(a0), Math.max(lo(a0), d.atk)); d.hp = Math.min(hi(h0), Math.max(lo(h0), d.hp));
+  if (a0===0) d.atk = 0;
+}
 (function(){
   const all = Object.values(LIB).filter(d=>!d.token && !(d.r==="s" && d.manifest));   // Starter Manifests are hand-tuned and keep their written costs
+  const DESIGNED = new Set(all.filter(d=>d.catalog && !d.manifest).map(d=>d.el));
   const med = a => { const s = [...a].sort((x,y)=>x-y); return s[Math.floor(s.length/2)]; };
   // Manifests cost 2 to 6 charge: clamp the written costs first so group medians are measured on playable costs.
   for (const d of all) if (d.manifest){ const k = Object.keys(d.mcost)[0]; d.mcost[k] = Math.max(2, Math.min(6, d.mcost[k])); }
   const ratios = {};
   for (const d of all){
     const conf = !BASE_ELS.includes(d.el);
+    if (conf && !d.manifest && DESIGNED.has(d.el)) continue; // designed confluences: anchored to the mono median below
     if (conf && !d.manifest && !d.fused) continue;          // confluence basics: the median comes from the fusions
     (ratios[balGroup(d)] = ratios[balGroup(d)] || []).push(cardRatio(d));
   }
   for (const [k, a] of Object.entries(ratios)) BAL_MED[k] = med(a);
+  for (const el of DESIGNED){ const ps = CONFLUENCE[el], fac = ps.length===2 ? CONF_FACTOR.dual : CONF_FACTOR.tri;
+    for (const r of ["c","u","r"]){ const a = ps.flatMap(p => ratios[p+"|"+r+"|B"] || []); if (a.length) BAL_MED[el+"|"+r+"|B"] = med(a)*fac; } }
   // Ladder tuning: a whole rarity tier of an element group can be set stronger or weaker (base/dual/triple : c/u/r).
-  for (const k of Object.keys(BAL_MED)){ const [el, r] = k.split("|"); const grp = BASE_ELS.includes(el) ? "base" : CONFLUENCE[el].length===2 ? "dual" : "tri";
+  for (const k of Object.keys(BAL_MED)){ const [el, r, kind] = k.split("|"); const grp = BASE_ELS.includes(el) ? "base" : CONFLUENCE[el].length===2 ? "dual" : "tri";
+    if (kind==="B" && DESIGNED.has(el)) continue;
     const f = TIERF[grp+":"+r]; if (f) BAL_MED[k] *= f; }
   for (const k of Object.keys(BAL_MED)) if (k.endsWith("|M") && BAL_MED[k.slice(0,-1)+"B"]) BAL_MED[k] = BAL_MED[k.slice(0,-1)+"B"] * MK;
   for (const d of all){ const ef = EF[d.el+":"+d.r]||1;
-    normalizeCard(d, ef*(d.manifest ? (d.special ? (SPMF[d.el]||1) : 1) : d.special ? (SPF[d.el]||1) : 1)); }
+    (d.catalog && !d.manifest ? normalizeDesigned : normalizeCard)(d, ef*(d.manifest ? (d.special ? (SPMF[d.el]||1) : 1) : d.special ? (SPF[d.el]||1) : 1)); }
   BAL_READY = true;
 })();
 
