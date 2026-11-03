@@ -6,11 +6,20 @@
    shimmer (Barrier, freeze and healing; the answers), dawnfire (burn that only grows once Manifests have been cast).
    Aurora's charge rules: one card per rarity gives 3+ charge on its own (Gather Light, Charge the Sky, Cascade of Dawn); every other
    card gives at most 1; no card gives charge and draws; "Manifests cast" checks are thresholds; board-wide damage at most 2. */
-const AURORA_CATALOG = [];
+// Loaded after decks_triple.js (build.py). The catalog replaces the confluence's old basic cards (special cards, named recipes
+// and formula fusions): they leave the library, the special-card list and the recipe book first, so the designed cards can take
+// their names. cards/catalog_decks.js then rebuilds this confluence's prebuilt decks from the catalog.
+globalThis.AURORA_CATALOG = [];
+(function(){
+  const gone = new Set();
+  for (const [id, d] of Object.entries(LIB)) if (d.el==="aurora" && !d.manifest && !d.token){ delete LIB[id]; gone.add(id); }
+  for (let i = SPECIALS.length-1; i >= 0; i--) if (gone.has(SPECIALS[i].id)) SPECIALS.splice(i, 1);
+  for (const [k, id] of Object.entries(RECIPES)) if (gone.has(id)) delete RECIPES[k];
+})();
 (function(){
   let M = null;
   const S = (th, tr, sig, o={}) => { M = { th, tr, sig, catalog:"aurora" }; return o; };
-  const add = d => { Object.assign(d, M); AURORA_CATALOG.push(d); return d; };
+  const add = d => { Object.assign(d, M); globalThis.AURORA_CATALOG.push(d); return d; };
   setEl("aurora");
 
   /* ---- Radiance (25) ---- */
@@ -137,4 +146,9 @@ const AURORA_CATALOG = [];
   add(Cr("Sunrise Wyrm",6,7,8,"pierce","play/mani2: dmg all_e 2",S("dawnfire","burn+manifest",["Flame Tyrant","Deepsea Hydra","Storm Titan"])));
   add(Cr("Phoenix of Dawn",5,6,7,"","play: dmg all_e 1 | manifest: buff self 1 1",S("dawnfire","burn+manifest",["Pyrelord Vexis","Siren Queen","Plasma Lord"])));
   add(Sp("Daybreak",6,"play: dmg all_e 2 | play/mani3: dmg face 3",S("dawnfire","burn+manifest",["Wildfire Blaze","Glacial Torrent","Ion Storm"])));
+  // Signature recipes: the Forge's recipe book makes each designed card from its named parents (one card per element).
+  for (const d of globalThis.AURORA_CATALOG){
+    const ids = d.sig.map((n, i) => cardIdByName(n, [CONFLUENCE["aurora"][i]]));
+    d.recipe = ids; RECIPES[fuseKey(ids)] = d.id;
+  }
 })();
