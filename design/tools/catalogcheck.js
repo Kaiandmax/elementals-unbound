@@ -9,7 +9,7 @@ const conf = process.argv[2] || "steam";
 const ROOT = path.join(__dirname, "../..");
 vm.runInThisContext(fs.readFileSync(path.join(ROOT, "tools/engine.js"), "utf8"), { filename: "engine.js" });
 const S = globalThis.__sim, L = S.LIB, els = S.CONFLUENCE[conf];
-const TIER = +process.env.TIER || (els.length === 2 ? 1.25 : 1.6);   // TIER=1.2 to measure against another tier factor
+const TIER = +process.env.TIER || (els.length === 2 ? 1.25 : 1.5);   // TIER=1.2 to measure against another tier factor
 // Mono reference: the median value per Energy of the parent elements' basic cards, by rarity (before the new card enters LIB).
 const med = a => { const s = [...a].sort((x, y) => x - y); return s[Math.floor(s.length / 2)]; };
 const mono = {};
@@ -21,6 +21,14 @@ for (const [id, d] of Object.entries(L)) if (d.el === conf && !d.manifest && !d.
 vm.runInThisContext(fs.readFileSync(path.join(ROOT, `cards/catalog_${conf}.js`), "utf8"), { filename: `catalog_${conf}.js` });
 const C = globalThis[conf.toUpperCase() + "_CATALOG"] || vm.runInThisContext(conf.toUpperCase() + "_CATALOG");
 
+// Rarity unlocks (design/confluence-cards.md): commons fire once or only grow themselves; "whenever you..." engines that hit
+// other things and static effects start at uncommon; rule-benders (bank, cost, granting keywords to all, steal, double, return all) are rare.
+const ENG = new Set(["draw","spell","react","creature","card","charge","manifest","freeze","edie","die","heal","token","spend","face"]);
+const commonOK = fx => fx.split("|").map(x => x.trim()).filter(Boolean).every(seg => {
+  const [trig, atoms = ""] = seg.split(/:(.*)/s); const t = trig.split("/")[0].trim();
+  if (t === "static" || /\b(steal|double|destroy)\b|bounce own/.test(atoms)) return false;
+  return !ENG.has(t) || atoms.split(";").every(a => /^\s*(buff|kw) self\b/.test(a));
+});
 const grid = {}, cost = { cr: {}, other: {} }, themes = {}, pairs = new Map(), problems = [];
 for (const d of C){
   const k = d.type + ":" + d.r; grid[k] = (grid[k] || 0) + 1;
@@ -30,7 +38,9 @@ for (const d of C){
   sig.forEach((n, i) => { const p = byName[n]; if (!p) problems.push(`${d.name}: parent "${n}" not found`); else if (p.el !== els[i]) problems.push(`${d.name}: parent "${n}" is ${p.el}, expected ${els[i]}`); });
   const key = [...sig].sort().join(" + ");
   if (pairs.has(key)) problems.push(`${d.name}: signature recipe ${key} already used by ${pairs.get(key)}`); else pairs.set(key, d.name);
-  if ((d.kw || []).length > 1) problems.push(`${d.name}: ${d.kw.length} keywords`);
+  if ((d.kw || []).length > 1 && d.r !== "r") problems.push(`${d.name}: ${d.kw.length} keywords (two keywords are a rare's)`);
+  if (d.r === "c" && !commonOK(d.fx || "")) problems.push(`${d.name}: common with an uncommon/rare ability (${d.fx})`);
+  if (d.r !== "r" && /\bstatic: (bank|cost|grant)|\b(steal|double)\b|bounce own/.test(d.fx || "")) problems.push(`${d.name}: rule-bender below rare (${d.fx})`);
   if ((d.text || "").length > 140) problems.push(`${d.name}: long text (${d.text.length})`);
   const face = ((d.fx || "").match(/dmg face (\d+)/g) || []).reduce((s, m) => s + +m.split(" ")[2], 0) + ((d.kw || []).includes("haste") ? d.atk : 0);
   if (face > d.cost + 1) problems.push(`${d.name}: up to ${face} face damage the turn it's played (cap ${d.cost + 1})`);
