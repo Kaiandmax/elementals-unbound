@@ -2,7 +2,7 @@
    Fire + Water. 100 designed cards that replace Steam's formula fusions (design/confluence-cards.md, design/confluence-slots.md).
    NOT loaded by build.py yet: it goes in once Balance has priced it and Game Dev's Forge reads catalogs.
    Each card: o.th = theme, o.tr = trait pair (Fire trait + Water trait; the Forge's nearest-match key), o.sig = signature recipe [Fire card, Water card].
-   Themes: pressure (archetype: a full hand fuels everything), scald (sturdy bodies that give off heat every turn), fog (Ward and ambush),
+   Themes: pressure (archetype: a full hand fuels everything), scald (heavy hitters that burn as they attack, with Drain to win races), fog (Ward and ambush),
    boil (freeze, then burn), vent (return your own creatures to replay their arrival).
    Rules: one keyword and one effect (or two small ones); "cards in hand" checks are thresholds, never per-card scaling;
    a basic card deals at most its cost +1 to a player on the turn it's played; board-wide damage at most 2. */
@@ -46,16 +46,16 @@ const STEAM_CATALOG = [];
 
   /* ---- Scald (20) ---- */
   setR("c");
-  add(Cr("Scalding Crab",2,1,3,"","start: zaps 1 1",S("scald","burn+shell",["Molten Hatchling","Coral Crab"])));
-  add(Cr("Kelp Brander",2,1,5,"wall","start: dmg face 1",S("scald","burn+wall",["Brimstone Guard","Rime Watcher"])));
-  add(Cr("Steam Vent Guard",3,2,6,"","play: dmg all_e 1",S("scald","burn+wall",["Bonfire Keeper","Reef Guardian"])));
-  add(Cr("Boiling Reef",6,5,9,"drain","start: zaps 1 2",S("scald","burn+drain",["Magma Golem","Sea Serpent"])));
-  add(Cr("Scorchshell Turtle",2,2,4,"ward","hurt: buff self 1 0",S("scald","fury+ward",["Apprentice Pyromancer","Mist Weaver"])));
-  add(Cr("Geyser Sentinel",5,4,8,"","play: dmg all_e 1 | start: mend self all",S("scald","burn+wall",["Kiln Golem","Shiver Elemental"])));
+  add(Cr("Scalding Crab",2,2,3,"","attack: zaps 1 1",S("scald","burn+shell",["Molten Hatchling","Coral Crab"])));
+  add(Cr("Kelp Brander",2,3,3,"drain","",S("scald","burn+wall",["Brimstone Guard","Rime Watcher"])));
+  add(Cr("Steam Vent Guard",3,3,5,"","play: dmg all_e 1",S("scald","burn+wall",["Bonfire Keeper","Reef Guardian"])));
+  add(Cr("Boiling Reef",6,6,8,"drain","attack: zaps 1 2",S("scald","burn+drain",["Magma Golem","Sea Serpent"])));
+  add(Cr("Scorchshell Turtle",2,3,3,"ward","hurt: buff self 1 0",S("scald","fury+ward",["Apprentice Pyromancer","Mist Weaver"])));
+  add(Cr("Geyser Sentinel",5,5,7,"","play: dmg all_e 1 | start: mend self all",S("scald","burn+wall",["Kiln Golem","Shiver Elemental"])));
   add(Sp("Scalding Splash",2,"play: dmg t 2; mend own 2",S("scald","burn+mend",["Scorch","Soothing Rain"],{tgt:"e"})));
   add(Re("Scalding Shield",1,"play: buff t 0 3 tmp; dmg str 1",S("scald","burn+shield",["Ember Shield","Tidal Shield"],{tgt:"o"})));
   add(Re("Steam Burn",2,"play: dmg t 3",S("scald","burn+tide",["Wild Surge","Icy Grip"],{tgt:"eatk"})));
-  add(Au("Hot Springs",2,"start: mend own 1",S("scald","warmth+mend",["Kindling Hearth","Tidal Archive"])));
+  add(Au("Hot Springs",2,"static: lord all 1 0",S("scald","warmth+mend",["Kindling Hearth","Tidal Archive"])));
   setR("u");
   add(Cr("Living Kettle",4,3,8,"","end: zaps 2 1",S("scald","burn+wall",["Flame Warden","Coral Hydra"])));
   add(Cr("Steamcoat Knight",3,3,5,"ward","attack: mend self all",S("scald","lance+mend",["Ignited Lancer","Tideborn Knight"])));
@@ -96,13 +96,13 @@ const STEAM_CATALOG = [];
   /* ---- Boil (21) ---- */
   setR("c");
   add(Cr("Frostburn Sprite",1,1,1,"","play: freeze t; dmg t 1",S("boil","burn+freeze",["Ember Whelp","Frost Sprite"],{tgt:"e"})));
-  add(Cr("Shatterflame Wolf",2,3,3,"","play: dmg frz_e 2",S("boil","burn+freeze",["Cinder Hound","Glacier Wolf"])));
+  add(Cr("Shatterflame Wolf",2,2,3,"","play: dmg frz_e 2",S("boil","burn+freeze",["Cinder Hound","Glacier Wolf"])));
   add(Cr("Boilfrost Mage",3,2,4,"","play: freeze t; dmg t 1",S("boil","burn+freeze",["Flamecaller Adept","Winter Mage"],{tgt:"e"})));
-  add(Cr("Thawbreaker",4,4,5,"","attack: dmg frz_e 2",S("boil","burn+freeze",["Lava Hound","Frostbite Shade"])));
+  add(Cr("Thawbreaker",4,3,5,"","attack: dmg frz_e 2",S("boil","burn+freeze",["Lava Hound","Frostbite Shade"])));
   add(Cr("Glassblower",1,1,2,"","freeze: dmg face 1",S("boil","burn+freeze",["Torchbearer","Rime Watcher"])));
   add(Sp("Flash Boil",2,"play: freeze t; dmg frz_e 2",S("boil","burn+freeze",["Firebolt","Shatter"],{tgt:"e"})));
   add(Sp("Thermal Shock",3,"play: dmg t 2 frz",S("boil","burn+freeze",["Combust","Frozen Tomb"],{tgt:"e"})));
-  add(Sp("Steam Scour",1,"play: dmg frz_e 2",S("boil","burn+freeze",["Searing Spark","Chill"])));
+  add(Sp("Steam Scour",1,"play: dmg frz_e 1",S("boil","burn+freeze",["Searing Spark","Chill"])));
   add(Re("Frost Flare",2,"play: freeze t; dmg t 1",S("boil","burn+freeze",["Flash Fire","Icy Grip"],{tgt:"eatk"})));
   add(Au("Thermal Spring",1,"freeze: dmg face 1",S("boil","burn+freeze",["Kindling Hearth","Permafrost Shrine"])));
   add(Au("Rime Brazier",3,"start: freeze weak; dmg frz_e 1",S("boil","burn+freeze",["Everburning Brazier","Permafrost Shrine"])));
