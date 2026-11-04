@@ -421,6 +421,9 @@ const LIB = {};
 let CATALOG_EL = null; const CATALOG_ELS = new Set();
 function catalogBegin(el){ CATALOG_EL = el; CATALOG_ELS.add(el); }
 function catalogEnd(el){ CATALOG_EL = null; for (const c of Object.values(LIB)) if (c.el===el && !c.catalog && !c.manifest && !c.token) c.retired = true; }
+// Old deck files still fuse their pairs after the catalogs load, so a last pass (build.py adds it after every card
+// file) retires every non-catalog basic of a catalog confluence, whenever it was made.
+function catalogFinish(){ for (const c of Object.values(LIB)) if (CATALOG_ELS.has(c.el) && !c.catalog && !c.manifest && !c.token) c.retired = true; }
 function card(o){ o.charge = o.charge ?? 1; o.cost = o.cost ?? 0; o.kw = o.kw || []; o.r = o.r || "s";
   if (LIB[o.id] && !(CATALOG_EL && LIB[o.id].el===CATALOG_EL && !LIB[o.id].manifest && !LIB[o.id].catalog)) throw new Error("Duplicate card id "+o.id);
   LIB[o.id] = o; return o; }
