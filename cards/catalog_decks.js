@@ -5,16 +5,16 @@
 (function(){
   const CATALOG_DECKS = {
     steam: {
-      // Balance (2026-11-04): theme picks chosen by L3 sims vs the tier below (see PR #62); names follow the themes; Story may rename.
-      steam_c:  { name:"Pressure Cooker", desc:"A full hand that turns into burn, then boils what's frozen.", themes:["pressure","boil"], rar:["c"] },
-      steam_u:  { name:"Scalding Mist",   desc:"Freeze them, then strike from the fog.",                   themes:["boil","fog"],        rar:["u","c"] },
-      steam_r:  { name:"Boiling Point",   desc:"Freeze them, then boil them.",                             themes:["boil"],              rar:["r","u","c"] },
-      steam_sp: { name:"Fog Lords",       desc:"Ward, ambush and tricks out of the mist.",                 themes:["fog","vent"],        rar:["r","u"] },
+      // Balance (2026-11-04): theme picks set by L3 sims against the tier below (PR #62). Names follow the themes; Story may rename.
+      steam_c:  { name:"Pressure Cooker", desc:"A full hand that turns into burn, with ambushers in the fog.", themes:["pressure","fog"], rar:["c"] },
+      steam_u:  { name:"Geyser Cycle",    desc:"Freeze them, then replay creatures that boil on arrival.", themes:["boil","vent"],     rar:["u","c"] },
+      steam_r:  { name:"Boiling Point",   desc:"Freeze them, then boil them.",                             themes:["boil","vent"],     rar:["r","u","c"] },
+      steam_sp: { name:"Fog Lords",       desc:"Freeze them, then strike from the mist.",                  themes:["boil","fog"],      rar:["r","u"] },
     },
     aurora: {
-      aurora_c:  { name:"First Light",    desc:"Charge comes fast; cheap spells chain until the Manifests arrive.", themes:["radiance","spectrum"], rar:["c"] },
+      aurora_c:  { name:"First Light",    desc:"Charge comes fast and the Manifests follow.",          themes:["radiance"],             rar:["c"] },
       aurora_u:  { name:"Radiance",       desc:"Charge and Manifests, early and often.",               themes:["radiance"],             rar:["u","c"] },
-      aurora_r:  { name:"Lantern Host",   desc:"Shields and freezes hold the line while the Manifests rise.", themes:["radiance","shimmer"], rar:["r","u","c"] },
+      aurora_r:  { name:"Dawnfire Host",  desc:"Manifests rise, and the burn grows with them.",        themes:["radiance","dawnfire"],  rar:["r","u","c"] },
       aurora_sp: { name:"Spectrum",       desc:"Charge-fed Manifests and spells that chain into burn.", themes:["radiance","spectrum"], rar:["r","u"] },
     },
   };
