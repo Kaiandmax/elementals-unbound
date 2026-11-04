@@ -8,7 +8,7 @@ cd=os.path.join(d,'cards')
 cats=sorted(f for f in os.listdir(cd) if re.fullmatch(r'catalog_[a-z]+\.js', f))
 catparts=['catalogBegin("%s");\n' % f[8:-3] + open(os.path.join(cd,f)).read() + '\ncatalogEnd("%s");' % f[8:-3] for f in cats]
 order=['dsl.js','value.js','fire.js','water.js','earth.js','wind.js','lightning.js','fusion.js','forge.js','confluences.js','specials_dual.js','specials_triple.js']
-parts=[open(os.path.join(cd,f)).read() for f in order]+catparts+[open(os.path.join(cd,f)).read() for f in ['manifests_more.js','decks.js','decks_conf.js','decks_triple.js','decks_catalog.js','catalog.js','winrates.js']]
+parts=[open(os.path.join(cd,f)).read() for f in order]+catparts+[open(os.path.join(cd,f)).read() for f in ['manifests_more.js','decks.js','decks_conf.js','decks_triple.js','decks_catalog.js','catalog.js','winrates.js']]+['catalogFinish();']
 assert s.count('/*__CARDS__*/')==1
 s=s.replace('/*__ART__*/', open(os.path.join(d,'art.js')).read())
 # RPG layer: engine and maps, then Balance's encounter tables, then Story's words (story/data/*.js override placeholders).

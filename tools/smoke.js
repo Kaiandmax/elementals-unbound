@@ -39,6 +39,8 @@ let bad = 0;
   for (const [id, t] of Object.entries(S.RPG_ENCOUNTERS)) for (const e of t.list) if (!S.DECK_BY_ID[e.deck]) err("encounters", `${id}: deck ${e.deck} missing`);
   // Chests never hold a reserve Manifest (design/manifests.md: only the kept pool can be found).
   for (const [id, m] of Object.entries(M)) for (const c of m.chests||[]) for (const k of [].concat(c.card||[])) if (S.LIB[k] && S.LIB[k].reserve) err(id, `chest ${c.id} holds reserve card ${k}`);
+  // Catalog confluences: every older basic is retired, and no prebuilt deck of that confluence uses one.
+  for (const c of Object.values(S.LIB)) if (S.CATALOG_ELS.has(c.el) && !c.catalog && !c.manifest && !c.token && !c.retired) err("catalog", `${c.id} is an old ${c.el} basic but not retired`);
   // Designed catalogs: every signature recipe makes its own card, and the Forge always answers a legal same-type pick.
   for (const el of S.CATALOG_ELS){ const parts = S.CONFLUENCE[el], cat = Object.values(S.LIB).filter(c => c.catalog===el);
     const byName = n => Object.values(S.LIB).find(c => c.name===n && parts.includes(c.el) && !c.manifest && !c.catalog);
