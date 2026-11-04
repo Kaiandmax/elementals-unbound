@@ -6,12 +6,14 @@
    boil (freeze, then burn), vent (return your own creatures to replay their arrival).
    Rules: one keyword and one effect (or two small ones); "cards in hand" checks are thresholds, never per-card scaling;
    a basic card deals at most its cost +1 to a player on the turn it's played; board-wide damage at most 2. */
-const STEAM_CATALOG = [];
+// Loaded by build.py inside catalogBegin("steam")/catalogEnd("steam") (src.html): its cards replace this confluence's
+// older basics of the same id, and the rest are retired. cards/decks_catalog.js then rebuilds the prebuilt decks.
+globalThis.STEAM_CATALOG = [];
 (function(){
   // S() records the slot data and returns the card options; add() attaches the slot data to the card just made.
   let M = null;
   const S = (th, tr, sig, o={}) => { M = { th, tr, sig, catalog:"steam" }; return o; };
-  const add = d => { Object.assign(d, M); STEAM_CATALOG.push(d); return d; };
+  const add = d => { Object.assign(d, M); globalThis.STEAM_CATALOG.push(d); return d; };
   setEl("steam");
 
   /* ---- Pressure (25) ---- */
@@ -138,4 +140,9 @@ const STEAM_CATALOG = [];
   add(Cr("Old Faithful",5,5,7,"","play: dmg all_e 2",S("vent","burn+tide",["Magmaforge Golem","Shoal Leviathan"])));
   add(Cr("Geyser Drake",4,5,5,"haste","play: bounce t",S("vent","haste+tide",["Solar Flare Drake","Storm Narwhal"],{tgt:"o"})));
   add(Sp("Great Venting",6,"play: bounce own; draw 2",S("vent","study+tide",["Pyre Ascension","Great Ebb"])));
+  // Signature recipes: the Forge's recipe book makes each designed card from its named parents (one card per element).
+  for (const d of globalThis.STEAM_CATALOG){
+    const ids = d.sig.map((n, i) => cardIdByName(n, [CONFLUENCE["steam"][i]]));
+    d.recipe = ids; RECIPES[fuseKey(ids)] = d.id;
+  }
 })();
