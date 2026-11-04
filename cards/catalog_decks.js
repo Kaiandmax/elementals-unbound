@@ -5,16 +5,17 @@
 (function(){
   const CATALOG_DECKS = {
     steam: {
-      steam_c:  { name:"Boiling Point",   desc:"Freeze them, then boil them.",                         themes:["boil"],               rar:["c"] },
-      steam_u:  { name:"Pressure Cooker", desc:"A full hand that turns into burn.",                     themes:["pressure"],           rar:["u","c"] },
-      steam_r:  { name:"Fog Lords",       desc:"Ward, ambush and tricks out of the mist.",              themes:["fog","vent"],         rar:["r","u","c"] },
-      steam_sp: { name:"Pressure",        desc:"A full hand fuels everything.",                         themes:["pressure"],           rar:["r","u"] },
+      // Balance (2026-11-04): theme picks chosen by L3 sims vs the tier below (see PR #62); names follow the themes; Story may rename.
+      steam_c:  { name:"Pressure Cooker", desc:"A full hand that turns into burn, then boils what's frozen.", themes:["pressure","boil"], rar:["c"] },
+      steam_u:  { name:"Scalding Mist",   desc:"Freeze them, then strike from the fog.",                   themes:["boil","fog"],        rar:["u","c"] },
+      steam_r:  { name:"Boiling Point",   desc:"Freeze them, then boil them.",                             themes:["boil"],              rar:["r","u","c"] },
+      steam_sp: { name:"Fog Lords",       desc:"Ward, ambush and tricks out of the mist.",                 themes:["fog","vent"],        rar:["r","u"] },
     },
     aurora: {
-      aurora_c:  { name:"First Light",    desc:"Shields and freezes that hold until the Manifests come.", themes:["shimmer","radiance"], rar:["c"] },
-      aurora_u:  { name:"Spectrum",       desc:"Cheap spells that chain into burn.",                   themes:["spectrum"],           rar:["u","c"] },
-      aurora_r:  { name:"Prism Host",     desc:"Small fighters that blaze while charge flows.",        themes:["prism","dawnfire"],   rar:["r","u","c"] },
-      aurora_sp: { name:"Radiance",       desc:"Charge and Manifests, early and often.",               themes:["radiance"],           rar:["r","u"] },
+      aurora_c:  { name:"First Light",    desc:"Charge comes fast; cheap spells chain until the Manifests arrive.", themes:["radiance","spectrum"], rar:["c"] },
+      aurora_u:  { name:"Radiance",       desc:"Charge and Manifests, early and often.",               themes:["radiance"],             rar:["u","c"] },
+      aurora_r:  { name:"Lantern Host",   desc:"Shields and freezes hold the line while the Manifests rise.", themes:["radiance","shimmer"], rar:["r","u","c"] },
+      aurora_sp: { name:"Spectrum",       desc:"Charge-fed Manifests and spells that chain into burn.", themes:["radiance","spectrum"], rar:["r","u"] },
     },
   };
   // A curve for 10 cards: how many to take at each cost (any leftover slots are filled from the cheapest left).
