@@ -25,7 +25,7 @@
     const cat = globalThis[conf.toUpperCase()+"_CATALOG"];
     if (!cat) continue;                                   // catalog not loaded: keep the fused decks
     for (const [id, spec] of Object.entries(decks)){
-      const d = DECK_BY_ID[id]; if (!d) throw new Error("catalog_decks: no deck "+id);
+      const d = DECK_BY_ID[id]; if (!d) throw new Error("decks_catalog: no deck "+id);
       // Theme order alternates when a deck mixes themes, so both get slots.
       const pool = cat.filter(c => spec.themes.includes(c.th) && spec.rar.includes(c.r))
         .sort((a,b) => (rank[a.r]-rank[b.r]) || (spec.themes.indexOf(a.th)-spec.themes.indexOf(b.th)) || a.cost-b.cost);
@@ -36,7 +36,7 @@
         for (let k=0; got<n && k<20; k++){ const list = byTheme[k % byTheme.length].filter(c => c.cost===+cost && !pick.includes(c)); if (list.length){ take(list[0]); got++; } else if (byTheme.every(l => !l.some(c => c.cost===+cost && !pick.includes(c)))) break; }
       }
       for (const c of [...pool].sort((a,b)=>a.cost-b.cost)) if (pick.length < 10) take(c);
-      if (pick.length < 10) throw new Error(`catalog_decks: ${id} has only ${pick.length} cards`);
+      if (pick.length < 10) throw new Error(`decks_catalog: ${id} has only ${pick.length} cards`);
       d.main = pick.slice(0,10).map(c => c.id);
       d.name = spec.name; d.desc = spec.desc; d.pairs = null; d.catalog = conf;
     }

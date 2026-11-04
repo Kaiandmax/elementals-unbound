@@ -37,6 +37,16 @@ let bad = 0;
     if (![[0,1],[1,0],[-1,0],[0,-1]].some(([dx,dy]) => S.RPG_TILE[(m.rows[o.y+dy]||"")[o.x+dx]])) err(id, `${o.id || o.text} at ${o.x},${o.y} can't be reached`);
   for (const [id, m] of Object.entries(M)) for (const sp of m.wilds||[]) if (sp.roster ? !S.RPG_ROSTERS[sp.roster] || !S.RPG_RANK_DECKS[sp.rank] : !S.RPG_ENCOUNTERS[sp.table]) err(id, `roaming ${sp.roster || sp.table} missing`);
   for (const [id, t] of Object.entries(S.RPG_ENCOUNTERS)) for (const e of t.list) if (!S.DECK_BY_ID[e.deck]) err("encounters", `${id}: deck ${e.deck} missing`);
+  // Chests never hold a reserve Manifest (design/manifests.md: only the kept pool can be found).
+  for (const [id, m] of Object.entries(M)) for (const c of m.chests||[]) for (const k of [].concat(c.card||[])) if (S.LIB[k] && S.LIB[k].reserve) err(id, `chest ${c.id} holds reserve card ${k}`);
+  // Designed catalogs: every signature recipe makes its own card, and the Forge always answers a legal same-type pick.
+  for (const el of S.CATALOG_ELS){ const parts = S.CONFLUENCE[el], cat = Object.values(S.LIB).filter(c => c.catalog===el);
+    const byName = n => Object.values(S.LIB).find(c => c.name===n && parts.includes(c.el) && !c.manifest && !c.catalog);
+    for (const c of cat){ const ps = (c.sig||[]).map(byName); if (ps.length !== parts.length || ps.some(x=>!x)) { err("forge", `${c.id}: signature parents missing`); continue; }
+      const r = S.forgePick(ps.map(p=>p.id)); if (!r || r.card !== c) err("forge", `${c.id}: signature makes ${r && r.card.id}`); }
+    const pools = parts.map(e => Object.values(S.LIB).filter(c => c.el===e && !c.manifest && !c.token && !c.fused && !c.special && !c.recipe));
+    for (let t = 0; t < 300; t++){ const f = pools[0][t % pools[0].length], rest = pools.slice(1).map(p => p.filter(c=>c.type===f.type)[(t*7) % Math.max(1, p.filter(c=>c.type===f.type).length)]);
+      if (rest.some(x=>!x)) continue; const r = S.forgePick([f.id, ...rest.map(c=>c.id)]); if (!r || r.card.catalog!==el || r.card.type!==f.type) err("forge", `${el}: ${f.id} + ${rest.map(c=>c.id)} gave ${r && r.card.id}`); } }
   // Rosters: every rank of every roster can build a legal deck.
   for (const [rid, r] of Object.entries(S.RPG_ROSTERS)) for (const rank of Object.keys(S.RPG_RANK_DECKS)) for (let t = 0; t < 20; t++) {
     const e = S.rpgRosterPick(rid, rank, Math.random); if (!e || !S.DECK_BY_ID[e.deck]) { err("rosters", `${rid} ${rank}: no deck`); break; } }

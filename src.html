@@ -414,7 +414,16 @@ function kwText(t){ return esc(t||"").replace(TERM_RE, m => { const k = termKey(
 
 /* ---------------- Card library ---------------- */
 const LIB = {};
-function card(o){ o.charge = o.charge ?? 1; o.cost = o.cost ?? 0; o.kw = o.kw || []; o.r = o.r || "s"; if (LIB[o.id]) throw new Error("Duplicate card id "+o.id); LIB[o.id] = o; return o; }
+// Designed confluence catalogs (design/confluence-cards.md): build.py wraps each cards/catalog_<el>.js in catalogBegin/End.
+// While one loads, a catalog card replaces the old card of that confluence with the same id; afterwards every older
+// basic card of that confluence (fusions and specials) is retired: kept for the prebuilt decks until TCG rebuilds them,
+// but left out of the library and the Forge.
+let CATALOG_EL = null; const CATALOG_ELS = new Set();
+function catalogBegin(el){ CATALOG_EL = el; CATALOG_ELS.add(el); }
+function catalogEnd(el){ CATALOG_EL = null; for (const c of Object.values(LIB)) if (c.el===el && !c.catalog && !c.manifest && !c.token) c.retired = true; }
+function card(o){ o.charge = o.charge ?? 1; o.cost = o.cost ?? 0; o.kw = o.kw || []; o.r = o.r || "s";
+  if (LIB[o.id] && !(CATALOG_EL && LIB[o.id].el===CATALOG_EL && !LIB[o.id].manifest && !LIB[o.id].catalog)) throw new Error("Duplicate card id "+o.id);
+  LIB[o.id] = o; return o; }
 const nonManifest = t => t.kind === "creature" && !t.c.d.manifest;
 
 // FIRE
@@ -2042,10 +2051,10 @@ const TYPE_ORDER = { creature:0, spell:1, aura:2, reaction:3 };
 function libCards(){
   const f = setup.lib, q = f.q.trim().toLowerCase();
   const rOrd = { s:0, c:1, u:2, r:3 };
-  return Object.values(LIB).filter(d=>
+  return Object.values(LIB).filter(d=> !d.reserve && !d.retired && !(d.fused && CATALOG_ELS.has(d.el)) &&
     (f.el==="all" || d.el===f.el) && (f.r==="all" || d.r===f.r) &&
     (f.type==="all" || (f.type==="manifest" ? d.manifest : (!d.manifest && d.type===f.type))) &&
-    (f.kind==="all" || (f.kind==="special" ? !!d.special : f.kind==="fused" ? !!d.fused : f.kind==="recipe" ? (!!d.recipe && !d.special) : (!d.fused && !d.special && !d.recipe))) &&
+    (f.kind==="all" || (f.kind==="designed" ? !!d.catalog : f.kind==="special" ? !!d.special : f.kind==="fused" ? !!d.fused : f.kind==="recipe" ? (!!d.recipe && !d.special) : (!d.fused && !d.special && !d.recipe && !d.catalog))) &&
     (!q || (d.name+" "+d.text).toLowerCase().includes(q)))
     .sort((a,b)=> Object.keys(ELS).indexOf(a.el)-Object.keys(ELS).indexOf(b.el) || rOrd[a.r]-rOrd[b.r] || (a.manifest-b.manifest) ||
       (a.manifest ? sumObj(a.mcost)-sumObj(b.mcost) : a.cost-b.cost) || a.name.localeCompare(b.name));
@@ -2080,7 +2089,7 @@ function forgeHTML(){
   const picked = els.map(e => f.pick[e] && LIB[f.pick[e]]).filter(Boolean);
   // Cards that would complete a special recipe together with what's already picked (any type).
   const recipeHits = new Set();
-  if (picked.length) for (const id of Object.values(RECIPES)){ const d = LIB[id]; if (d.el!==f.conf) continue;
+  if (picked.length && !CATALOG_ELS.has(f.conf)) for (const id of Object.values(RECIPES)){ const d = LIB[id]; if (!d || !d.recipe || d.el!==f.conf) continue;
     if (picked.every(p => d.recipe.includes(p.id))) for (const r of d.recipe) recipeHits.add(r); }
   const pool = el => Object.values(LIB).filter(d=>d.el===el && !d.manifest && !d.token &&
       (f.r==="all" || d.r===f.r || (f.r==="c" && d.r==="s")) && (!q || (d.name+" "+d.text).toLowerCase().includes(q)) &&
@@ -2094,18 +2103,26 @@ function forgeHTML(){
   };
   const opt = (key, val, label)=>`<button class="fbtn ${f[key]===val?"on":""}" data-forgef="${key}:${val}">${label}</button>`;
   const names = els.map(e=>ELS[e]);
-  let result = `<p class="muted">Pick one ${joinAnd(names)} card${els.length===3?", all":", both"} of the same type. Fusing never uses up your cards: the same cards always make the same ${ELS[f.conf]} card.${els.length===3 ? ` A triple card is the same as fusing a dual card with a card of the missing element, in any order: only the three base cards matter.` : ""}</p>`;
+  let result = `<p class="muted">Pick one ${joinAnd(names)} card${els.length===3?", all":", both"} of the same type. Fusing never uses up your cards: the same cards always make the same ${ELS[f.conf]} card.${CATALOG_ELS.has(f.conf) ? ` ${ELS[f.conf]} cards are designed: each has one signature recipe, and any other cards make the closest design.` : ""}${els.length===3 && !CATALOG_ELS.has(f.conf) ? ` A triple card is the same as fusing a dual card with a card of the missing element, in any order: only the three base cards matter.` : ""}</p>`;
   const eq = cs => cs.map(c=>cardHTML(c)).join('<span class="op">+</span>');
   if (picked.length===els.length){
     let out = null, err = "";
     const ids = picked.map(c=>c.id);
-    try { const key = fuseKey(ids); out = RECIPES[key] ? LIB[RECIPES[key]] : (picked.every(c=>c.type===picked[0].type) ? fuseParts(ids) : null); } catch(e){ err = e.message; }
+    let how = null;
+    try { const fp = CATALOG_ELS.has(f.conf) ? forgePick(ids) : null;
+      if (fp){ out = fp.card; how = fp.how; }
+      else if (CATALOG_ELS.has(f.conf)) out = null;
+      else { const key = fuseKey(ids); out = RECIPES[key] ? LIB[RECIPES[key]] : (picked.every(c=>c.type===picked[0].type) ? fuseParts(ids) : null); } } catch(e){ err = e.message; }
     let via = "";
-    if (out && !out.recipe && els.length===3){
+    if (out && how){
+      result = `<div class="forge-eq">${eq(picked)}<span class="op">=</span>${cardHTML(out,{cls:"forged"})}</div>
+        <p class="muted">${how==="recipe" ? `<b>Signature recipe!</b> ${esc(out.name)} is the design these ${els.length===3?"three":"two"} cards were made for.` :
+          `The closest ${ELS[out.el]} design to these cards: same type, cost near ${forgeTarget(ids).cost}, rarity ${RARITY[forgeTarget(ids).r]}, and it echoes ${forgeEcho(ids, out) || "their elements"}. Every ${ELS[out.el]} card also has one signature recipe that makes it exactly.`}</p>`;
+    } else if (out && !out.recipe && els.length===3){
       const ds = [[0,1,2],[0,2,1],[1,2,0]].map(([a,b,c]) => { try { const dual = canFuse(picked[a].id, picked[b].id) ? fuse(picked[a].id, picked[b].id) : null; return dual && !dual.recipe ? `<span class="el-${dual.el}" style="color:var(--el)">${esc(dual.name)}</span> + <span class="el-${picked[c].el}" style="color:var(--el)">${esc(picked[c].name)}</span>` : null; } catch(e){ return null; } }).filter(Boolean);
       if (ds.length) via = ` Same as fusing ${ds.join(", or ")}.`;
     }
-    result = out ? `<div class="forge-eq">${eq(picked)}<span class="op">=</span>${cardHTML(out,{cls:"forged", from:!!out.recipe})}</div>
+    if (!how) result = out ? `<div class="forge-eq">${eq(picked)}<span class="op">=</span>${cardHTML(out,{cls:"forged", from:!!out.recipe})}</div>
       <p class="muted">${out.recipe ? `A special recipe: these ${els.length===3?"three":"two"} cards make a unique card.` :
         `Cost ${out.cost} (${out.type==="creature" ? (els.length===3 ? "the highest cost plus a fifth of the other two, rounded down" : "the highest cost") : "the highest cost plus half the rest, rounded down"}). ${out.type==="creature"?`Stats: the biggest of each plus half the rest, rounded up. `:""}Rarity: the average, rounded down. Gives 1 ${ELS[out.el]} charge.${via}`}</p>`
       : `<p class="muted">${esc(err || "These cards can't be fused: pick cards of the same type (or a special recipe).")}</p>`;
@@ -2113,7 +2130,7 @@ function forgeHTML(){
     const miss = els.filter(e=>!f.pick[e]).map(e=>`<div class="card ghost"><div class="nm">Pick a ${ELS[e]} ${f.type}</div></div>`);
     result = `<div class="forge-eq">${[...picked.map(c=>cardHTML(c)), ...miss].join('<span class="op">+</span>')}</div>`;
   }
-  const specials = Object.values(LIB).filter(d=>d.el===f.conf && d.recipe && !d.manifest).sort((a,b)=>(!!b.special-!!a.special) || rOrd[a.r]-rOrd[b.r] || a.cost-b.cost);
+  const specials = Object.values(LIB).filter(d=>d.el===f.conf && d.recipe && !d.manifest && !d.retired).sort((a,b)=>(!!b.special-!!a.special) || rOrd[a.r]-rOrd[b.r] || a.cost-b.cost);
   const confBtn = c => `<button class="fbtn el-${c} ${f.conf===c?"on":""}" data-forgef="conf:${c}" title="${CONFLUENCE[c].map(x=>ELS[x]).join(" + ")}">${ELS[c]}</button>`;
   const arch = ARCHETYPE[f.conf];
   return `<div class="forge">
@@ -2210,7 +2227,7 @@ function renderSetup(){
       <div class="frow"><span class="lbl">Element</span>${opt("el","all","All")}${BASE_ELS.map(e=>opt("el",e,ELS[e])).join("")}</div>
       <div class="frow"><span class="lbl">Dual</span>${DUAL_ELS.map(e=>opt("el",e,ELS[e])).join("")}</div>
       <div class="frow"><span class="lbl">Triple</span>${TRIPLE_ELS.map(e=>opt("el",e,ELS[e])).join("")}</div>
-      <div class="frow"><span class="lbl">Kind</span>${opt("kind","all","All")}${opt("kind","base","Base cards")}${opt("kind","fused","Fusions")}${opt("kind","special","Special")}${opt("kind","recipe","Older recipes")}</div>
+      <div class="frow"><span class="lbl">Kind</span>${opt("kind","all","All")}${opt("kind","base","Base cards")}${CATALOG_ELS.size ? opt("kind","designed","Designed") : ""}${opt("kind","fused","Fusions")}${opt("kind","special","Special")}${opt("kind","recipe","Older recipes")}</div>
       <div class="frow"><span class="lbl">Rarity</span>${opt("r","all","All")}${["s","c","u","r"].map(r=>opt("r",r,RARITY[r])).join("")}</div>
       <div class="frow"><span class="lbl">Type</span>${opt("type","all","All")}${["creature","spell","aura","reaction","manifest"].map(t=>opt("type",t,t[0].toUpperCase()+t.slice(1))).join("")}</div>
       <div class="frow"><label class="lbl" for="libq">Search</label><input id="libq" type="search" value="${esc(f.q)}" placeholder="Name or rules text, e.g. Drain"></div>

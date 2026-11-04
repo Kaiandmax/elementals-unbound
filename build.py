@@ -1,7 +1,14 @@
+import re
 import os
 d=os.path.dirname(os.path.abspath(__file__))
 s=open(os.path.join(d,'src.html')).read()
-parts=[open(os.path.join(d,'cards',f)).read() for f in ['dsl.js','value.js','fire.js','water.js','earth.js','wind.js','lightning.js','fusion.js','confluences.js','specials_dual.js','specials_triple.js','manifests_more.js','decks.js','decks_conf.js','decks_triple.js','catalog_steam.js','catalog_aurora.js','catalog_decks.js','catalog.js','winrates.js']]
+# Designed confluence catalogs (cards/catalog_<el>.js) load after the specials, each wrapped so its cards replace that
+# confluence's older basics (see catalogBegin in src.html); the Forge (cards/forge.js) then picks from them.
+cd=os.path.join(d,'cards')
+cats=sorted(f for f in os.listdir(cd) if re.fullmatch(r'catalog_[a-z]+\.js', f))
+catparts=['catalogBegin("%s");\n' % f[8:-3] + open(os.path.join(cd,f)).read() + '\ncatalogEnd("%s");' % f[8:-3] for f in cats]
+order=['dsl.js','value.js','fire.js','water.js','earth.js','wind.js','lightning.js','fusion.js','forge.js','confluences.js','specials_dual.js','specials_triple.js']
+parts=[open(os.path.join(cd,f)).read() for f in order]+catparts+[open(os.path.join(cd,f)).read() for f in ['manifests_more.js','decks.js','decks_conf.js','decks_triple.js','decks_catalog.js','catalog.js','winrates.js']]
 assert s.count('/*__CARDS__*/')==1
 s=s.replace('/*__ART__*/', open(os.path.join(d,'art.js')).read())
 # RPG layer: engine and maps, then Balance's encounter tables, then Story's words (story/data/*.js override placeholders).
