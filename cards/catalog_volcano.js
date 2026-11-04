@@ -4,16 +4,9 @@
    Themes: eruption (archetype: sacrifice your own creatures for a blast), magma (big Pierce bodies that hit on arrival),
    fault (Fortify bodies whose Last Gasp hits back), ashfall (support: small sweeps that only hurt enemies),
    caldera (Last Gasp chains and Magmite tokens). Rarity unlocks: commons fire once; "whenever a creature dies" engines from uncommon. */
-// Loaded after decks_triple.js (build.py). The catalog replaces the confluence's old basic cards (special cards, named recipes
-// and formula fusions): they leave the library, the special-card list and the recipe book first, so the designed cards can take
-// their names. cards/catalog_decks.js then rebuilds this confluence's prebuilt decks from the catalog.
+// Loaded by build.py inside catalogBegin("volcano")/catalogEnd("volcano") (src.html): its cards replace this confluence's
+// older basics of the same id, and the rest are retired. cards/decks_catalog.js then rebuilds the prebuilt decks.
 globalThis.VOLCANO_CATALOG = [];
-(function(){
-  const gone = new Set();
-  for (const [id, d] of Object.entries(LIB)) if (d.el==="volcano" && !d.manifest && !d.token){ delete LIB[id]; gone.add(id); }
-  for (let i = SPECIALS.length-1; i >= 0; i--) if (gone.has(SPECIALS[i].id)) SPECIALS.splice(i, 1);
-  for (const [k, id] of Object.entries(RECIPES)) if (gone.has(id)) delete RECIPES[k];
-})();
 (function(){
   // S() records the slot data and returns the card options; add() attaches the slot data to the card just made.
   let M = null;

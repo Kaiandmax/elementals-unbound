@@ -6,16 +6,9 @@
    boil (freeze, then burn), vent (return your own creatures to replay their arrival).
    Rules: one keyword and one effect (or two small ones); "cards in hand" checks are thresholds, never per-card scaling;
    a basic card deals at most its cost +1 to a player on the turn it's played; board-wide damage at most 2. */
-// Loaded after decks_triple.js (build.py). The catalog replaces the confluence's old basic cards (special cards, named recipes
-// and formula fusions): they leave the library, the special-card list and the recipe book first, so the designed cards can take
-// their names. cards/catalog_decks.js then rebuilds this confluence's prebuilt decks from the catalog.
+// Loaded by build.py inside catalogBegin("steam")/catalogEnd("steam") (src.html): its cards replace this confluence's
+// older basics of the same id, and the rest are retired. cards/decks_catalog.js then rebuilds the prebuilt decks.
 globalThis.STEAM_CATALOG = [];
-(function(){
-  const gone = new Set();
-  for (const [id, d] of Object.entries(LIB)) if (d.el==="steam" && !d.manifest && !d.token){ delete LIB[id]; gone.add(id); }
-  for (let i = SPECIALS.length-1; i >= 0; i--) if (gone.has(SPECIALS[i].id)) SPECIALS.splice(i, 1);
-  for (const [k, id] of Object.entries(RECIPES)) if (gone.has(id)) delete RECIPES[k];
-})();
 (function(){
   // S() records the slot data and returns the card options; add() attaches the slot data to the card just made.
   let M = null;
