@@ -10,6 +10,12 @@
       steam_r:  { name:"Fog Lords",       desc:"Ward, ambush and tricks out of the mist.",              themes:["fog","vent"],         rar:["r","u","c"] },
       steam_sp: { name:"Pressure",        desc:"A full hand fuels everything.",                         themes:["pressure"],           rar:["r","u"] },
     },
+    volcano: {
+      volcano_forge:    { name:"Magma Run",       desc:"Big Pierce bodies that burn on the way in.",          themes:["magma"],              rar:["c"] },
+      volcano_ash:      { name:"Fault Lines",     desc:"Fortified stone that bites back when it breaks.",     themes:["fault","ashfall"],    rar:["u","c"] },
+      volcano_obsidian: { name:"Caldera",         desc:"Magmites that hatch, burn and rise again.",           themes:["caldera","eruption"], rar:["r","u","c"] },
+      volcano_sp: { name:"Eruption",        desc:"Sacrifice your own creatures for explosive damage.",  themes:["eruption"],           rar:["r","u"] },
+    },
     aurora: {
       aurora_c:  { name:"First Light",    desc:"Shields and freezes that hold until the Manifests come.", themes:["shimmer","radiance"], rar:["c"] },
       aurora_u:  { name:"Spectrum",       desc:"Cheap spells that chain into burn.",                   themes:["spectrum"],           rar:["u","c"] },
