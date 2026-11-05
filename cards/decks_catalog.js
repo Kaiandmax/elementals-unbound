@@ -11,6 +11,13 @@
       steam_r:  { name:"Boiling Point",   desc:"Freeze them, then boil them.",                             themes:["boil","vent"],     rar:["r","u","c"] },
       steam_sp: { name:"Fog Lords",       desc:"Freeze them, then strike from the mist.",                  themes:["boil","fog"],      rar:["r","u"] },
     },
+    volcano: {
+      // Balance (2026-11-05): theme picks set by L3 sims against the tier below (PR #65); names follow the themes; Story may rename.
+      volcano_forge:    { name:"Magma Run",        desc:"Big Pierce bodies that burn on the way in, behind fortified stone.", themes:["magma","fault"], rar:["c"] },
+      volcano_ash:      { name:"Eruption",         desc:"Sacrifice your own creatures for explosive damage.",            themes:["eruption"],        rar:["u","c"] },
+      volcano_obsidian: { name:"Obsidian Eruption", desc:"Rare blasts: feed your creatures to the mountain.",            themes:["eruption"],        rar:["r","u","c"] },
+      volcano_sp:       { name:"Fault Lines",      desc:"Fortified stone and magma that bite back.",                     themes:["magma","fault"],   rar:["r","u"] },
+    },
     aurora: {
       aurora_c:  { name:"First Light",    desc:"Charge comes fast and the Manifests follow.",          themes:["radiance"],             rar:["c"] },
       aurora_u:  { name:"Radiance",       desc:"Charge and Manifests, early and often.",               themes:["radiance"],             rar:["u","c"] },
