@@ -180,6 +180,8 @@ function normalizeCore(d, f){
    the factor is their anchor. */
 const CONF_FACTOR = Object.assign({ dual:1.25, tri:1.5 }, globalThis.CONFF_OVR||{});
 const DESIGNED_BODY = 0.25;
+// Ladder tuning for designed catalogs: a whole rarity tier of dual or triple designed basics set stronger or weaker.
+const DESIGNED_TIERF = Object.assign({ "tri:c": 0.93 }, globalThis.DTIERF_OVR||{});
 function normalizeDesigned(d, f){
   const a0 = d.atk, h0 = d.hp;
   normalizeCard(d, f);
@@ -213,7 +215,7 @@ function normalizeDesigned(d, f){
     for (const r of ["c","u","r"]){ const a = ps.flatMap(p => ratios[p+"|"+r+"|B"] || []); if (a.length) BAL_MED[el+"|"+r+"|B"] = med(a)*fac; } }
   // Ladder tuning: a whole rarity tier of an element group can be set stronger or weaker (base/dual/triple : c/u/r).
   for (const k of Object.keys(BAL_MED)){ const [el, r, kind] = k.split("|"); const grp = BASE_ELS.includes(el) ? "base" : CONFLUENCE[el].length===2 ? "dual" : "tri";
-    if (kind==="B" && DESIGNED.has(el)) continue;
+    if (kind==="B" && DESIGNED.has(el)){ const f = DESIGNED_TIERF[grp+":"+r]; if (f) BAL_MED[k] *= f; continue; }
     const f = TIERF[grp+":"+r]; if (f) BAL_MED[k] *= f; }
   for (const k of Object.keys(BAL_MED)) if (k.endsWith("|M") && BAL_MED[k.slice(0,-1)+"B"]) BAL_MED[k] = BAL_MED[k.slice(0,-1)+"B"] * MK;
   for (const d of all){ const ef = EF[d.el+":"+d.r]||1;
