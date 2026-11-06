@@ -4,6 +4,7 @@
    A first draft: effects come from per-theme templates that follow design/confluence-cards.md (rarity unlocks, one keyword
    below rare, burst cap, sweeps at most 2). Balance prices them; TCG revises cards by hand and Story names them.
    Each card: th = theme, tr = traits, sig = signature recipe [lightning, water]. */
+// Hand-revised: downpour (2026-11-06). Regenerating storm with gencatalog.js would overwrite it, so keep this block.
 // Loaded by build.py inside catalogBegin("storm")/catalogEnd("storm") (src.html): its cards replace this confluence's
 // older basics of the same id, and the rest are retired. cards/decks_catalog.js then rebuilds the prebuilt decks.
 globalThis.STORM_CATALOG = [];
@@ -15,10 +16,10 @@ globalThis.STORM_CATALOG = [];
 
   /* ---- spellstorm (25) ---- */
   setR("c");
-  add(Cr("Thunder Imp",3,4,4,"","play: dmg t 3",S("spellstorm","chain+burn",["Bolt Thrower","Whirlpool Mage"],{tgt:"e"})));
+  add(Cr("Thunder Imp",3,4,4,"","play: dmg t 3",S("downpour","chain+burn",["Bolt Thrower","Whirlpool Mage"],{tgt:"e"})));
   add(Cr("Static Serpent",2,3,3,"","play: dmg face 1",S("spellstorm","chain+burn",["Volt Runner","Mist Weaver"])));
   add(Cr("Thunder Caller",2,3,3,"","chain2: draw 1",S("spellstorm","chain+burn",["Capacitor Golem","Riverbank Sage"])));
-  add(Cr("Static Sentinel",2,3,3,"","attack: dmg face 1",S("spellstorm","chain+burn",["Conduit Keeper","Kelp Lurker"])));
+  add(Cr("Static Sentinel",2,3,3,"","attack: dmg face 1",S("downpour","chain+burn",["Conduit Keeper","Kelp Lurker"])));
   add(Cr("Rain Golem",1,2,2,"","play/chain2: buff self 1 1",S("spellstorm","chain+burn",["Static Sprite","Brook Otter"])));
   add(Cr("Tempest Spirit",1,2,2,"","play/chain2: buff self 1 1",S("spellstorm","chain+burn",["Spark Mite","Tide Sprite"])));
   add(Sp("Cloudburst Ritual",1,"play: draw 1 | chain2: energy 1",S("spellstorm","chain+burn",["Quick Study","Ebb and Flow"])));
@@ -45,33 +46,33 @@ globalThis.STORM_CATALOG = [];
   add(Re("Rolling Snap",4,"play: dmg t 2 | chain2: draw 1",S("spellstorm","chain+burn",["Thunder Trap","Frozen Moment"],{tgt:"eatk"})));
   add(Au("Thunder Engine",4,"end/spell2: zaps 1 2",S("spellstorm","chain+burn",["Infinite Battery","Eternal Winter"])));
 
-  /* ---- downpour (20) ---- */
+  /* ---- downpour (20): cheap spells fall like rain; bodies grow with each one and Chain 2 pays off. Water's freeze, Lightning's haste. ---- */
   setR("c");
-  add(Cr("Rolling Raider",2,3,3,"","attack: dmg face 1",S("downpour","burn+chain",["Lightning Courier","Rime Watcher"])));
-  add(Cr("Stormtide Raider",3,5,3,"","play: dmg t 1 | chain2: dmg t 1",S("downpour","burn+chain",["Arc Apprentice","Reef Guardian"],{tgt:"ea"})));
-  add(Cr("Cloudburst Reaver",2,3,3,"","chain2: draw 1",S("downpour","burn+chain",["Flicker Mage","Pearl Diver"])));
-  add(Cr("Thunder Raider",4,6,4,"","death: dmg all_e 1",S("downpour","burn+chain",["Thunder Ram","Sea Serpent"])));
-  add(Cr("Rolling Brute",3,5,3,"","play/chain2: buff self 1 1",S("downpour","burn+chain",["Storm Caller","Winter Mage"])));
-  add(Sp("Stormtide Burst",1,"play: dmg t 2",S("downpour","burn+chain",["Charge Conduit","Ebb and Flow"],{tgt:"e"})));
-  add(Sp("Rolling Rite",1,"play: dmg t 1 | chain2: dmg t 2",S("downpour","burn+chain",["Chain Lightning","Flowing Wisdom"],{tgt:"ea"})));
-  add(Re("Tempest Flash",3,"play: dmg t 3",S("downpour","burn+chain",["Surge Shield","Icy Grip"],{tgt:"ea"})));
-  add(Re("Downpour Trap",2,"play: dmg t 2 | chain2: draw 1",S("downpour","burn+chain",["Blitz","Chill"],{tgt:"eatk"})));
-  add(Au("Static Sanctum",3,"end: dmg face 1",S("downpour","burn+chain",["Lightning Rod","Tidal Archive"])));
-  add(Au("Tempest Font",2,"start: zaps 1 1",S("downpour","burn+chain",["Overload Coil","Healing Spring"])));
+  add(Cr("Rolling Raider",2,3,3,"haste","",S("downpour","haste+chain",["Lightning Courier","Rime Watcher"])));
+  add(Cr("Stormtide Raider",3,4,3,"","play: freeze t | play/chain2: dmg t 2",S("downpour","burn+freeze",["Arc Apprentice","Reef Guardian"],{tgt:"e"})));
+  add(Cr("Cloudburst Reaver",2,2,3,"","spell: buff self 1 1",S("downpour","burn+chain",["Flicker Mage","Pearl Diver"])));
+  add(Cr("Thunder Raider",4,5,4,"","play: dmg t 3",S("downpour","burn+chain",["Thunder Ram","Sea Serpent"],{tgt:"e"})));
+  add(Cr("Rolling Brute",1,2,2,"","spell: buff self 1 1",S("downpour","burn+chain",["Storm Caller","Winter Mage"])));
+  add(Sp("Stormtide Burst",1,"play: dmg t 2 | play/chain2: draw 1",S("downpour","burn+chain",["Charge Conduit","Ebb and Flow"],{tgt:"ea"})));
+  add(Sp("Rolling Rite",2,"play: dmg t 2; freeze t",S("downpour","burn+freeze",["Chain Lightning","Flowing Wisdom"],{tgt:"e"})));
+  add(Re("Tempest Flash",2,"play: freeze t; dmg t 2",S("downpour","burn+chain",["Surge Shield","Icy Grip"],{tgt:"eatk"})));
+  add(Re("Downpour Trap",1,"play: freeze t | play/chain2: draw 1",S("downpour","freeze+chain",["Blitz","Chill"],{tgt:"eatk"})));
+  add(Au("Static Sanctum",2,"end/spell2: dmg face 2",S("spellstorm","burn+chain",["Lightning Rod","Tidal Archive"])));
+  add(Au("Tempest Font",2,"start: zaps 2 1",S("spellstorm","burn+chain",["Overload Coil","Healing Spring"])));
   setR("u");
-  add(Cr("Thunder Hound",4,6,4,"","spell: buff self 1 1",S("downpour","burn+chain",["Capacitor Titan","Icewall Colossus"])));
-  add(Cr("Cloudburst Wolf",3,5,3,"","spell: zaps 1 1",S("downpour","burn+chain",["Voltage Wraith","Wavecrest Mage"])));
-  add(Cr("Cloudburst Lancer",3,5,3,"","play: dmg t 3",S("downpour","burn+chain",["Pulse Mage","Tideborn Knight"],{tgt:"e"})));
-  add(Sp("Squall Torrent",3,"play: dmg t 3",S("downpour","burn+chain",["Forked Lightning","Crashing Wave"],{tgt:"ea"})));
-  add(Sp("Cloudburst Volley",3,"play: dmg t 3",S("downpour","burn+chain",["Overload Cascade","Cold Snap"],{tgt:"ea"})));
-  add(Re("Downpour Feint",3,"play: dmg t 3",S("downpour","burn+chain",["Shockwave Counter","Nullify"],{tgt:"ea"})));
-  add(Au("Stormtide Field",3,"start: zaps 1 1",S("downpour","burn+chain",["Storm Battery","Ocean's Blessing"])));
+  add(Cr("Thunder Hound",4,5,6,"","spell: dmg rnd 1",S("downpour","burn+chain",["Capacitor Titan","Icewall Colossus"])));
+  add(Cr("Cloudburst Wolf",3,4,4,"haste","spell: buff self 1 0",S("downpour","haste+chain",["Voltage Wraith","Wavecrest Mage"])));
+  add(Cr("Cloudburst Lancer",3,4,5,"","spell: freeze rnd",S("downpour","burn+freeze",["Pulse Mage","Tideborn Knight"])));
+  add(Sp("Squall Torrent",3,"play: dmg t 3; draw 1",S("downpour","burn+chain",["Forked Lightning","Crashing Wave"],{tgt:"ea"})));
+  add(Sp("Cloudburst Volley",3,"play: zaps 3 1 | play/chain2: zaps 2 1",S("downpour","burn+chain",["Overload Cascade","Cold Snap"])));
+  add(Re("Downpour Feint",2,"play: freeze t; dmg t 3 | play/chain2: draw 1",S("downpour","burn+freeze",["Shockwave Counter","Nullify"],{tgt:"eatk"})));
+  add(Au("Stormtide Field",3,"spell: zaps 1 1",S("downpour","burn+chain",["Storm Battery","Ocean's Blessing"])));
   setR("r");
-  add(Cr("Rolling Reaver",5,8,6,"","spell: dmg face 1",S("downpour","burn+chain",["Volt Dragon","Tidal Archmage"])));
-  add(Cr("Drenched Raider",6,9,7,"","chain2: draw 1",S("downpour","burn+chain",["Storm Titan","Shoal Leviathan"])));
-  add(Sp("Rolling Burst",5,"play: dmg t 5; draw 1",S("downpour","burn+chain",["Thunderous Cascade","Glacial Torrent"],{tgt:"e"})));
-  add(Re("Downpour Flash",4,"play: dmg t 4",S("downpour","burn+chain",["Lightning Reflexes","Ice Prison"],{tgt:"ea"})));
-  add(Au("Static Grove",4,"end/spell2: zaps 1 2",S("downpour","burn+chain",["Storm Battery","Eternal Winter"])));
+  add(Cr("Rolling Reaver",5,5,6,"haste","spell: buff self 1 1",S("downpour","haste+chain",["Volt Dragon","Tidal Archmage"])));
+  add(Cr("Drenched Raider",6,7,7,"","spell: dmg all_e 1",S("downpour","burn+chain",["Storm Titan","Shoal Leviathan"])));
+  add(Sp("Rolling Burst",5,"play: dmg t 5; freeze all_e",S("downpour","burn+freeze",["Thunderous Cascade","Glacial Torrent"],{tgt:"e"})));
+  add(Re("Downpour Flash",4,"play: dmg t 4 | play/chain2: draw 2",S("downpour","burn+chain",["Lightning Reflexes","Ice Prison"],{tgt:"ea"})));
+  add(Au("Static Grove",4,"static: cost spell 1",S("downpour","burn+chain",["Storm Battery","Eternal Winter"])));
 
   /* ---- thunderhead (20) ---- */
   setR("c");
