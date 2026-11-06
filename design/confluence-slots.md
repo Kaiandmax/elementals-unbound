@@ -110,8 +110,16 @@ Same shape as Steam and Aurora: 4-5 themes each, the archetype first (it keeps t
 
 Each confluence's catalog file lists the slots per theme (type, cost, rarity, trait pair, signature recipe), as `catalog_steam.js` and `catalog_aurora.js` do, and must pass `design/tools/catalogcheck.js` before it goes to Balance.
 
+### Lessons from the generated catalogs (#67-#78, 2026-11-06)
+
+- **Uncommon and rare creatures need cheap bodies with real riders.** The generator made them 4-6 Energy bodies with small riders. Normalization can move a designed body only 25%, so they stayed under budget while spells were lifted. Forge, Glass and Hurricane uncommons and rares sat at 5-30% until their creatures dropped to 2-4 Energy with an engine, a token or Airborne.
+- **Haste tokens plus a pump break the burst cap.** A 1-Energy "summon a Haste token, tokens get +2/+0" is 3-4 face damage. Ash's hot themes now make the non-Haste Cinderling from pump and recurring makers. Normalization's Haste clamp (#79) keeps written-legal Haste bodies legal after pricing.
+- **Mass freeze is a lock.** It is uncommon and up, and only on a card that fires once; repeating triggers freeze one creature (rule in `confluence-cards.md`, checked by `catalogcheck.js`).
+- **Swapping motifs in the generator is a slot machine.** Every regeneration re-rolls effects and swings themes by about ±30, so targeted hand edits beat regeneration once a catalog is in. When a whole rarity is low and the cards look right, it is an EF lever, not a card problem (Forge rares: EF 1.45).
+- **Defensive themes (Barrier, Fortify, Wall) can't carry a deck alone** in the sims. Pair them with a burn or token theme in the deck picks, or give them burn.
+
 ## Next
 
 1. `design/catalogs/steam.md` and `design/catalogs/aurora.md`: all 100 slots of each, with card text, trait pair and signature recipe.
 2. Then the card files (`cards/catalog_steam.js`, `cards/catalog_aurora.js`) for Balance's review and Game Dev's Forge.
-3. Catalogs for the other 18 confluences, in batches, after the pilots land in the build.
+3. Catalogs for the other 18 confluences, in batches, after the pilots land in the build. **Done:** all 20 confluences are designed catalogs in the build (#59-#78). Next is Story naming the generated placeholders.
