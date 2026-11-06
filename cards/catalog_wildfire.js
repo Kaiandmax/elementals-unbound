@@ -124,17 +124,17 @@ globalThis.WILDFIRE_CATALOG = [];
 
   /* ---- smoke (15, support) ---- */
   setR("c");
-  add(Cr("Wildflame Colossus",3,3,5,"","play: buff t -1 -1",S("smoke","shrink",["Hellforge Smith","Sky Courier"],{tgt:"e"})));
-  add(Cr("Scorching Bulwark",1,1,3,"","play: buff t -2 0",S("smoke","shrink",["Ember Imp","Gust Sprite"],{tgt:"e"})));
-  add(Cr("Ashwind Guardian",1,1,2,"skyguard","play: buff t -2 0",S("smoke","shrink+skyguard",["Molten Hatchling","Swift Courier"],{tgt:"e"})));
-  add(Cr("Emberdrift Behemoth",2,2,3,"skyguard","play: buff t -2 0",S("smoke","shrink+skyguard",["Ember Duelist","Swiftwing Herald"],{tgt:"e"})));
-  add(Sp("Scorching Gift",1,"play: buff all_e -1 0; draw 1",S("smoke","shrink",["Searing Spark","Tailwind Rush"])));
-  add(Re("Searing Snap",1,"play: buff t -2 -2",S("smoke","shrink",["Wildfire Ignition","Crosswind"],{tgt:"eatk"})));
+  add(Cr("Wildflame Colossus",3,3,5,"","attack: buff str -1 0",S("smoke","shrink",["Hellforge Smith","Sky Courier"])));
+  add(Cr("Scorching Bulwark",1,1,3,"","play: buff t -1 0",S("smoke","shrink",["Ember Imp","Gust Sprite"],{tgt:"e"})));
+  add(Cr("Ashwind Guardian",1,1,2,"skyguard","play: buff t -1 0",S("smoke","shrink+skyguard",["Molten Hatchling","Swift Courier"],{tgt:"e"})));
+  add(Cr("Emberdrift Behemoth",2,2,3,"skyguard","play: buff t -1 0",S("smoke","shrink+skyguard",["Ember Duelist","Swiftwing Herald"],{tgt:"e"})));
+  add(Sp("Scorching Gift",1,"play: buff t -1 -1; draw 1",S("smoke","shrink",["Searing Spark","Tailwind Rush"],{tgt:"e"})));
+  add(Re("Searing Snap",1,"play: buff t -2 0",S("smoke","shrink",["Wildfire Ignition","Crosswind"],{tgt:"eatk"})));
   add(Au("Scorching Sanctum",2,"start: buff rnd -1 0",S("smoke","shrink",["Kindling Hearth","Sky Temple"])));
   setR("u");
-  add(Cr("Wildflame Wall",3,3,5,"","play: buff t -2 0",S("smoke","shrink",["Ashwing Harrier","Squall Captain"],{tgt:"e"})));
-  add(Cr("Kindled Wall",3,2,5,"skyguard","attack: buff str -1 0",S("smoke","shrink+skyguard",["Flame Warden","Featherblade Duelist"])));
-  add(Sp("Searing Blast",2,"play: buff t -1 -1",S("smoke","shrink",["Flame Lash","Cyclonic Rift"],{tgt:"e"})));
+  add(Cr("Wildflame Wall",3,3,5,"","play: buff t -1 0",S("smoke","shrink",["Ashwing Harrier","Squall Captain"],{tgt:"e"})));
+  add(Cr("Kindled Wall",3,2,5,"skyguard","play: buff t -1 0",S("smoke","shrink+skyguard",["Flame Warden","Featherblade Duelist"],{tgt:"e"})));
+  add(Sp("Searing Blast",2,"play: buff t -1 0",S("smoke","shrink",["Flame Lash","Cyclonic Rift"],{tgt:"e"})));
   setR("r");
   add(Cr("Cinderwing Behemoth",5,4,9,"skyguard","play: buff all_e -1 -1",S("smoke","shrink+skyguard",["Pyrelord Vexis","Mistral Phoenix"])));
   // Signature recipes: the Forge's recipe book makes each designed card from its named parents (one card per element).
