@@ -44,6 +44,7 @@ h1,h2,h3{font-family:var(--f-display);font-weight:700;margin:0;text-wrap:balance
 .tabs{display:flex;gap:6px;border-bottom:1px solid var(--line)}
 .tab{background:none;border:none;border-bottom:3px solid transparent;padding:8px 14px;font-weight:700;cursor:pointer;color:var(--mute)}
 .tab.on{color:var(--ink);border-bottom-color:var(--brass)}
+.ver{font-family:var(--f-ui,system-ui);font-size:13px;font-weight:600;color:var(--mute);vertical-align:middle;margin-left:6px;cursor:help}
 .hist{display:grid;gap:14px;padding-top:12px}.hist h3{margin:4px 0;font-size:15px}
 .hsum{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}.hsum>div{display:grid;gap:2px}.hbig{font-size:20px}
 .hist-tbls{display:flex;flex-wrap:wrap;gap:16px}.hist-tbl{flex:1 1 320px;min-width:0;overflow-x:auto}
@@ -330,6 +331,12 @@ details.rules ul{margin:.5em 0 0;padding-left:1.2em;max-width:80ch;display:grid;
 <script>
 "use strict";
 const HEADLESS = typeof document === "undefined";
+// Version: build.py fills this in from git history. The number goes up with every merged change to the card game
+// (cards/, src.html, art.js) or the RPG (rpg/, story/, music/); tcg and rpg count each part on its own.
+const GAME_VERSION = /*__VERSION__*/{ v:"dev", tcg:0, rpg:0, dirty:false };
+const versionText = () => `v${GAME_VERSION.v}${GAME_VERSION.dirty ? "+" : ""}`;
+const versionTip = () => `Version ${versionText()}: card game change ${GAME_VERSION.tcg}, RPG change ${GAME_VERSION.rpg}${GAME_VERSION.dirty ? " (plus unmerged local changes)" : ""}`;
+const versionHTML = () => `<span class="ver" title="${versionTip()}">${versionText()}</span>`;
 const ELS = { fire:"Fire", water:"Water", earth:"Earth", wind:"Wind", lightning:"Lightning" , volcano:"Volcano", wildfire:"Wildfire", plasma:"Plasma", steam:"Steam", swamp:"Swamp", ice:"Ice", storm:"Storm", sand:"Sand", metal:"Metal", tempest:"Tempest",
   geyser:"Geyser", mirage:"Mirage", aurora:"Aurora", ash:"Ash", forge:"Forge", solar:"Solar", glacier:"Glacier", quicksilver:"Quicksilver", hurricane:"Hurricane", glass:"Glass" };
 const BASE_ELS = ["fire","water","earth","wind","lightning"];
@@ -1696,7 +1703,7 @@ function matchRecord(){
   const side = p => ({ name:p.name, deck:p.deckName, deckId:p.deckId, el:p.el, tier:(DECK_BY_ID[p.deckId]||{}).tier || "", level:p.level || null,
     life:p.life, maxLife:p.maxLife, hand:p.hand.length, left:p.deck.length, manifestsLeft:p.manifests.length,
     board:p.board.map(c => ({ n:c.d.name, a:atkOf(c), h:hpLeft(c), m:hpOf(c), man:!!c.d.manifest })), auras:p.auras.map(a => a.name) });
-  const rec = { id:Date.now() + Math.floor(Math.random()*1000), at:new Date().toISOString(), result:g.over, turns:g.turnNo,
+  const rec = { id:Date.now() + Math.floor(Math.random()*1000), at:new Date().toISOString(), version:versionText(), result:g.over, turns:g.turnNo,
     first:g.first === 0 ? "you" : "enemy", enemyLifeMod:(g.cfg && g.cfg.enemyLife != null) ? g.cfg.enemyLife - 15 : 0,
     you:side(g.P[0]), enemy:side(g.P[1]), log:[...g.log].reverse().map(l => [l.s, l.cls || ""]) };
   const a = matchLoad(); a.unshift(rec); g.matchSaved = matchSave(a);
@@ -1716,7 +1723,7 @@ function matchHistoryHTML(){
   const row = r => { const open = H.open === r.id;
     return `<li class="hrow ${open?"open":""}"><button class="hhead" data-hist="open:${r.id}" aria-expanded="${open}">
       ${res(r)}<span class="hdecks"><b class="el-${r.you.el}" style="color:var(--el)">${esc(r.you.deck)}</b> ${life(r.you)} <span class="muted">vs.</span> <b class="el-${r.enemy.el}" style="color:var(--el)">${esc(r.enemy.deck)}</b> ${life(r.enemy)} <span class="muted">· AI ${r.enemy.level}${r.enemyLifeMod ? ` · enemy life ${r.enemyLifeMod}` : ""}</span></span>
-      <span class="hmeta muted">${r.turns} turn${r.turns===1?"":"s"} · ${r.first==="you"?"you went first":"enemy went first"} · ${esc(when(r))}</span></button>
+      <span class="hmeta muted">${r.version ? esc(r.version) + " · " : ""}${r.turns} turn${r.turns===1?"":"s"} · ${r.first==="you"?"you went first":"enemy went first"} · ${esc(when(r))}</span></button>
       ${open ? `<div class="hbody">
         <div class="hend"><div><span class="lbl">Your board at the end</span> ${boardTxt(r.you)}${r.you.auras.length?`<br><span class="lbl">Your auras</span> ${r.you.auras.map(esc).join(", ")}`:""}<br><span class="muted">Hand ${r.you.hand} · deck ${r.you.left} · Manifests left ${r.you.manifestsLeft}</span></div>
           <div><span class="lbl">Enemy board at the end</span> ${boardTxt(r.enemy)}${r.enemy.auras.length?`<br><span class="lbl">Enemy auras</span> ${r.enemy.auras.map(esc).join(", ")}`:""}<br><span class="muted">Hand ${r.enemy.hand} · deck ${r.enemy.left} · Manifests left ${r.enemy.manifestsLeft}</span></div></div>
@@ -1918,7 +1925,7 @@ function renderGame(){
   if (g.bark && !g.over){ modal += `<div class="bark" role="status" aria-live="polite"><button class="bark-x" data-btn="bark-x" aria-label="Dismiss">✕</button>${g.bark.lines.map(l=>{ const [w,t] = rpgSpeaker(l); return `<p>${w ? `<b>${esc(w)}:</b> ` : ""}${esc(t)}</p>`; }).join("")}</div>`;
     const bk = g.bark; setTimeout(()=>{ if (g && g.bark===bk){ g.bark = null; render(); } }, 4000 + 2200*bk.lines.length); }
   if (g.flash) modal += `<div class="flash" aria-live="polite"><div class="flash-in"><span class="flash-lbl">${esc(g.flash.who)}</span>${cardHTML(g.flash.m,{cls:"bigcard"})}</div></div>`;
-  return `<div class="top"><h1>Elementals Unbound</h1><div class="row"><span class="muted">Turn ${g.turnNo} · ${myTurn?"Your turn":"Enemy turn"}</span>${RPG.battle ? (g.over ? `<button class="btn primary" data-btn="rpg-return">Continue</button>` : RPG.battle.kind==="wild" ? `<button class="btn" data-btn="rpg-flee">Run away</button>` : "") : `<button class="btn" data-btn="decks">Change decks</button><button class="btn" data-btn="again">Restart</button>`}</div></div>
+  return `<div class="top"><h1>Elementals Unbound ${versionHTML()}</h1><div class="row"><span class="muted">Turn ${g.turnNo} · ${myTurn?"Your turn":"Enemy turn"}</span>${RPG.battle ? (g.over ? `<button class="btn primary" data-btn="rpg-return">Continue</button>` : RPG.battle.kind==="wild" ? `<button class="btn" data-btn="rpg-flee">Run away</button>` : "") : `<button class="btn" data-btn="decks">Change decks</button><button class="btn" data-btn="again">Restart</button>`}</div></div>
   <div class="game" style="margin-top:12px">
     <section class="table">
       ${sideHTML(en, validPl.has(1))}
@@ -2260,7 +2267,7 @@ function renderSetup(){
     </div>`;
   }
   return `<div class="setup">
-    <header><div class="top"><h1 style="font-size:30px">Elementals Unbound</h1><button class="btn primary" data-btn="rpg">Adventure (prototype)</button></div><p>Playtest build: 5 base elements, 10 dual confluences and 10 triple confluences. Every element has 100 basic cards and 40 Manifests. Base elements have Starter, Common, Uncommon and Rare decks; each confluence has Common, Uncommon and Rare fusion decks plus an Archetype deck built from its special cards. Try the Fusion Forge to fuse two elements into a dual card, or three into a triple card.</p></header>
+    <header><div class="top"><h1 style="font-size:30px">Elementals Unbound ${versionHTML()}</h1><button class="btn primary" data-btn="rpg">Adventure (prototype)</button></div><p>Playtest build: 5 base elements, 10 dual confluences and 10 triple confluences. Every element has 100 basic cards and 40 Manifests. Base elements have Starter, Common, Uncommon and Rare decks; each confluence has Common, Uncommon and Rare fusion decks plus an Archetype deck built from its special cards. Try the Fusion Forge to fuse two elements into a dual card, or three into a triple card.</p></header>
     ${tabs}${body}
     ${rulesHTML()}
   </div>`;
