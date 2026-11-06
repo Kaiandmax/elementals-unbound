@@ -1,6 +1,6 @@
 /* ================= SAND CATALOG (designed confluence cards, generated first draft) =================
    Wind + Earth. 100 cards built by design/tools/gencatalog.js from the themes in design/confluence-slots.md:
-   erosion (25: shrink + bounce), dune (20: burn + fortify), sandstorm (20: burn + shrink), quicksand (20, support: bounce + shrink), mesa (15: fortify).
+   erosion (25: shrink + bounce), dune (20: burn + fortify), sandstorm (20: burn + shrink), quicksand (20, support: bounce + shrink), mesa (15: fortify + burn).
    A first draft: effects come from per-theme templates that follow design/confluence-cards.md (rarity unlocks, one keyword
    below rare, burst cap, sweeps at most 2). Balance prices them; TCG revises cards by hand and Story names them.
    Each card: th = theme, tr = traits, sig = signature recipe [wind, earth]. */
@@ -15,33 +15,33 @@ globalThis.SAND_CATALOG = [];
 
   /* ---- erosion (25) ---- */
   setR("c");
-  add(Cr("Sandstorm Spirit",2,3,3,"","play: buff t -1 -1",S("erosion","shrink+bounce",["Whirlwind Acrobat","Bedrock Wall"],{tgt:"e"})));
-  add(Cr("Sunbaked Familiar",3,4,4,"","attack: buff str -1 0",S("erosion","shrink+bounce",["Harrier Hawk","Cliffside Watcher"])));
-  add(Cr("Gritted Imp",3,4,4,"","play: bounce t",S("erosion","shrink+bounce",["Featherfall Hawk","Canyon Ram"],{tgt:"o"})));
-  add(Cr("Dune Scout",1,2,2,"","play: bounce t",S("erosion","shrink+bounce",["Gust Sprite","Stone Sentry"],{tgt:"e:cost<=2"})));
-  add(Cr("Shifting Adept",3,4,4,"","play: buff t -1 -1",S("erosion","shrink+bounce",["Wind Dancer","Geode Burrower"],{tgt:"e"})));
-  add(Cr("Sirocco Imp",3,4,4,"","play: buff t -1 -1",S("erosion","shrink+bounce",["Dust Devil","Bulwark Golem"],{tgt:"e"})));
-  add(Sp("Sunbaked Gift",2,"play: buff t -1 -1",S("erosion","shrink+bounce",["Gust of Wind","Quake"],{tgt:"e"})));
-  add(Sp("Desert Torrent",2,"play: buff all_e -1 0; draw 1",S("erosion","shrink+bounce",["Recall Gust","Rockslide"])));
-  add(Sp("Shifting Rain",1,"play: buff all_e -1 0; draw 1",S("erosion","shrink+bounce",["Updraft","Earthen Blessing"])));
+  add(Cr("Sandstorm Guardian",2,2,4,"","play: bounce t",S("erosion","shrink+bounce",["Whirlwind Acrobat","Bedrock Wall"],{tgt:"o"})));
+  add(Cr("Sunbaked Sentry",3,3,5,"","attack: buff str -1 0",S("erosion","shrink+bounce",["Harrier Hawk","Cliffside Watcher"])));
+  add(Cr("Gritted Behemoth",3,3,5,"","play: bounce t",S("erosion","shrink+bounce",["Featherfall Hawk","Canyon Ram"],{tgt:"o"})));
+  add(Cr("Dune Giant",1,1,3,"","play: bounce t",S("erosion","shrink+bounce",["Gust Sprite","Stone Sentry"],{tgt:"e:cost<=2"})));
+  add(Cr("Shifting Warden",3,3,5,"","attack: buff str -1 0",S("erosion","shrink+bounce",["Wind Dancer","Geode Burrower"])));
+  add(Cr("Sirocco Behemoth",3,3,5,"","play: bounce t",S("erosion","shrink+bounce",["Dust Devil","Bulwark Golem"],{tgt:"o"})));
+  add(Sp("Sunbaked Gift",2,"play: buff t -1 0",S("erosion","shrink+bounce",["Gust of Wind","Quake"],{tgt:"e"})));
+  add(Sp("Desert Torrent",2,"play: buff t -1 -1; draw 1",S("erosion","shrink+bounce",["Recall Gust","Rockslide"],{tgt:"e"})));
+  add(Sp("Shifting Rain",1,"play: buff t -1 -1; draw 1",S("erosion","shrink+bounce",["Updraft","Earthen Blessing"],{tgt:"e"})));
   add(Re("Mesa Snap",1,"play: bounce t",S("erosion","shrink+bounce",["Tailwind","Rock Shield"],{tgt:"eatk"})));
   add(Re("Dune Ward",2,"play: bounce t",S("erosion","shrink+bounce",["Crosswind","Rock Shield"],{tgt:"eatk"})));
   add(Au("Mesa Beacon",2,"start: buff rnd -1 0",S("erosion","shrink+bounce",["Jet Stream","Mountain's Patience"])));
   add(Au("Sirocco Sanctum",2,"start: buff ostr 1 0 tmp",S("erosion","shrink+bounce",["Sky Temple","Ley Line"])));
   setR("u");
-  add(Cr("Wind-carved Imp",4,5,5,"","play: buff t -1 -1",S("erosion","shrink+bounce",["Gust Knight","Basalt Champion"],{tgt:"e"})));
-  add(Cr("Shifting Scout",3,4,4,"","play: bounce t",S("erosion","shrink+bounce",["Cloudshaper","Geode Shaman"],{tgt:"o"})));
-  add(Cr("Mesa Shaman",4,5,5,"","play: bounce t",S("erosion","shrink+bounce",["Tornado Elemental","Cavern Troll"],{tgt:"e:cost<=3"})));
-  add(Cr("Wind-carved Weaver",4,5,5,"","start: buff rnd -1 -1",S("erosion","shrink+bounce",["Raptor of the Peaks","Tremor Lord"])));
+  add(Cr("Wind-carved Behemoth",4,3,7,"","attack: buff str -1 0",S("erosion","shrink+bounce",["Gust Knight","Basalt Champion"])));
+  add(Cr("Shifting Giant",3,3,5,"","play: bounce t",S("erosion","shrink+bounce",["Cloudshaper","Geode Shaman"],{tgt:"o"})));
+  add(Cr("Mesa Bulwark",4,3,7,"","play: bounce t",S("erosion","shrink+bounce",["Tornado Elemental","Cavern Troll"],{tgt:"e:cost<=3"})));
+  add(Cr("Wind-carved Wall",4,3,7,"","start: buff rnd -1 0",S("erosion","shrink+bounce",["Raptor of the Peaks","Tremor Lord"])));
   add(Sp("Shifting Blast",4,"play: bounce t; draw 1",S("erosion","shrink+bounce",["Squall Line","Seismic Devastation"],{tgt:"o"})));
   add(Sp("Sirocco Storm",2,"play: bounce t; draw 1",S("erosion","shrink+bounce",["Skyward Ascent","Unyielding Earth"],{tgt:"o"})));
-  add(Re("Desert Feint",3,"play: buff t -2 -2",S("erosion","shrink+bounce",["Evasive Maneuver","Earthen Ward"],{tgt:"eatk"})));
+  add(Re("Desert Feint",3,"play: buff t -2 0",S("erosion","shrink+bounce",["Evasive Maneuver","Earthen Ward"],{tgt:"eatk"})));
   add(Au("Dune Engine",2,"ebounce: draw 1",S("erosion","shrink+bounce",["Jet Stream","Sacred Grove"])));
   setR("r");
-  add(Cr("Sandstorm Adept",5,7,7,"","play: buff t -2 0",S("erosion","shrink+bounce",["Thunderwing Roc","Crystal Dragon"],{tgt:"e"})));
-  add(Cr("Sandstorm Caller",6,8,8,"","attack: buff str -1 0",S("erosion","shrink+bounce",["Aerie Matriarch","Primordial Titan"])));
-  add(Cr("Mesa Weaver",6,8,8,"","play: bounce t; draw 1",S("erosion","shrink+bounce",["Cloud Titan","Avalanche Titan"],{tgt:"e"})));
-  add(Sp("Wind-carved Wave",5,"play: buff all_e -1 0; draw 1",S("erosion","shrink+bounce",["Tornado","Seismic Devastation"])));
+  add(Cr("Sandstorm Warden",5,5,9,"","play: buff t -1 0",S("erosion","shrink+bounce",["Thunderwing Roc","Crystal Dragon"],{tgt:"e"})));
+  add(Cr("Sandstorm Keeper",6,5,11,"","play: buff t -1 0",S("erosion","shrink+bounce",["Aerie Matriarch","Primordial Titan"],{tgt:"e"})));
+  add(Cr("Mesa Wall",6,5,11,"","play: bounce t; draw 1",S("erosion","shrink+bounce",["Cloud Titan","Avalanche Titan"],{tgt:"e"})));
+  add(Sp("Wind-carved Wave",5,"play: buff t -1 -1; draw 1",S("erosion","shrink+bounce",["Tornado","Seismic Devastation"],{tgt:"e"})));
   add(Re("Wind-carved Trap",3,"play: bounce t",S("erosion","shrink+bounce",["Perfect Gale","Tremor Trap"],{tgt:"eatk"})));
   add(Au("Dust Beacon",4,"start: buff all_e -1 0",S("erosion","shrink+bounce",["Eye of Eternity","Heart of the World"])));
 
@@ -67,7 +67,7 @@ globalThis.SAND_CATALOG = [];
   add(Re("Dust Snap",3,"play: fort t 2",S("dune","burn+fortify",["Sky Strike","Stone Aegis"],{tgt:"o"})));
   add(Au("Dust Engine",3,"end: dmg face 1",S("dune","burn+fortify",["Wind Chimes","Stone Sanctuary"])));
   setR("r");
-  add(Cr("Wind-carved Adept",6,7,8,"airborne","play: fort self 1",S("dune","burn+fortify+airborne",["Aerie Matriarch","Avalanche Titan"])));
+  add(Cr("Sunbaked Familiar",6,7,8,"airborne","play: fort self 1",S("dune","burn+fortify+airborne",["Aerie Matriarch","Avalanche Titan"])));
   add(Cr("Sirocco Adept",5,6,7,"airborne","play: fort own 2",S("dune","burn+fortify+airborne",["Ancient Wind Spirit","Diamondhide Wurm"])));
   add(Sp("Shifting Volley",6,"play: dmg all_e 2",S("dune","burn+fortify",["Squall Line","Shatter the Earth"])));
   add(Re("Dust Feint",5,"play: dmg t 7",S("dune","burn+fortify",["Wind Barrier","Stone Aegis"],{tgt:"eatk"})));
@@ -75,68 +75,68 @@ globalThis.SAND_CATALOG = [];
 
   /* ---- sandstorm (20) ---- */
   setR("c");
-  add(Cr("Sandstorm Scout",1,2,2,"","attack: buff str -1 0",S("sandstorm","burn+shrink",["Swift Courier","Root Tender"])));
-  add(Cr("Gritted Golem",3,4,4,"","play: dmg face 1",S("sandstorm","burn+shrink",["Flock Leader","Grove Shaper"])));
+  add(Cr("Sandstorm Scout",1,2,2,"","play: buff t -1 0",S("sandstorm","burn+shrink",["Swift Courier","Root Tender"],{tgt:"e"})));
+  add(Cr("Dune Scout",3,4,4,"","play: dmg face 1",S("sandstorm","burn+shrink",["Flock Leader","Grove Shaper"])));
   add(Cr("Dune Weaver",2,3,3,"","attack: dmg face 1",S("sandstorm","burn+shrink",["Skyward Scout","Crystal Burrower"])));
-  add(Cr("Mesa Sentinel",1,2,2,"","play: buff t -2 0",S("sandstorm","burn+shrink",["Sparrow Scout","Pebble Golem"],{tgt:"e"})));
+  add(Cr("Mesa Sentinel",1,2,2,"","play: buff t -1 0",S("sandstorm","burn+shrink",["Sparrow Scout","Pebble Golem"],{tgt:"e"})));
   add(Cr("Sirocco Weaver",2,3,3,"","play: dmg t 2",S("sandstorm","burn+shrink",["Wind Wanderer","Spiked Barricade"],{tgt:"e"})));
-  add(Sp("Wind-carved Call",2,"play: buff all_e -1 0; draw 1",S("sandstorm","burn+shrink",["Zephyr Strike","Overgrowth"])));
-  add(Sp("Dust Rain",2,"play: buff all_e -1 0; draw 1",S("sandstorm","burn+shrink",["Wingbeat","Fault Line"])));
+  add(Sp("Wind-carved Call",2,"play: buff t -1 -1; draw 1",S("sandstorm","burn+shrink",["Zephyr Strike","Overgrowth"],{tgt:"e"})));
+  add(Sp("Dust Rain",2,"play: buff t -1 -1; draw 1",S("sandstorm","burn+shrink",["Wingbeat","Fault Line"],{tgt:"e"})));
   add(Re("Wind-carved Flash",2,"play: dmg t 2",S("sandstorm","burn+shrink",["Crosswind","Earthen Ward"],{tgt:"ea"})));
-  add(Re("Shifting Ward",2,"play: buff t -2 -2",S("sandstorm","burn+shrink",["Evasive Maneuver","Tremor Trap"],{tgt:"eatk"})));
+  add(Re("Shifting Ward",2,"play: buff t -2 0",S("sandstorm","burn+shrink",["Evasive Maneuver","Tremor Trap"],{tgt:"eatk"})));
   add(Au("Gritted Banner",2,"start: buff rnd -1 0",S("sandstorm","burn+shrink",["Wind Chimes","Fortress Walls"])));
   setR("u");
   add(Cr("Desert Adept",4,5,5,"","play: dmg t 5",S("sandstorm","burn+shrink",["Vortex Mage","Ancient Guardian"],{tgt:"e"})));
   add(Cr("Sunbaked Serpent",4,5,5,"","death: dmg all_e 1",S("sandstorm","burn+shrink",["Feathered Serpent","Jade Behemoth"])));
-  add(Cr("Wind-carved Spirit",4,5,5,"","play: buff t -2 0",S("sandstorm","burn+shrink",["Skyline Falcon","Grand Geomancer"],{tgt:"e"})));
+  add(Cr("Wind-carved Spirit",4,5,5,"","play: dmg face 1",S("sandstorm","burn+shrink",["Skyline Falcon","Grand Geomancer"])));
   add(Sp("Wind-carved Storm",4,"play: dmg t 4",S("sandstorm","burn+shrink",["Tempest Volley","Unearth"],{tgt:"ea"})));
   add(Re("Mesa Riposte",2,"play: dmg t 3",S("sandstorm","burn+shrink",["Perfect Gale","Earthen Ward"],{tgt:"eatk"})));
   add(Au("Gritted Totem",3,"spell: zaps 1 1",S("sandstorm","burn+shrink",["Aerie","Sacred Grove"])));
   setR("r");
   add(Cr("Dust Elemental",6,8,8,"","play: dmg t 3",S("sandstorm","burn+shrink",["Cloud Leviathan","Primordial Titan"],{tgt:"e"})));
-  add(Cr("Wind-carved Shaman",5,7,7,"","play: dmg t 3",S("sandstorm","burn+shrink",["Tempest Dragon","Gaia's Avatar"],{tgt:"e"})));
-  add(Sp("Mesa Call",3,"play: buff t -2 -2",S("sandstorm","burn+shrink",["Aerial Bombardment","Earth's Fury"],{tgt:"e"})));
+  add(Cr("Sandstorm Adept",5,7,7,"","play: buff all_e -1 -1",S("sandstorm","burn+shrink",["Tempest Dragon","Gaia's Avatar"])));
+  add(Sp("Mesa Call",3,"play: buff t -2 0",S("sandstorm","burn+shrink",["Aerial Bombardment","Earth's Fury"],{tgt:"e"})));
   add(Re("Wind-carved Ward",3,"play: dmg t 5",S("sandstorm","burn+shrink",["Vanishing Wind","Tremor Trap"],{tgt:"eatk"})));
   add(Au("Desert Altar",4,"start: zaps 1 1",S("sandstorm","burn+shrink",["Aerie","Stone Sanctuary"])));
 
   /* ---- quicksand (20, support) ---- */
   setR("c");
   add(Cr("Desert Wall",2,2,4,"","play: bounce t",S("quicksand","bounce+shrink",["Windbreak Guardian","Stonecaller"],{tgt:"o"})));
-  add(Cr("Sunbaked Watcher",1,1,3,"","play: buff t -1 -1",S("quicksand","bounce+shrink",["Storm Crow","Clay Homunculus"],{tgt:"e"})));
+  add(Cr("Sunbaked Watcher",1,1,3,"","attack: buff str -1 0",S("quicksand","bounce+shrink",["Storm Crow","Clay Homunculus"])));
   add(Cr("Sandstorm Bulwark",2,2,4,"","play: bounce t",S("quicksand","bounce+shrink",["Drifting Monk","Seed Bearer"],{tgt:"o"})));
-  add(Cr("Sirocco Behemoth",1,1,3,"","play: buff t -1 -1",S("quicksand","bounce+shrink",["Tempest Sprite","Clay Homunculus"],{tgt:"e"})));
-  add(Cr("Sunbaked Warden",2,2,4,"","attack: buff str -1 0",S("quicksand","bounce+shrink",["Breeze Messenger","Crag Brute"])));
+  add(Cr("Gritted Tortoise",1,1,3,"","attack: buff str -1 0",S("quicksand","bounce+shrink",["Tempest Sprite","Clay Homunculus"])));
+  add(Cr("Sunbaked Warden",2,2,4,"","play: buff t -1 0",S("quicksand","bounce+shrink",["Breeze Messenger","Crag Brute"],{tgt:"e"})));
   add(Sp("Shifting Burst",1,"play: bounce t",S("quicksand","bounce+shrink",["Cyclone Kick","Fertile Ground"],{tgt:"e"})));
-  add(Sp("Wind-carved Rain",2,"play: buff all_e -1 0; draw 1",S("quicksand","bounce+shrink",["Wind Shear","Rockslide"])));
+  add(Sp("Wind-carved Rain",2,"play: buff t -1 -1; draw 1",S("quicksand","bounce+shrink",["Wind Shear","Rockslide"],{tgt:"e"})));
   add(Re("Sirocco Feint",2,"play: bounce t",S("quicksand","bounce+shrink",["Sidestep","Rock Shield"],{tgt:"eatk"})));
   add(Au("Sirocco Totem",2,"start: buff rnd -1 0",S("quicksand","bounce+shrink",["Sky Temple","Mountain's Patience"])));
   setR("u");
-  add(Cr("Mesa Bulwark",3,2,5,"skyguard","ebounce: draw 1",S("quicksand","bounce+shrink+skyguard",["Sky Pirate","Iron Tortoise"])));
-  add(Cr("Sandstorm Giant",3,2,5,"skyguard","play: bounce t",S("quicksand","bounce+shrink+skyguard",["Windsong Falcon","Granite Lion"],{tgt:"e:cost<=3"})));
-  add(Cr("Shifting Watcher",4,3,7,"","play: bounce t",S("quicksand","bounce+shrink",["Cloud Strider","Elder Treant"],{tgt:"o"})));
-  add(Sp("Dust Ritual",3,"play: buff all_e -1 0; draw 1",S("quicksand","bounce+shrink",["Wind Walk","Cataclysmic Quake"])));
-  add(Re("Dune Trap",4,"play: bounce t",S("quicksand","bounce+shrink",["Wind Barrier","Earthen Ward"],{tgt:"eatk"})));
-  add(Au("Dune Grove",3,"start: buff ostr 1 0 tmp",S("quicksand","bounce+shrink",["Eye of Eternity","Crystal Resonance"])));
+  add(Cr("Dune Bulwark",3,2,5,"skyguard","play: bounce t",S("quicksand","bounce+shrink+skyguard",["Windsong Falcon","Iron Tortoise"],{tgt:"e:cost<=3"})));
+  add(Cr("Desert Titan",3,2,5,"skyguard","attack: buff str -1 0",S("quicksand","bounce+shrink+skyguard",["Featherblade Duelist","Quartz Elemental"])));
+  add(Cr("Desert Tortoise",4,3,6,"skyguard","ebounce: draw 1",S("quicksand","bounce+shrink+skyguard",["Lord of the Skies","Terravore"])));
+  add(Sp("Sandstorm Call",3,"play: buff t -1 -1; draw 1",S("quicksand","bounce+shrink",["Wind Walk","Cataclysmic Quake"],{tgt:"e"})));
+  add(Re("Shifting Guard",4,"play: bounce t",S("quicksand","bounce+shrink",["Sky Strike","Earthen Ward"],{tgt:"eatk"})));
+  add(Au("Gritted Field",3,"start: buff rnd -1 0",S("quicksand","bounce+shrink",["Eye of Eternity","Crystal Resonance"])));
   setR("r");
-  add(Cr("Mesa Wall",5,4,9,"skyguard","play: bounce t; draw 1",S("quicksand","bounce+shrink+skyguard",["Lord of the Skies","Bedrock Leviathan"],{tgt:"e"})));
-  add(Cr("Dune Wall",4,3,7,"skyguard","play: buff t -1 -1",S("quicksand","bounce+shrink+skyguard",["Zephyr Archon","Golem Patriarch"],{tgt:"e"})));
-  add(Sp("Wind-carved Rite",5,"play: buff t -3 -3",S("quicksand","bounce+shrink",["Winds of Change","Earth's Fury"],{tgt:"e"})));
+  add(Cr("Sirocco Tortoise",5,4,9,"skyguard","play: bounce t",S("quicksand","bounce+shrink+skyguard",["Zephyr Archon","Bedrock Leviathan"],{tgt:"o"})));
+  add(Cr("Sunbaked Wall",4,3,7,"skyguard","play: bounce t",S("quicksand","bounce+shrink+skyguard",["Hurricane Elemental","Golem Patriarch"],{tgt:"o"})));
+  add(Sp("Shifting Ritual",5,"play: bounce t; draw 1",S("quicksand","bounce+shrink",["Cyclonic Rift","Seismic Devastation"],{tgt:"o"})));
 
   /* ---- mesa (15) ---- */
   setR("c");
-  add(Cr("Sirocco Titan",1,1,3,"","play: fort t 1",S("mesa","fortify",["Gust Sprite","Crystal Sprout"],{tgt:"o"})));
-  add(Cr("Dust Bulwark",2,2,3,"airborne","play: fort t 1",S("mesa","fortify+airborne",["Swiftwing Herald","Druid of the Stone"],{tgt:"o"})));
-  add(Cr("Wind-carved Tortoise",2,2,3,"airborne","play: fort t 1",S("mesa","fortify+airborne",["Gale Rider","Rampart Elder"],{tgt:"o"})));
-  add(Cr("Wind-carved Watcher",3,3,5,"","death: fort own 1",S("mesa","fortify",["Cloud Hawk","Rampart Elder"])));
-  add(Sp("Wind-carved Gift",2,"play: fort t 2; buff t 1 0",S("mesa","fortify",["Recall Gust","Quake"],{tgt:"o"})));
-  add(Re("Sirocco Guard",1,"play: fort t 2",S("mesa","fortify",["Sky Strike","Rock Shield"],{tgt:"o"})));
-  add(Au("Shifting Font",1,"start: fort ostr 1",S("mesa","fortify",["Jet Stream","Ley Line"])));
+  add(Cr("Desert Behemoth",1,1,2,"airborne","death: dmg all_e 1",S("mesa","fortify+burn+airborne",["Sparrow Scout","Crystal Sprout"])));
+  add(Cr("Shifting Bulwark",2,2,3,"airborne","play: dmg t 2",S("mesa","fortify+burn+airborne",["Swiftwing Herald","Worldroot Sapling"],{tgt:"e"})));
+  add(Cr("Desert Bulwark",2,2,4,"","attack: dmg face 1",S("mesa","fortify+burn",["Gale Rider","Druid of the Stone"])));
+  add(Cr("Gritted Titan",3,2,5,"airborne","attack: dmg face 1",S("mesa","fortify+burn+airborne",["Cloud Hawk","Rampart Elder"])));
+  add(Sp("Shifting Wave",2,"play: dmg t 3",S("mesa","fortify+burn",["Gust of Wind","Overgrowth"],{tgt:"e"})));
+  add(Re("Mesa Flash",1,"play: dmg t 1",S("mesa","fortify+burn",["Sidestep","Tremor Trap"],{tgt:"ea"})));
+  add(Au("Dune Altar",1,"start: fort ostr 1",S("mesa","fortify+burn",["Jet Stream","Ley Line"])));
   setR("u");
-  add(Cr("Dune Colossus",4,3,6,"airborne","play: fort self 1",S("mesa","fortify+airborne",["Storm Roc","Hill Giant"])));
-  add(Cr("Desert Behemoth",4,3,6,"airborne","play: fort t 1",S("mesa","fortify+airborne",["Roc Hatchery","Mountain Guardian"],{tgt:"o"})));
-  add(Sp("Desert Volley",3,"play: fort own 1",S("mesa","fortify",["Gale Barrage","Unearth"])));
+  add(Cr("Shifting Colossus",4,3,6,"airborne","play: dmg face 1",S("mesa","fortify+burn+airborne",["Cloud Strider","Ironbark Treant"])));
+  add(Cr("Mesa Behemoth",4,3,6,"airborne","play: fort self 1",S("mesa","fortify+burn+airborne",["Mistral Phoenix","Granite Juggernaut"])));
+  add(Sp("Mesa Torrent",3,"play: fort own 1",S("mesa","fortify+burn",["Gale Barrage","Unearth"])));
   setR("r");
-  add(Cr("Desert Watcher",5,4,9,"airborne","play: fort self 1",S("mesa","fortify+airborne",["Hurricane Elemental","Obsidian Golem"])));
+  add(Cr("Dust Bulwark",5,5,9,"","play: dmg t 3",S("mesa","fortify+burn",["Roc Hatchery","Emerald Wyrm"],{tgt:"e"})));
   // Signature recipes: the Forge's recipe book makes each designed card from its named parents (one card per element).
   for (const d of globalThis.SAND_CATALOG){
     const ids = d.sig.map((n, i) => cardIdByName(n, [CONFLUENCE["sand"][i]]));

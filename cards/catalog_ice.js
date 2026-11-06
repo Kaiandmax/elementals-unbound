@@ -1,6 +1,6 @@
 /* ================= ICE CATALOG (designed confluence cards, generated first draft) =================
    Water + Wind. 100 cards built by design/tools/gencatalog.js from the themes in design/confluence-slots.md:
-   shatter (25: freeze + shatter), rimewings (20: freeze + burn), snowdrift (20: bounce + freeze), hoarfrost (20: freeze + burn), squall (15, support: freeze + draw).
+   shatter (25: freeze + shatter), rimewings (20: freeze), snowdrift (20: bounce + freeze), hoarfrost (20: freeze + burn), squall (15, support: draw).
    A first draft: effects come from per-theme templates that follow design/confluence-cards.md (rarity unlocks, one keyword
    below rare, burst cap, sweeps at most 2). Balance prices them; TCG revises cards by hand and Story names them.
    Each card: th = theme, tr = traits, sig = signature recipe [water, wind]. */
@@ -47,31 +47,31 @@ globalThis.ICE_CATALOG = [];
 
   /* ---- rimewings (20) ---- */
   setR("c");
-  add(Cr("Icebound Charger",2,3,3,"","play: freeze t; dmg t 1",S("rimewings","freeze+burn",["Rime Watcher","Whirlwind Acrobat"],{tgt:"e"})));
-  add(Cr("Frost Hawk",2,3,2,"airborne","play: freeze t; dmg t 1",S("rimewings","freeze+burn+airborne",["Kelp Lurker","Drifting Monk"],{tgt:"e"})));
-  add(Cr("Snowdrift Brute",2,3,2,"airborne","attack: freeze str",S("rimewings","freeze+burn+airborne",["Riverbank Sage","Skyward Scout"])));
-  add(Cr("Wintry Reaver",2,3,2,"airborne","attack: freeze str",S("rimewings","freeze+burn+airborne",["Mist Weaver","Windbreak Guardian"])));
-  add(Cr("Wintry Drake",2,3,3,"","play: dmg face 1",S("rimewings","freeze+burn",["Coral Warden","Breeze Messenger"])));
-  add(Sp("Icebound Storm",1,"play: freeze all_e",S("rimewings","freeze+burn",["Ebb and Flow","Tailwind Rush"])));
-  add(Sp("Hoarfrost Rite",1,"play: dmg t 1",S("rimewings","freeze+burn",["Shatter","Cyclone Kick"],{tgt:"ea"})));
-  add(Re("Hoarfrost Feint",2,"play: freeze t; dmg t 1",S("rimewings","freeze+burn",["Frost Snap","Sidestep"],{tgt:"eatk"})));
-  add(Re("Frozen Snap",2,"play: freeze t",S("rimewings","freeze+burn",["Chill","Tailwind"],{tgt:"eatk"})));
-  add(Au("Icebound Beacon",1,"end: dmg face 1",S("rimewings","freeze+burn",["Sea of Clarity","Sky Temple"])));
-  add(Au("Rime Banner",2,"start: freeze str",S("rimewings","freeze+burn",["Healing Spring","Jet Stream"])));
+  add(Cr("Icebound Serpent",2,3,3,"","attack: freeze str",S("rimewings","freeze",["Rime Watcher","Whirlwind Acrobat"])));
+  add(Cr("Frost Weaver",2,2,3,"airborne","attack: freeze str",S("rimewings","freeze+airborne",["Kelp Lurker","Drifting Monk"])));
+  add(Cr("Snowdrift Caller",2,2,3,"airborne","play: freeze t",S("rimewings","freeze+airborne",["Riverbank Sage","Skyward Scout"],{tgt:"e"})));
+  add(Cr("Icebound Caller",2,2,3,"airborne","play: freeze t",S("rimewings","freeze+airborne",["Mist Weaver","Windbreak Guardian"],{tgt:"e"})));
+  add(Cr("Wintry Spirit",2,3,3,"","play: freeze t; dmg t 1",S("rimewings","freeze",["Coral Warden","Breeze Messenger"],{tgt:"e"})));
+  add(Sp("Icebound Storm",1,"play: freeze t; draw 1",S("rimewings","freeze",["Ebb and Flow","Tailwind Rush"],{tgt:"e"})));
+  add(Sp("Hoarfrost Rite",1,"play: freeze all_e",S("rimewings","freeze",["Shatter","Cyclone Kick"])));
+  add(Re("Hoarfrost Feint",2,"play: freeze t",S("rimewings","freeze",["Frost Snap","Sidestep"],{tgt:"eatk"})));
+  add(Re("Frozen Snap",2,"play: freeze t",S("rimewings","freeze",["Chill","Tailwind"],{tgt:"eatk"})));
+  add(Au("Icebound Beacon",1,"start: freeze str",S("rimewings","freeze",["Sea of Clarity","Sky Temple"])));
+  add(Au("Rime Banner",2,"start: freeze str",S("rimewings","freeze",["Healing Spring","Jet Stream"])));
   setR("u");
-  add(Cr("Glacial Striker",3,4,3,"airborne","attack: freeze str",S("rimewings","freeze+burn+airborne",["Wavecrest Mage","Gyrfalcon"])));
-  add(Cr("Snowdrift Duelist",5,8,5,"","play: freeze t; dmg t 1",S("rimewings","freeze+burn",["Frost Giant","Thunderhawk"],{tgt:"e"})));
-  add(Cr("Chill Hound",5,7,5,"airborne","freeze: dmg face 1",S("rimewings","freeze+burn+airborne",["Shoal Leviathan","Ancient Wind Spirit"])));
-  add(Sp("Chill Burst",4,"play: dmg t 4; draw 1",S("rimewings","freeze+burn",["Glacial Torrent","Tempest Volley"],{tgt:"e"})));
-  add(Sp("Wintry Wave",3,"play: freeze all_e",S("rimewings","freeze+burn",["Frozen Tomb","Skyward Ascent"])));
-  add(Re("Wintry Flash",3,"play: dmg t 3",S("rimewings","freeze+burn",["Sudden Current","Sky Strike"],{tgt:"ea"})));
-  add(Au("Frost Altar",3,"start: zaps 1 1",S("rimewings","freeze+burn",["Ocean's Blessing","Aerie"])));
+  add(Cr("Glacial Elemental",3,3,4,"airborne","play: freeze t",S("rimewings","freeze+airborne",["Wavecrest Mage","Gyrfalcon"],{tgt:"e"})));
+  add(Cr("Snowdrift Imp",5,6,7,"","play: freeze t",S("rimewings","freeze",["Frost Giant","Thunderhawk"],{tgt:"e"})));
+  add(Cr("Chill Shaman",5,6,6,"airborne","start: freeze str",S("rimewings","freeze+airborne",["Shoal Leviathan","Ancient Wind Spirit"])));
+  add(Sp("Chill Burst",4,"play: freeze all_e",S("rimewings","freeze",["Glacial Torrent","Tempest Volley"])));
+  add(Sp("Wintry Wave",3,"play: freeze t; dmg t 3",S("rimewings","freeze",["Frozen Tomb","Skyward Ascent"],{tgt:"e"})));
+  add(Re("Wintry Flash",3,"play: freeze t; dmg t 1",S("rimewings","freeze",["Sudden Current","Sky Strike"],{tgt:"eatk"})));
+  add(Au("Frost Altar",3,"start: freeze str",S("rimewings","freeze",["Ocean's Blessing","Aerie"])));
   setR("r");
-  add(Cr("Chill Striker",4,6,4,"airborne","play: dmg face 1",S("rimewings","freeze+burn+airborne",["Glacial Empress","Hurricane Elemental"])));
-  add(Cr("Glacial Falcon",4,6,4,"airborne","play: dmg all_e 2",S("rimewings","freeze+burn+airborne",["Siren Queen","Zephyr Archon"])));
-  add(Sp("Sleet Rain",5,"play: dmg t 5; draw 1",S("rimewings","freeze+burn",["Glacial Torrent","Tornado"],{tgt:"e"})));
-  add(Re("Wintry Riposte",4,"play: freeze t",S("rimewings","freeze+burn",["Reverse Current","Vanishing Wind"],{tgt:"eatk"})));
-  add(Au("Hoarfrost Grove",3,"start: freeze str",S("rimewings","freeze+burn",["Ocean's Blessing","Eye of Eternity"])));
+  add(Cr("Chill Elemental",4,5,5,"airborne","play: freeze t; dmg t 1",S("rimewings","freeze+airborne",["Glacial Empress","Hurricane Elemental"],{tgt:"e"})));
+  add(Cr("Glacial Scout",4,5,5,"airborne","play: freeze all_e",S("rimewings","freeze+airborne",["Siren Queen","Zephyr Archon"])));
+  add(Sp("Sleet Rain",5,"play: freeze all_e",S("rimewings","freeze",["Glacial Torrent","Tornado"])));
+  add(Re("Wintry Riposte",4,"play: freeze t",S("rimewings","freeze",["Reverse Current","Vanishing Wind"],{tgt:"eatk"})));
+  add(Au("Hoarfrost Grove",3,"start: freeze str",S("rimewings","freeze",["Ocean's Blessing","Eye of Eternity"])));
 
   /* ---- snowdrift (20) ---- */
   setR("c");
@@ -79,8 +79,8 @@ globalThis.ICE_CATALOG = [];
   add(Cr("Rime Elemental",3,4,4,"","attack: freeze str",S("snowdrift","bounce+freeze",["Reef Guardian","Cloud Hawk"])));
   add(Cr("Frozen Caller",3,4,4,"","attack: freeze str",S("snowdrift","bounce+freeze",["Frostbite Shade","Gale Sage"])));
   add(Cr("Rime Shaman",3,4,4,"","attack: freeze str",S("snowdrift","bounce+freeze",["Whirlpool Mage","Sky Courier"])));
-  add(Cr("Glacial Scout",2,3,3,"","attack: freeze str",S("snowdrift","bounce+freeze",["Glacier Wolf","Tempest Sprite"])));
-  add(Sp("Rime Wave",1,"play: freeze t; dmg t 1",S("snowdrift","bounce+freeze",["Soothing Rain","Zephyr Strike"],{tgt:"e"})));
+  add(Cr("Frozen Serpent",2,3,3,"","attack: freeze str",S("snowdrift","bounce+freeze",["Glacier Wolf","Tempest Sprite"])));
+  add(Sp("Glacial Ritual",1,"play: bounce t",S("snowdrift","bounce+freeze",["Soothing Rain","Zephyr Strike"],{tgt:"e"})));
   add(Sp("Wintry Volley",1,"play: bounce t",S("snowdrift","bounce+freeze",["Whirlpool Trap","Eye of the Gale"],{tgt:"e"})));
   add(Re("Sleet Riposte",2,"play: freeze t",S("snowdrift","bounce+freeze",["Icy Grip","Crosswind"],{tgt:"eatk"})));
   add(Re("Frost Feint",2,"play: bounce t",S("snowdrift","bounce+freeze",["Riptide Counter","Wind Barrier"],{tgt:"e:cost<=3"})));
@@ -93,7 +93,7 @@ globalThis.ICE_CATALOG = [];
   add(Re("Hoarfrost Recoil",3,"play: freeze t; dmg t 1",S("snowdrift","bounce+freeze",["Absolute Zero","Perfect Gale"],{tgt:"eatk"})));
   add(Au("Chill Altar",3,"ebounce: dmg face 1",S("snowdrift","bounce+freeze",["Permafrost Shrine","Aerie"])));
   setR("r");
-  add(Cr("Frost Weaver",5,7,7,"","attack: freeze all_e",S("snowdrift","bounce+freeze",["Deepsea Hydra","Aerie Matriarch"])));
+  add(Cr("Wintry Imp",5,7,7,"","attack: freeze all_e",S("snowdrift","bounce+freeze",["Deepsea Hydra","Aerie Matriarch"])));
   add(Cr("Sleet Elemental",6,8,8,"","play: bounce t; draw 1",S("snowdrift","bounce+freeze",["Coral Titan","Cloud Leviathan"],{tgt:"e"})));
   add(Sp("Hoarfrost Rain",4,"play: freeze t; dmg t 3",S("snowdrift","bounce+freeze",["Healing Torrent","Squall Line"],{tgt:"e"})));
   add(Re("Glacial Recoil",5,"play: freeze t",S("snowdrift","bounce+freeze",["Frozen Moment","Vanishing Wind"],{tgt:"eatk"})));
@@ -124,19 +124,19 @@ globalThis.ICE_CATALOG = [];
 
   /* ---- squall (15, support) ---- */
   setR("c");
-  add(Cr("Snowdrift Sentinel",2,3,3,"","play: freeze t",S("squall","freeze+draw",["Winter Mage","Cirrus Dancer"],{tgt:"e"})));
-  add(Cr("Frozen Serpent",3,4,4,"","play: draw 1",S("squall","freeze+draw",["Kraken Spawn","Dust Devil"])));
-  add(Cr("Icebound Familiar",1,2,2,"","play: draw 1",S("squall","freeze+draw",["Brook Otter","Gust Sprite"])));
-  add(Cr("Icebound Elemental",1,1,2,"airborne","death: draw 1",S("squall","freeze+draw+airborne",["Coral Crab","Swift Courier"])));
-  add(Sp("Frozen Wave",1,"play: draw 1; energy 1",S("squall","freeze+draw",["Flowing Wisdom","Cyclone Kick"])));
-  add(Re("Snowdrift Riposte",1,"play: freeze t; dmg t 1",S("squall","freeze+draw",["Deflect","Sidestep"],{tgt:"eatk"})));
-  add(Au("Snowdrift Totem",2,"end: draw 1",S("squall","freeze+draw",["Tidal Mastery","Sky Temple"])));
+  add(Cr("Snowdrift Sentinel",2,3,3,"","play: draw 1",S("squall","draw",["Winter Mage","Cirrus Dancer"])));
+  add(Cr("Rime Imp",3,4,4,"","death: draw 1",S("squall","draw",["Kraken Spawn","Dust Devil"])));
+  add(Cr("Icebound Familiar",1,2,2,"","death: draw 1",S("squall","draw",["Brook Otter","Gust Sprite"])));
+  add(Cr("Icebound Elemental",1,1,2,"airborne","death: draw 1",S("squall","draw+airborne",["Coral Crab","Swift Courier"])));
+  add(Sp("Frozen Wave",1,"play: draw 1; heal 2",S("squall","draw",["Flowing Wisdom","Cyclone Kick"])));
+  add(Re("Snowdrift Riposte",1,"play: draw 1",S("squall","draw",["Deflect","Sidestep"])));
+  add(Au("Snowdrift Totem",2,"end: draw 1",S("squall","draw",["Tidal Mastery","Sky Temple"])));
   setR("u");
-  add(Cr("Glacial Adept",3,3,4,"airborne","freeze: dmg face 1",S("squall","freeze+draw+airborne",["Deep Oracle","Sky Pirate"])));
-  add(Cr("Frost Sentinel",3,3,4,"airborne","death: draw 1",S("squall","freeze+draw+airborne",["Hydromancer","Cloudshaper"])));
-  add(Sp("Wintry Rite",2,"play: freeze t; dmg t 2",S("squall","freeze+draw",["Deep Insight","Cyclonic Rift"],{tgt:"e"})));
+  add(Cr("Glacial Adept",3,3,4,"airborne","spell: draw 1",S("squall","draw+airborne",["Deep Oracle","Sky Pirate"])));
+  add(Cr("Frost Sentinel",3,3,4,"airborne","death: draw 1",S("squall","draw+airborne",["Hydromancer","Cloudshaper"])));
+  add(Sp("Wintry Rite",2,"play: draw 1",S("squall","draw",["Deep Insight","Cyclonic Rift"])));
   setR("r");
-  add(Cr("Snowdrift Shaman",6,7,8,"airborne","death: draw 1",S("squall","freeze+draw+airborne",["Wavebreaker Champion","Aerie Matriarch"])));
+  add(Cr("Snowdrift Shaman",6,7,8,"airborne","death: draw 1",S("squall","draw+airborne",["Wavebreaker Champion","Aerie Matriarch"])));
   // Signature recipes: the Forge's recipe book makes each designed card from its named parents (one card per element).
   for (const d of globalThis.ICE_CATALOG){
     const ids = d.sig.map((n, i) => cardIdByName(n, [CONFLUENCE["ice"][i]]));

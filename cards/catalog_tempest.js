@@ -1,6 +1,6 @@
 /* ================= TEMPEST CATALOG (designed confluence cards, generated first draft) =================
    Wind + Lightning. 100 cards built by design/tools/gencatalog.js from the themes in design/confluence-slots.md:
-   blitz (25: haste + burn), galeriders (20: burn + buff), squallline (20: haste + buff), eyeofstorm (20, support: barrier + bounce), downburst (15: bounce + burn).
+   blitz (25: haste + burn), galeriders (20: haste + burn), squallline (20: haste + buff), eyeofstorm (20, support: barrier + bounce), downburst (15: bounce + burn).
    A first draft: effects come from per-theme templates that follow design/confluence-cards.md (rarity unlocks, one keyword
    below rare, burst cap, sweeps at most 2). Balance prices them; TCG revises cards by hand and Story names them.
    Each card: th = theme, tr = traits, sig = signature recipe [wind, lightning]. */
@@ -47,31 +47,31 @@ globalThis.TEMPEST_CATALOG = [];
 
   /* ---- galeriders (20) ---- */
   setR("c");
-  add(Cr("Squall Duelist",3,5,3,"","attack: dmg face 1",S("galeriders","burn+buff",["Cloud Hawk","Tesla Knight"])));
-  add(Cr("Volt Lancer",2,3,2,"airborne","attack: dmg face 1",S("galeriders","burn+buff+airborne",["Zephyr Courier","Volt Runner"])));
-  add(Cr("Thunderwing Charger",3,4,3,"airborne","attack: buff self 1 0 tmp",S("galeriders","burn+buff+airborne",["Sky Courier","Voltage Hound"])));
-  add(Cr("Howling Lancer",2,3,2,"airborne","death: dmg all_e 1",S("galeriders","burn+buff+airborne",["Whirlwind Acrobat","Conduit Keeper"])));
-  add(Cr("Thunderwing Drake",3,5,3,"","attack: dmg face 1",S("galeriders","burn+buff",["Wind Dancer","Storm Caller"])));
-  add(Sp("Skybolt Call",2,"play: buff t 1 1",S("galeriders","burn+buff",["Recall Gust","Thunder Lance"],{tgt:"o"})));
-  add(Sp("Gale Call",2,"play: buff t 1 1",S("galeriders","burn+buff",["Gust of Wind","Jolt"],{tgt:"o"})));
-  add(Re("Whirling Snap",2,"play: buff t 1 1 tmp",S("galeriders","burn+buff",["Crosswind","Shock Reflex"],{tgt:"oatk"})));
-  add(Re("Lightning Snap",2,"play: buff t 1 1 tmp",S("galeriders","burn+buff",["Sidestep","Blitz"],{tgt:"oatk"})));
-  add(Au("Stormrider Banner",1,"start: zaps 1 1",S("galeriders","burn+buff",["Sky Temple","Overload Coil"])));
-  add(Au("Whirling Altar",1,"end: dmg face 1",S("galeriders","burn+buff",["Jet Stream","Lightning Rod"])));
+  add(Cr("Squall Duelist",3,5,3,"","attack: buff self 1 0 tmp",S("galeriders","haste+burn",["Cloud Hawk","Tesla Knight"])));
+  add(Cr("Volt Lancer",2,3,2,"airborne","attack: buff self 1 0 tmp",S("galeriders","haste+burn+airborne",["Zephyr Courier","Volt Runner"])));
+  add(Cr("Thunderwing Charger",3,4,3,"airborne","death: dmg all_e 1",S("galeriders","haste+burn+airborne",["Sky Courier","Voltage Hound"])));
+  add(Cr("Howling Lancer",2,3,2,"airborne","play: dmg t 2",S("galeriders","haste+burn+airborne",["Whirlwind Acrobat","Conduit Keeper"],{tgt:"e"})));
+  add(Cr("Thunderwing Drake",3,5,3,"","play: kw self haste tmp",S("galeriders","haste+burn",["Wind Dancer","Storm Caller"])));
+  add(Sp("Skybolt Call",2,"play: dmg t 2",S("galeriders","haste+burn",["Recall Gust","Thunder Lance"],{tgt:"ea"})));
+  add(Sp("Gale Call",2,"play: dmg t 2",S("galeriders","haste+burn",["Gust of Wind","Jolt"],{tgt:"ea"})));
+  add(Re("Whirling Snap",2,"play: dmg t 3",S("galeriders","haste+burn",["Crosswind","Shock Reflex"],{tgt:"eatk"})));
+  add(Re("Lightning Snap",2,"play: dmg t 3",S("galeriders","haste+burn",["Sidestep","Blitz"],{tgt:"eatk"})));
+  add(Au("Stormrider Banner",1,"start: buff ostr 1 0 tmp",S("galeriders","haste+burn",["Sky Temple","Overload Coil"])));
+  add(Au("Whirling Altar",1,"start: zaps 1 1",S("galeriders","haste+burn",["Jet Stream","Lightning Rod"])));
   setR("u");
-  add(Cr("Howling Brute",4,6,4,"","attack: dmg face 1",S("galeriders","burn+buff",["Tornado Elemental","Thunderclap Adept"])));
-  add(Cr("Skybolt Raider",4,6,4,"","static: lord all 1 0",S("galeriders","burn+buff",["Lord of the Skies","Galvanic Golem"])));
-  add(Cr("Volt Reaver",4,5,4,"airborne","static: lord all 1 0",S("galeriders","burn+buff+airborne",["Feathered Serpent","Capacitor Titan"])));
-  add(Sp("Skybolt Surge",3,"play: dmg t 4",S("galeriders","burn+buff",["Gale Barrage","Overload Cascade"],{tgt:"e"})));
-  add(Sp("Stormrider Call",3,"play: dmg t 3; draw 1",S("galeriders","burn+buff",["Skyward Ascent","Battery Dump"],{tgt:"e"})));
-  add(Re("Skybolt Ward",3,"play: buff t 2 2 tmp",S("galeriders","burn+buff",["Evasive Maneuver","Electrify"],{tgt:"oatk"})));
-  add(Au("Stormrider Sanctum",3,"spell: zaps 1 1",S("galeriders","burn+buff",["Aerie","Storm God's Altar"])));
+  add(Cr("Howling Brute",4,6,4,"","attack: buff self 1 0 tmp",S("galeriders","haste+burn",["Tornado Elemental","Thunderclap Adept"])));
+  add(Cr("Skybolt Raider",4,6,4,"","edie: buff self 1 1",S("galeriders","haste+burn",["Lord of the Skies","Galvanic Golem"])));
+  add(Cr("Volt Reaver",4,5,4,"airborne","edie: buff self 1 1",S("galeriders","haste+burn+airborne",["Feathered Serpent","Capacitor Titan"])));
+  add(Sp("Skybolt Surge",3,"play: buff t 2 0; kw t haste",S("galeriders","haste+burn",["Gale Barrage","Overload Cascade"],{tgt:"o"})));
+  add(Sp("Stormrider Call",3,"play: dmg t 3",S("galeriders","haste+burn",["Skyward Ascent","Battery Dump"],{tgt:"ea"})));
+  add(Re("Skybolt Ward",3,"play: dmg t 4",S("galeriders","haste+burn",["Evasive Maneuver","Electrify"],{tgt:"eatk"})));
+  add(Au("Stormrider Sanctum",3,"static: lord all 1 0",S("galeriders","haste+burn",["Aerie","Storm God's Altar"])));
   setR("r");
-  add(Cr("Skybolt Lancer",4,6,4,"airborne","attack: buff self 1 0 tmp",S("galeriders","burn+buff+airborne",["Hurricane Elemental","Tempest Archon"])));
-  add(Cr("Lightning Hawk",6,9,6,"airborne","static: lord all 1 1",S("galeriders","burn+buff+airborne",["Cloud Leviathan","Static Overlord"])));
-  add(Sp("Volt Volley",4,"play: dmg all_e 2",S("galeriders","burn+buff",["Tornado","Thunderous Cascade"])));
-  add(Re("Gale Ward",4,"play: buff t 2 2 tmp",S("galeriders","burn+buff",["Perfect Gale","Thunder Trap"],{tgt:"o"})));
-  add(Au("Thunderwing Font",6,"start: buff ostr 2 0 tmp",S("galeriders","burn+buff",["Nesting Grounds","Storm Battery"])));
+  add(Cr("Skybolt Lancer",4,6,4,"airborne","death: dmg all_e 1",S("galeriders","haste+burn+airborne",["Hurricane Elemental","Tempest Archon"])));
+  add(Cr("Lightning Hawk",6,9,6,"airborne","attack: dmg all_e 1",S("galeriders","haste+burn+airborne",["Cloud Leviathan","Static Overlord"])));
+  add(Sp("Volt Volley",4,"play: dmg t 6",S("galeriders","haste+burn",["Tornado","Thunderous Cascade"],{tgt:"e"})));
+  add(Re("Gale Ward",4,"play: dmg t 4",S("galeriders","haste+burn",["Perfect Gale","Thunder Trap"],{tgt:"ea"})));
+  add(Au("Thunderwing Font",6,"end: dmg face 1",S("galeriders","haste+burn",["Nesting Grounds","Storm Battery"])));
 
   /* ---- squallline (20) ---- */
   setR("c");

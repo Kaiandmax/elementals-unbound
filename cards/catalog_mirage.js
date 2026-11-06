@@ -127,14 +127,14 @@ globalThis.MIRAGE_CATALOG = [];
   add(Cr("Haze Watcher",3,3,5,"","attack: buff str -1 0",S("fatamorgana","mirror+shrink",["Sun Priestess","Narwhal Lancer","Sky Courier"])));
   add(Cr("Shimmering Wall",2,2,4,"","play: summon mirror 1",S("fatamorgana","mirror+shrink",["Ember Duelist","Riverbank Sage","Zephyr Courier"])));
   add(Cr("Veiled Colossus",3,3,5,"","play: summon mirror 1",S("fatamorgana","mirror+shrink",["Flame Herald","Wavecrest Mage","Gale Sage"])));
-  add(Cr("Dreaming Giant",2,2,4,"","play: buff t -1 -1",S("fatamorgana","mirror+shrink",["Blazing Martyr","Mist Weaver","Swiftwing Herald"],{tgt:"e"})));
+  add(Cr("Dreaming Giant",2,2,4,"","attack: buff str -1 0",S("fatamorgana","mirror+shrink",["Blazing Martyr","Mist Weaver","Swiftwing Herald"])));
   add(Sp("Illusory Storm",2,"play: summon mirror 1",S("fatamorgana","mirror+shrink",["Firebolt","Tidal Insight","Tempest Volley"])));
-  add(Re("Twin Riposte",2,"play: buff t -2 -2",S("fatamorgana","mirror+shrink",["Heat Surge","Chill","Tailwind"],{tgt:"eatk"})));
+  add(Re("Twin Riposte",2,"play: buff t -2 0",S("fatamorgana","mirror+shrink",["Heat Surge","Chill","Tailwind"],{tgt:"eatk"})));
   add(Au("Shimmering Beacon",1,"start: summon mirror 1",S("fatamorgana","mirror+shrink",["Kindling Hearth","Sea of Clarity","Sky Temple"])));
   setR("u");
-  add(Cr("Fata Behemoth",3,3,5,"","play: buff t -2 0",S("fatamorgana","mirror+shrink",["Flame Warden","Deep Oracle","Windsong Falcon"],{tgt:"e"})));
+  add(Cr("Fata Behemoth",3,3,5,"","death: summon mirror 1",S("fatamorgana","mirror+shrink",["Flame Warden","Deep Oracle","Windsong Falcon"])));
   add(Cr("Illusory Behemoth",3,3,5,"","attack: buff str -1 0",S("fatamorgana","mirror+shrink",["Scorchclaw Ravager","Hydromancer","Gyrfalcon"])));
-  add(Sp("Phantom Burst",2,"play: buff t -1 -1",S("fatamorgana","mirror+shrink",["Pyre Ascension","Riptide Reversal","Winds of Change"],{tgt:"e"})));
+  add(Sp("Phantom Burst",2,"play: buff t -1 0",S("fatamorgana","mirror+shrink",["Pyre Ascension","Riptide Reversal","Winds of Change"],{tgt:"e"})));
   setR("r");
   add(Cr("Phantom Bulwark",5,5,9,"","play: buff all_e -1 -1",S("fatamorgana","mirror+shrink",["Flamewing Dragon","Deep One Elder","Thunderwing Roc"])));
   // Signature recipes: the Forge's recipe book makes each designed card from its named parents (one card per element).

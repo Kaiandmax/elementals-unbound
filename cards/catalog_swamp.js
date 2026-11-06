@@ -75,28 +75,28 @@ globalThis.SWAMP_CATALOG = [];
 
   /* ---- rot (20) ---- */
   setR("c");
-  add(Cr("Peat Sentinel",3,3,4,"venom","attack: buff str -1 0",S("rot","shrink+venom",["Whirlpool Mage","Cliffside Watcher"])));
-  add(Cr("Peat Serpent",1,2,2,"","play: buff t -2 0",S("rot","shrink",["Brook Otter","Stonecaller"],{tgt:"e"})));
+  add(Cr("Peat Sentinel",3,3,4,"venom","play: buff t -1 0",S("rot","shrink+venom",["Whirlpool Mage","Cliffside Watcher"],{tgt:"e"})));
+  add(Cr("Peat Serpent",1,2,2,"","play: buff t -1 0",S("rot","shrink",["Brook Otter","Stonecaller"],{tgt:"e"})));
   add(Cr("Peat Spirit",2,2,3,"venom","attack: buff str -1 0",S("rot","shrink+venom",["Tide Caller","Burrow Mole"])));
-  add(Cr("Sunken Scout",3,4,4,"","play: buff t -2 0",S("rot","shrink",["Reef Guardian","Ironhide Rhino"],{tgt:"e"})));
-  add(Cr("Sodden Sentinel",2,2,3,"venom","play: buff t -1 -1",S("rot","shrink+venom",["Riptide Rogue","Crag Brute"],{tgt:"e"})));
-  add(Sp("Peat Wave",3,"play: buff t -2 -2",S("rot","shrink",["Cold Snap","Overgrowth"],{tgt:"e"})));
-  add(Sp("Mossy Ritual",2,"play: buff t -1 -1",S("rot","shrink",["Shatter","Stone Skin"],{tgt:"e"})));
-  add(Re("Bog Snap",2,"play: buff t -2 -2",S("rot","shrink",["Riptide Counter","Rock Shield"],{tgt:"eatk"})));
-  add(Re("Sunken Feint",2,"play: buff t -2 -2",S("rot","shrink",["Frost Snap","Earthen Ward"],{tgt:"eatk"})));
+  add(Cr("Sunken Scout",3,4,4,"","play: buff t -1 0",S("rot","shrink",["Reef Guardian","Ironhide Rhino"],{tgt:"e"})));
+  add(Cr("Sodden Sentinel",2,2,3,"venom","attack: buff str -1 0",S("rot","shrink+venom",["Riptide Rogue","Crag Brute"])));
+  add(Sp("Peat Wave",3,"play: buff t -2 0",S("rot","shrink",["Cold Snap","Overgrowth"],{tgt:"e"})));
+  add(Sp("Mossy Ritual",2,"play: buff t -1 0",S("rot","shrink",["Shatter","Stone Skin"],{tgt:"e"})));
+  add(Re("Bog Snap",2,"play: buff t -2 0",S("rot","shrink",["Riptide Counter","Rock Shield"],{tgt:"eatk"})));
+  add(Re("Sunken Feint",2,"play: buff t -2 0",S("rot","shrink",["Frost Snap","Earthen Ward"],{tgt:"eatk"})));
   add(Au("Rotting Engine",1,"start: buff rnd -1 0",S("rot","shrink",["Tidal Mastery","Mountain's Patience"])));
   setR("u");
-  add(Cr("Rotting Serpent",5,6,6,"venom","start: buff rnd -1 -1",S("rot","shrink+venom",["Shoal Leviathan","Emerald Wyrm"])));
-  add(Cr("Sunken Golem",3,4,4,"","play: buff t -1 -1",S("rot","shrink",["Wave Dancer","Stoneheart Sentinel"],{tgt:"e"})));
-  add(Cr("Peat Golem",4,5,5,"","start: buff rnd -1 -1",S("rot","shrink",["Sea Serpent","Ironbark Treant"])));
-  add(Sp("Murk Burst",2,"play: buff t -1 -1",S("rot","shrink",["Deep Insight","Earth's Fury"],{tgt:"e"})));
-  add(Re("Sodden Guard",3,"play: buff t -2 -2",S("rot","shrink",["Nullify","Tremor Trap"],{tgt:"eatk"})));
-  add(Au("Rotting Sanctum",2,"start: buff rnd -1 -1",S("rot","shrink",["Sea of Clarity","Stone Sanctuary"])));
+  add(Cr("Rotting Serpent",5,6,6,"venom","start: buff rnd -1 0",S("rot","shrink+venom",["Shoal Leviathan","Emerald Wyrm"])));
+  add(Cr("Sunken Golem",3,4,4,"","attack: buff str -1 0",S("rot","shrink",["Wave Dancer","Stoneheart Sentinel"])));
+  add(Cr("Peat Golem",4,5,5,"","start: buff rnd -1 0",S("rot","shrink",["Sea Serpent","Ironbark Treant"])));
+  add(Sp("Murk Burst",2,"play: buff t -1 0",S("rot","shrink",["Deep Insight","Earth's Fury"],{tgt:"e"})));
+  add(Re("Sodden Guard",3,"play: buff t -2 0",S("rot","shrink",["Nullify","Tremor Trap"],{tgt:"eatk"})));
+  add(Au("Rotting Sanctum",2,"start: buff rnd -1 0",S("rot","shrink",["Sea of Clarity","Stone Sanctuary"])));
   setR("r");
   add(Cr("Mossy Familiar",4,5,6,"","attack: buff str -1 0",S("rot","shrink",["Coral Titan","Granite Juggernaut"])));
-  add(Cr("Bog Shaman",5,6,7,"venom","play: buff t -2 0",S("rot","shrink+venom",["Deepsea Hydra","Bedrock Leviathan"],{tgt:"e"})));
-  add(Sp("Fen Torrent",5,"play: buff all_e -1 0; draw 1",S("rot","shrink",["Glacial Torrent","Seismic Devastation"])));
-  add(Re("Mire Riposte",4,"play: buff t -2 -2",S("rot","shrink",["Ice Prison","Stone Aegis"],{tgt:"eatk"})));
+  add(Cr("Bog Shaman",5,6,7,"venom","play: buff t -1 0",S("rot","shrink+venom",["Deepsea Hydra","Bedrock Leviathan"],{tgt:"e"})));
+  add(Sp("Fen Torrent",5,"play: buff t -1 -1; draw 1",S("rot","shrink",["Glacial Torrent","Seismic Devastation"],{tgt:"e"})));
+  add(Re("Mire Riposte",4,"play: buff t -2 0",S("rot","shrink",["Ice Prison","Stone Aegis"],{tgt:"eatk"})));
   add(Au("Rotting Shrine",5,"start: buff rnd -1 0",S("rot","shrink",["Healing Spring","Stone Sanctuary"])));
 
   /* ---- bogspawn (20) ---- */
