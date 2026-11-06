@@ -122,8 +122,8 @@
       hurricane_sp: { name:"Maelstrom", desc:"Eyewall and Riptide.", themes:["eyewall","riptide"], rar:["r","u"] },
     },
     glass: {
-      glass_c: { name:"Fulgurite Fields", desc:"Prismwall and Shards.", themes:["prismwall","shards"], rar:["c"] },
-      glass_u: { name:"Prism Spires", desc:"Mirror.", themes:["mirror"], rar:["u","c"] },
+      glass_c: { name:"Fulgurite Fields", desc:"Prismwall and Splinter.", themes:["prismwall","splinter"], rar:["c"] },
+      glass_u: { name:"Prism Spires", desc:"Fulgurite.", themes:["fulgurite"], rar:["u","c"] },
       glass_r: { name:"Cathedral of Glass", desc:"Mirror and Prismwall.", themes:["mirror","prismwall"], rar:["r","u","c"] },
       glass_sp: { name:"Shards", desc:"Fulgurite and Splinter.", themes:["fulgurite","splinter"], rar:["r","u"] },
     },
