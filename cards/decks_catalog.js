@@ -15,7 +15,7 @@
       // Balance (2026-11-05): theme picks set by L3 sims against the tier below (PR #65); names follow the themes; Story may rename.
       volcano_forge:    { name:"Magma Run",        desc:"Big Pierce bodies that burn on the way in, behind fortified stone.", themes:["magma","fault"], rar:["c"] },
       volcano_ash:      { name:"Eruption",         desc:"Sacrifice your own creatures for explosive damage.",            themes:["eruption"],        rar:["u","c"] },
-      volcano_obsidian: { name:"Obsidian Eruption", desc:"Rare blasts: feed your creatures to the mountain.",            themes:["eruption"],        rar:["r","u","c"] },
+      volcano_obsidian: { name:"Obsidian Eruption", desc:"Rare blasts: feed your creatures to the mountain.",            themes:["eruption","magma"],        rar:["r","u","c"] },
       volcano_sp:       { name:"Fault Lines",      desc:"Fortified stone and magma that bite back.",                     themes:["magma","fault"],   rar:["r","u"] },
     },
     aurora: {
@@ -53,7 +53,7 @@
       storm_c: { name:"Rain of Sparks", desc:"Lightningrod and Spellstorm.", themes:["lightningrod","spellstorm"], rar:["c"] },
       storm_u: { name:"Thunder Tide", desc:"Riptide.", themes:["riptide"], rar:["u","c"] },
       storm_r: { name:"Eye of Storms", desc:"Lightningrod and Thunderhead.", themes:["lightningrod","thunderhead"], rar:["r","u","c"] },
-      storm_sp: { name:"Spellstorm", desc:"Downpour and Riptide.", themes:["downpour","riptide"], rar:["r","u"] },
+      storm_sp: { name:"Spellstorm", desc:"Lightningrod and Thunderhead.", themes:["lightningrod","thunderhead"], rar:["r","u"] },
     },
     sand: {
       sand_c: { name:"Dune Riders", desc:"Dune and Sandstorm.", themes:["dune","sandstorm"], rar:["c"] },
@@ -76,8 +76,8 @@
     geyser: {
       geyser_c: { name:"Hot Springs", desc:"Hotspring.", themes:["hotspring"], rar:["c"] },
       geyser_u: { name:"Boiling Earth", desc:"Mudslide.", themes:["mudslide"], rar:["u","c"] },
-      geyser_r: { name:"Primordial Vents", desc:"Mudslide and Wellspring.", themes:["mudslide","wellspring"], rar:["r","u","c"] },
-      geyser_sp: { name:"Wellspring", desc:"Vent and Wellspring.", themes:["vent","wellspring"], rar:["r","u"] },
+      geyser_r: { name:"Primordial Vents", desc:"Hotspring.", themes:["hotspring"], rar:["r","u","c"] },
+      geyser_sp: { name:"Wellspring", desc:"Mudslide and Sinter.", themes:["mudslide","sinter"], rar:["r","u"] },
     },
     mirage: {
       mirage_c: { name:"Heat Haze", desc:"Fatamorgana and Phantasm.", themes:["fatamorgana","phantasm"], rar:["c"] },
@@ -119,7 +119,7 @@
       hurricane_c: { name:"Squall Front", desc:"Downdraft.", themes:["downdraft"], rar:["c"] },
       hurricane_u: { name:"Typhoon Season", desc:"Maelstrom.", themes:["maelstrom"], rar:["u","c"] },
       hurricane_r: { name:"Category Five", desc:"Downdraft and Maelstrom.", themes:["downdraft","maelstrom"], rar:["r","u","c"] },
-      hurricane_sp: { name:"Maelstrom", desc:"Eyewall and Riptide.", themes:["eyewall","riptide"], rar:["r","u"] },
+      hurricane_sp: { name:"Maelstrom", desc:"Downdraft and Maelstrom.", themes:["downdraft","maelstrom"], rar:["r","u"] },
     },
     glass: {
       glass_c: { name:"Fulgurite Fields", desc:"Prismwall and Splinter.", themes:["prismwall","splinter"], rar:["c"] },
