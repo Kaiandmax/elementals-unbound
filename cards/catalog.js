@@ -65,7 +65,7 @@ const CATALOG = {};
    SPF nudges a confluence's special cards up to 8% above or below that (from archetype deck tuning), so they stay within the group's band. */
 const BAL = Object.assign({ band:0.12 }, globalThis.BAL_OVR||{});
 const SPF = Object.assign({"ash": 0.92, "aurora": 0.92, "forge": 1.08, "geyser": 1.08, "glacier": 1.08, "glass": 1.08, "hurricane": 0.92, "ice": 1.012, "metal": 0.97, "mirage": 0.92, "plasma": 0.92, "quicksilver": 1.08, "sand": 1.08, "solar": 0.92, "steam": 0.92, "storm": 0.92, "swamp": 1.055, "tempest": 0.92, "volcano": 0.92, "wildfire": 1.044}, globalThis.SPF_OVR||{});
-const TIERF = Object.assign({"base:c": 0.979, "base:r": 1.011, "base:u": 1.186, "dual:c": 1.009, "dual:r": 0.978, "dual:u": 1.034, "tri:c": 1.057, "tri:r": 1.177, "tri:u": 1.012}, globalThis.TIERF_OVR||{});
+const TIERF = Object.assign({"base:c": 0.979, "base:r": 1.035, "base:u": 1.186, "dual:c": 1.009, "dual:r": 0.978, "dual:u": 1.034, "tri:c": 1.057, "tri:r": 1.177, "tri:u": 1.012}, globalThis.TIERF_OVR||{});
 // Manifests are priced off their own element and rarity's basic cards: MK times the basic cards' value per cost
 // (on the steeper Manifest curve), so a Manifest always feels like a payoff for its group, and charge buys the same
 // power everywhere. EF ("el:r") sets a whole element and rarity stronger or weaker, basic cards and Manifests together,

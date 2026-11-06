@@ -40,10 +40,10 @@ deck("fire_inferno","fire","Inferno Dragons","rare","Dragons and phoenixes that 
   ["Infernal Dragon King", "Eternal Phoenix", "Legion of Embers", "Crimson Inferno"]);
 
 deck("water_tide","water","Tidecaller","common","Draw cards, drain life and outlast the enemy behind big blockers.",
-  ["Brook Otter","Kelp Lurker","Tidepool Healer","Reef Guardian","Flowing Wisdom","Deepwater Scholar","Icy Grip","Tide Caller","Sea Serpent","Harbor Golem"],
+  ["Brook Otter","Kelp Lurker","Tidepool Healer","Reef Guardian","Tidal Shield","Deepwater Scholar","Icy Grip","Tide Caller","Sea Serpent","Soothing Rain"],
   ["Rising Tide", "Sea Dragon", "Glacier Titan", "Tidal Elemental"]);
 deck("water_frost","water","Frostbind","common","Freeze the enemy's best creatures every turn, then shatter them.",
-  ["Frost Sprite","Chill","Rime Watcher","Winter Mage","Cold Snap","Frostbite Shade","Icy Grip","Shiver Elemental","Shatter","Narwhal Lancer"],
+  ["Frost Sprite","Permafrost Shrine","Rime Watcher","Winter Mage","Cold Snap","Frostbite Shade","Icy Grip","Shiver Elemental","Shatter","Narwhal Lancer"],
   ["Glacier Titan", "Frozen Prison", "Frostfall", "Hailstorm"]);
 deck("water_riptide","water","Riptide","uncommon","Bounce enemy creatures and counter their plays to stay a step ahead.",
   ["Riptide Rogue","Sudden Current","Wavecrest Mage","Nullify","Tideborn Knight","Kraken Spawn","Glacier Wolf","Harbor Golem","Reef Guardian","Chill"],
@@ -56,7 +56,7 @@ deck("earth_wall","earth","Stonewall","common","Walls and Vigilant guardians tha
   ["Ironhide Rhino","Granite Guard","Thornback Boar","Bulwark Golem","Spiked Barricade","Quake","Mountain Guardian","Boulder Toss","Cliffside Watcher","Boulder Hurler"],
   ["Stone Colossus", "Earthen Ramparts", "Seismic Roar", "Mountain Heart"]);
 deck("earth_roots","earth","Deep Roots","common","Ramp Energy and charge early, then drop giants.",
-  ["Root Tender","Seed Bearer","Fertile Ground","Grove Shaper","Old-Growth Treant","Earthquake Beetle","Mossback Giant","Overgrowth","Hill Giant","Ironhide Rhino"],
+  ["Root Tender","Seed Bearer","Ley Line","Grove Shaper","Old-Growth Treant","Earthquake Beetle","Mossback Giant","Rock Shield","Hill Giant","Ironhide Rhino"],
   ["Verdant Bloom", "Ancient Treefolk", "Bedrock Avatar", "Earth Elemental"]);
 deck("earth_crystal","earth","Crystal Growth","uncommon","Fortify and permanent buffs grow every creature into a monster.",
   ["Crystal Sprout","Amber Golem","Crystalline Growth","Jade Behemoth","Stoneheart Sentinel","Crag Brute","Basalt Champion","Iron Tortoise","Boulder Toss","Ancient Guardian"],
@@ -66,10 +66,10 @@ deck("earth_titans","earth","Titans","rare","Oversized creatures at every cost, 
   ["Crystal Wyrm", "Throne of Mountains", "Ancient Colossus", "Earthbinder Gorr"]);
 
 deck("wind_flock","wind","Featherflock","common","Flood the skies with small fliers and the leaders that pump them.",
-  ["Sparrow Scout","Feather Sprite","Gullcaller","Flock Leader","Updraft Swarm","Kestrel Rider","Cloud Hawk","Nesting Grounds","Skyline Falcon","Wingbeat"],
+  ["Sparrow Scout","Feather Sprite","Gullcaller","Flock Leader","Updraft Swarm","Kestrel Rider","Swift Courier","Nesting Grounds","Skyline Falcon","Wingbeat"],
   ["Flock of Thousands", "Roc Matriarch", "Sky Sanctuary", "Feathered Host"]);
 deck("wind_zephyr","wind","Zephyr Tricks","common","Replay creatures for their arrival effects while bouncing the enemy.",
-  ["Breeze Messenger","Wind Wanderer","Recall Gust","Whirlwind Acrobat","Gale Sage","Sky Courier","Gust of Wind","Tempest Sprite","Zephyr Strike","Dust Devil"],
+  ["Breeze Messenger","Wind Wanderer","Recall Gust","Whirlwind Acrobat","Gale Sage","Sky Courier","Cloud Strider","Tempest Sprite","Zephyr Strike","Dust Devil"],
   ["Winds of Fortune", "Storm Rider", "Wind Spirit", "Hurricane Wall"]);
 deck("wind_gale","wind","Gale Riders","uncommon","Fast, hasty fliers with tricks to win every race.",
   ["Gale Rider","Windsong Falcon","Sky Strike","Squall Captain","Raptor of the Peaks","Featherblade Duelist","Wind Wraith","Kestrel Rider","Cloud Hawk","Gust of Wind"],
@@ -79,10 +79,10 @@ deck("wind_sovereign","wind","Sky Sovereigns","rare","Elite fliers led by lords 
   ["Sky Sovereign Zephyra", "Roc Armada", "Phoenix of the Gale", "Tempest Ascension"]);
 
 deck("lightning_spark","lightning","Spark Storm","common","Cheap spells chained together, with creatures that grow on every cast.",
-  ["Zap","Quick Study","Static Sprite","Arc Apprentice","Jolt","Bolt Thrower","Spark Surge","Flicker Mage","Storm Caller","Chain Spark"],
+  ["Zap","Quick Study","Static Sprite","Arc Apprentice","Surge Shield","Bolt Thrower","Spark Surge","Flicker Mage","Storm Caller","Chain Spark"],
   ["Ball Lightning", "Spark Legion", "Static Field", "Chain Reaction"]);
 deck("lightning_static","lightning","Static Charge","common","Store up charge to unlock Attuned bonuses, then strike hard.",
-  ["Capacitor Golem","Charged Coil","Voltage Hound","Power Surge","Static Elemental","Thunder Lance","Conduit Keeper","Ion Drake","Tesla Knight","Thunder Ram"],
+  ["Crackle","Charged Coil","Voltage Hound","Power Surge","Battery Dump","Thunder Lance","Conduit Keeper","Ion Drake","Tesla Knight","Thunder Ram"],
   ["Storm Summoning", "Lightning Djinn", "Arc Storm", "Voltaic Titan"]);
 deck("lightning_overload","lightning","Overload","uncommon","Hasty attackers and burn spells that never let up.",
   ["Thunder Imp","Lightning Bolt","Arc Duelist","Pulse Mage","Voltage Wraith","Chain Lightning","Thunder Wolf","Jolt","Storm Caller","Volt Hopper"],
