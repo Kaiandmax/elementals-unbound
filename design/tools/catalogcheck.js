@@ -41,6 +41,9 @@ for (const d of C){
   if ((d.kw || []).length > 1 && d.r !== "r") problems.push(`${d.name}: ${d.kw.length} keywords (two keywords are a rare's)`);
   if (d.r === "c" && !commonOK(d.fx || "")) problems.push(`${d.name}: common with an uncommon/rare ability (${d.fx})`);
   if (d.r !== "r" && /\bstatic: (bank|cost|grant)|\b(steal|double)\b|bounce own/.test(d.fx || "")) problems.push(`${d.name}: rule-bender below rare (${d.fx})`);
+  // Freeze locks (2026-11-06): mass freeze is uncommon and up, and never repeats (attack/start/end triggers freeze one creature at most).
+  if (d.r === "c" && /freeze all_e/.test(d.fx || "")) problems.push(`${d.name}: mass freeze at common (${d.fx})`);
+  if (/\b(attack|start|end|spell|draw)[^|:]*:[^|]*freeze all_e/.test(d.fx || "")) problems.push(`${d.name}: repeating mass freeze (${d.fx})`);
   if ((d.text || "").length > 140) problems.push(`${d.name}: long text (${d.text.length})`);
   const face = ((d.fx || "").match(/dmg face (\d+)/g) || []).reduce((s, m) => s + +m.split(" ")[2], 0) + ((d.kw || []).includes("haste") ? d.atk : 0);
   if (face > d.cost + 1) problems.push(`${d.name}: up to ${face} face damage the turn it's played (cap ${d.cost + 1})`);

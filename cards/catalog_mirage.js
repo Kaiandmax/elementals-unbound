@@ -107,7 +107,7 @@ globalThis.MIRAGE_CATALOG = [];
   add(Cr("Twin Lancer",2,3,3,"","attack: freeze str",S("heatshimmer","freeze+burn",["Phoenix Chick","Glacier Wolf","Windbreak Guardian"])));
   add(Cr("Twin Duelist",1,2,1,"airborne","death: dmg all_e 1",S("heatshimmer","freeze+burn+airborne",["Pyre Zealot","Coral Crab","Gust Sprite"])));
   add(Sp("Glimmer Call",1,"play: dmg all_e 1",S("heatshimmer","freeze+burn",["Searing Spark","Ebb and Flow","Updraft"])));
-  add(Sp("Phantom Blast",1,"play: freeze all_e",S("heatshimmer","freeze+burn",["Searing Blast","Whirlpool Trap","Eye of the Gale"])));
+  add(Sp("Phantom Blast",1,"play: freeze t; dmg t 1",S("heatshimmer","freeze+burn",["Searing Blast","Whirlpool Trap","Eye of the Gale"],{tgt:"e"})));
   add(Re("Illusory Snap",1,"play: dmg t 1",S("heatshimmer","freeze+burn",["Wildfire Ignition","Undertow","Sidestep"],{tgt:"ea"})));
   add(Au("Mirage Grove",3,"end: dmg face 1",S("heatshimmer","freeze+burn",["Crown of Cinders","Permafrost Shrine","Wind Chimes"])));
   setR("u");

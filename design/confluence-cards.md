@@ -100,6 +100,8 @@ The options that were on the table are kept for the record.
 | Uncommon | Everything a common can, plus **engines**: "whenever you draw / play a spell / gain charge / cast a Manifest..." that hit other things, and **static effects** (your creatures get +1/+0). Destroy effects. |
 | Rare | Everything an uncommon can, plus **rule-benders**: Energy bank, cost reduction, granting a keyword to all your creatures, double attack, take control, return all your creatures; and two keywords. |
 
+**Freeze (2026-11-06):** freezing every enemy creature is uncommon and up, and only on a card that fires once (when played). A repeating trigger (attacking, start or end of turn) freezes one creature at most. Mass freeze for 1-2 Energy at common, or on every attack, locked games out in the pilots.
+
 `design/tools/catalogcheck.js` enforces this. In the pilots it moved 9 engine cards from common to uncommon (swapping in simple uncommons of the same type and theme), rewrote 6 common auras as start- or end-of-turn effects, and moved Refracted Strike (double attack) to rare.
 
 ## Rollout

@@ -67,7 +67,7 @@ globalThis.STEAM_CATALOG = [];
   add(Au("Scalding Baths",3,"static: lord all 0 1 | draw: heal 1",S("pressure","warmth+draw",["Furnace of Rage","Sea of Clarity"])));
   setR("r");
   add(Cr("Thermal Bastion",6,6,10,"drain","play: draw 3",S("pressure","size+draw",["Searing Overlord","Coral Titan"])));
-  add(Cr("Scaldmother Hydra",5,5,8,"","attack: freeze all_e",S("boil","burn+freeze",["Blazewing Matriarch","Deepsea Hydra"])));
+  add(Cr("Scaldmother Hydra",5,5,8,"","attack: freeze str; dmg frz_e 1",S("boil","burn+freeze",["Blazewing Matriarch","Deepsea Hydra"])));
   add(Sp("Scalding Cascade",3,"play: freeze str; dmg frz_e 3",S("boil","burn+freeze",["Firestorm Ritual","Healing Torrent"])));
   add(Au("Kettle Fortress",5,"static: bank 2 | draw: zaps 1 1",S("pressure","fuel+draw",["Crown of Cinders","Eternal Winter"])));
 
