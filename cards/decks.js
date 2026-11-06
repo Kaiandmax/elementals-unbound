@@ -49,7 +49,7 @@ deck("water_riptide","water","Riptide","uncommon","Bounce enemy creatures and co
   ["Riptide Rogue","Sudden Current","Wavecrest Mage","Nullify","Tideborn Knight","Kraken Spawn","Glacier Wolf","Harbor Golem","Reef Guardian","Chill"],
   ["Abyssal Kraken", "Ocean Sovereign", "Maelstrom Spiral", "Tide Lord"]);
 deck("water_abyss","water","Abyssal Leviathans","rare","Enormous sea creatures that drain life and lock down the board.",
-  ["Leviathan Elder","Abyss Watcher","Glacial Empress","Siren Queen","Kelp Colossus","Wavebreaker Champion","Sea Witch","Tideborn Knight","Frostfang Wyrm","Frozen Moment"],
+  ["Leviathan Elder","Abyss Watcher","Glacial Empress","Siren Queen","Kelp Colossus","Wavebreaker Champion","Sea Witch","Tideborn Knight","Frostfang Wyrm","Whirlpool Trap"],
   ["Leviathan of the Abyss", "Tide Sovereign Neris", "Absolute Winter", "Primeval Kraken"]);
 
 deck("earth_wall","earth","Stonewall","common","Walls and Vigilant guardians that punish every attack.",
@@ -75,7 +75,7 @@ deck("wind_gale","wind","Gale Riders","uncommon","Fast, hasty fliers with tricks
   ["Gale Rider","Windsong Falcon","Sky Strike","Squall Captain","Raptor of the Peaks","Featherblade Duelist","Wind Wraith","Kestrel Rider","Cloud Hawk","Gust of Wind"],
   ["Roc of the Storm", "Sky Emperor", "Tempest Call", "Storm Djinn"]);
 deck("wind_sovereign","wind","Sky Sovereigns","rare","Elite fliers led by lords of the sky.",
-  ["Lord of the Skies","Silverwing Griffin","Stormwing Phoenix","Gale Assassin","Skyshard Sentinel","Peregrine Ace","Cyclonic Rift","Windlord Aeris","Feathered Serpent","Aerie Matriarch"],
+  ["Lord of the Skies","Silverwing Griffin","Stormwing Phoenix","Gale Assassin","Skyshard Sentinel","Peregrine Ace","Cyclonic Rift","Windlord Aeris","Thunderwing Roc","Aerie Matriarch"],
   ["Sky Sovereign Zephyra", "Roc Armada", "Phoenix of the Gale", "Tempest Ascension"]);
 
 deck("lightning_spark","lightning","Spark Storm","common","Cheap spells chained together, with creatures that grow on every cast.",
