@@ -720,10 +720,16 @@ function hook(p, evt, data={}){
   for (const c of [...p.board]){ const h=c.d.on && c.d.on[evt]; if(h && data.inst!==c && onBoard(c)) h({p,o,self:c,data}); }
   for (const a of [...p.auras]){ const h=a.on && a.on[evt]; if(h) h({p,o,self:a,data}); }
 }
+// Deaths can set off more deaths. Two triggers can feed each other forever (Crown of Wildfire's 1 damage to every enemy
+// creature on each death against Bottomless Bog's fresh Mudling on each death), so the chain stops as soon as a
+// player is out of life, and after DEATH_ROUNDS passes at most.
+const DEATH_ROUNDS = 40;
 function checkDeaths(){
-  let again = true;
+  let again = true, rounds = 0;
   while (again){
     again = false;
+    if (g.P.some(q => q.life <= 0)) checkWin();       // a game that's over ends now (a boss refills and the chain goes on)
+    if (++rounds > DEATH_ROUNDS){ log("The chain of deaths stops."); break; }
     for (const p of g.P){
       for (const c of [...p.board]){
         if (isDead(c)){

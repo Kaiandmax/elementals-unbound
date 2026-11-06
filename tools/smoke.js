@@ -69,6 +69,17 @@ let bad = 0;
     if (!!r.essence !== !!S.CONFLUENCE[dk.el]) err("drops", `${dk.id}: essence ${r.essence ? "from a mono deck" : "missing"}`);
   }
 }
+// Death chains end: Crown of Wildfire against Bottomless Bog once looped forever (Balance, 2026-11-06).
+{ const crown = Object.values(S.LIB).find(c => c.name==="Crown of Wildfire"), bog = Object.values(S.LIB).find(c => c.name==="Bottomless Bog");
+  if (crown && bog && S.TOKENS.mudling){
+    const P = [S.newPlayer(0, decks[0].id, "A", true, 15), S.newPlayer(1, decks[1].id, "B", true, 1000)];
+    S.setG({ sim:true, P, log:[], turnNo:1, active:0, ui:{}, combat:null });
+    P[0].auras.push(crown); P[1].auras.push(bog);
+    for (let i = 0; i < 3; i++) S.summon(P[1], S.TOKENS.mudling);
+    P[1].board.forEach(c => c.dmg = 1); P[1].board[0].dmg = 99;
+    const t = Date.now(); try { S.checkDeaths(); } catch(e){ if (e !== S.OVER) throw e; }
+    if (Date.now() - t > 2000) { console.error("death chain took", Date.now() - t, "ms"); bad++; }
+  } }
 for (const d of decks) if (!d.main || !d.main.length || !d.manifests || !d.manifests.length) { console.error("empty deck", d.id); bad++; }
 (async () => {
   let done = 0, draws = 0;
