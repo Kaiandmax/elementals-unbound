@@ -247,5 +247,5 @@ const ARCH_K = Object.assign({"ash": 4, "aurora": 10, "forge": 8, "geyser": 4, "
 /* ---- Starting life by element ----
    Each element (or confluence) starts at its own life total, a balance lever alongside card strength: set by
    simulation so decks of the same rarity and element count stay within about 70/30 of each other. */
-const EL_LIFE = Object.assign({"ash": 12, "glass": 17, "aurora": 13, "earth": 16, "fire": 16, "forge": 16, "hurricane": 14, "ice": 12, "lightning": 14, "metal": 14, "mirage": 16, "plasma": 17, "quicksilver": 13, "sand": 15, "solar": 20, "steam": 16, "storm": 13, "swamp": 13, "volcano": 17, "water": 15, "wildfire": 19}, globalThis.LIFE_OVR||{});
+const EL_LIFE = Object.assign({"ash": 13, "glass": 17, "aurora": 13, "earth": 16, "fire": 16, "forge": 16, "hurricane": 14, "ice": 12, "lightning": 14, "metal": 14, "mirage": 16, "plasma": 17, "quicksilver": 13, "sand": 15, "solar": 20, "steam": 16, "storm": 13, "swamp": 13, "volcano": 17, "water": 15, "wildfire": 19}, globalThis.LIFE_OVR||{});
 function deckLife(ref){ const dk = DECK_BY_ID[ref] || DECK_BY_ID[ref+"_starter"]; return (dk && EL_LIFE[dk.el]) || 15; }
