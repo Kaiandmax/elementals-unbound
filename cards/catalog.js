@@ -187,6 +187,13 @@ function normalizeDesigned(d, f){
   const lo = x => x===0 ? 0 : Math.max(1, Math.ceil(x*(1-DESIGNED_BODY) - 1e-9)), hi = x => Math.max(1, Math.floor(x*(1+DESIGNED_BODY) + 1e-9));
   d.atk = Math.min(hi(a0), Math.max(lo(a0), d.atk)); d.hp = Math.min(hi(h0), Math.max(lo(h0), d.hp));
   if (a0===0) d.atk = 0;
+  // Burst cap (design/confluence-cards.md): on arrival, a Haste creature's attack plus its face damage and Haste tokens
+  // stays within cost + 1. Checked after normalization, which can raise attack by up to DESIGNED_BODY.
+  if ((d.kw||[]).includes("haste") && typeof d.fx==="string"){
+    const face = (d.fx.match(/play[^|]*dmg face (\d+)/g)||[]).reduce((s,m)=>s + +m.match(/(\d+)$/)[1], 0)
+      + (/play[^|]*summon (ashling|volt|spark)/.test(d.fx) ? 1 : 0);
+    d.atk = Math.max(1, Math.min(d.atk, d.cost + 1 - face));
+  }
 }
 (function(){
   const all = Object.values(LIB).filter(d=>!d.token && !(d.r==="s" && d.manifest));   // Starter Manifests are hand-tuned and keep their written costs
