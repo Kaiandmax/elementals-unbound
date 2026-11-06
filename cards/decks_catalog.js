@@ -50,9 +50,9 @@
       ice_sp: { name:"Shatter", desc:"Hoarfrost and Shatter.", themes:["hoarfrost","shatter"], rar:["r","u"] },
     },
     storm: {
-      storm_c: { name:"Rain of Sparks", desc:"Riptide and Spellstorm.", themes:["riptide","spellstorm"], rar:["c"] },
+      storm_c: { name:"Rain of Sparks", desc:"Lightningrod and Spellstorm.", themes:["lightningrod","spellstorm"], rar:["c"] },
       storm_u: { name:"Thunder Tide", desc:"Riptide.", themes:["riptide"], rar:["u","c"] },
-      storm_r: { name:"Eye of Storms", desc:"Lightningrod and Riptide.", themes:["lightningrod","riptide"], rar:["r","u","c"] },
+      storm_r: { name:"Eye of Storms", desc:"Lightningrod and Thunderhead.", themes:["lightningrod","thunderhead"], rar:["r","u","c"] },
       storm_sp: { name:"Spellstorm", desc:"Downpour and Riptide.", themes:["downpour","riptide"], rar:["r","u"] },
     },
     sand: {
@@ -62,10 +62,10 @@
       sand_sp: { name:"Erosion", desc:"Quicksand and Sandstorm.", themes:["quicksand","sandstorm"], rar:["r","u"] },
     },
     metal: {
-      metal_c: { name:"Iron Works", desc:"Magnet and Plating.", themes:["magnet","plating"], rar:["c"] },
-      metal_u: { name:"Steel Legion", desc:"Magnet and Rail.", themes:["magnet","rail"], rar:["u","c"] },
-      metal_r: { name:"Thunder Forge", desc:"Dynamo and Plating.", themes:["dynamo","plating"], rar:["r","u","c"] },
-      metal_sp: { name:"Plating", desc:"Magnet and Plating.", themes:["magnet","plating"], rar:["r","u"] },
+      metal_c: { name:"Iron Works", desc:"Dynamo and Rail.", themes:["dynamo","rail"], rar:["c"] },
+      metal_u: { name:"Steel Legion", desc:"Magnet and Plating.", themes:["magnet","plating"], rar:["u","c"] },
+      metal_r: { name:"Thunder Forge", desc:"Forgework and Rail.", themes:["forgework","rail"], rar:["r","u","c"] },
+      metal_sp: { name:"Plating", desc:"Dynamo and Rail.", themes:["dynamo","rail"], rar:["r","u"] },
     },
     tempest: {
       tempest_c: { name:"Squall Line", desc:"Blitz and Galeriders.", themes:["blitz","galeriders"], rar:["c"] },
