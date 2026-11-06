@@ -7,6 +7,8 @@
 // Loaded by build.py inside catalogBegin("ash")/catalogEnd("ash") (src.html): its cards replace this confluence's
 // older basics of the same id, and the rest are retired. cards/decks_catalog.js then rebuilds the prebuilt decks.
 globalThis.ASH_CATALOG = [];
+// Ash's own token for every theme but Cinders: a 1/1 without Haste, so token makers build a board instead of a burst.
+tok("cinderling","Cinderling","ash",1,1,"");
 (function(){
   let M = null;
   const S = (th, tr, sig, o={}) => { M = { th, tr, sig, catalog:"ash" }; return o; };
@@ -52,8 +54,8 @@ globalThis.ASH_CATALOG = [];
   add(Cr("Ashborn Duelist",1,2,2,"","play: summon ashling 1",S("pyroclast","sacrifice+tokens",["Molten Hatchling","Pebble Golem","Swift Courier"])));
   add(Cr("Smoke Duelist",2,3,3,"","play: summon ashling 1",S("pyroclast","sacrifice+tokens",["Apprentice Pyromancer","Spiked Barricade","Windbreak Guardian"])));
   add(Cr("Pumice Raider",3,5,3,"","death: summon ashling 1",S("pyroclast","sacrifice+tokens",["Pyre Dancer","Quarry Shaman","Cloud Hawk"])));
-  add(Sp("Smoke Ritual",2,"play: sac; dmg all_e 0 x",S("pyroclast","sacrifice+tokens",["Firebolt","Quake","Gust of Wind"])));
-  add(Sp("Ember Wave",1,"play: sac; dmg all_e 0 x",S("pyroclast","sacrifice+tokens",["Stoke the Coals","Fertile Ground","Cyclone Kick"])));
+  add(Sp("Smoke Ritual",2,"play: sac; dmg t 0 x",S("pyroclast","sacrifice+tokens",["Firebolt","Quake","Gust of Wind"],{tgt:"e"})));
+  add(Sp("Ember Wave",1,"play: sac; dmg t 0 x",S("pyroclast","sacrifice+tokens",["Stoke the Coals","Fertile Ground","Cyclone Kick"],{tgt:"e"})));
   add(Re("Soot Riposte",1,"play: summon ashling 1",S("pyroclast","sacrifice+tokens",["Wildfire Ignition","Rock Shield","Tailwind"])));
   add(Re("Cinder Flash",1,"play: summon ashling 1",S("pyroclast","sacrifice+tokens",["Flash Fire","Earthen Ward","Sidestep"])));
   add(Au("Pumice Engine",3,"start: summon ashling 1",S("pyroclast","sacrifice+tokens",["Everburning Brazier","Fortress Walls","Wind Chimes"])));
@@ -65,12 +67,12 @@ globalThis.ASH_CATALOG = [];
   add(Sp("Pumice Wave",3,"play: summon ashling 1",S("pyroclast","sacrifice+tokens",["Dragonfire","Unyielding Earth","Updraft Swarm"])));
   add(Sp("Pumice Gift",2,"play: summon ashling 1",S("pyroclast","sacrifice+tokens",["Combustion Wave","Seismic Pulse","Skyward Ascent"])));
   add(Re("Ashen Retort",3,"play: summon ashling 1",S("pyroclast","sacrifice+tokens",["Wild Surge","Tremor Trap","Sky Strike"])));
-  add(Au("Cinder Beacon",3,"end: summon ashling 1",S("pyroclast","sacrifice+tokens",["Crown of Cinders","Sacred Grove","Aerie"])));
+  add(Au("Cinder Beacon",3,"end: summon cinderling 1",S("pyroclast","sacrifice+tokens",["Crown of Cinders","Sacred Grove","Aerie"])));
   setR("r");
-  add(Cr("Ember Hawk",6,9,7,"","start: summon ashling 2",S("pyroclast","sacrifice+tokens",["Searing Overlord","Primordial Titan","Cloud Titan"])));
+  add(Cr("Ember Hawk",6,9,7,"","start: summon cinderling 2",S("pyroclast","sacrifice+tokens",["Searing Overlord","Primordial Titan","Cloud Titan"])));
   add(Cr("Charred Falcon",5,8,6,"","play/own2: sac; buff self 2 2",S("pyroclast","sacrifice+tokens",["Lavaheart Titan","Gaia's Avatar","Ancient Wind Spirit"])));
   add(Sp("Ember Gift",5,"play: sac; draw 2",S("pyroclast","sacrifice+tokens",["Chain of Flame","Seismic Devastation","Squall Line"])));
-  add(Re("Pumice Retort",4,"play: summon ashling 2",S("pyroclast","sacrifice+tokens",["Inferno Surge","Stone Aegis","Vanishing Wind"])));
+  add(Re("Pumice Retort",4,"play: summon cinderling 2",S("pyroclast","sacrifice+tokens",["Inferno Surge","Stone Aegis","Vanishing Wind"])));
   add(Au("Pumice Sanctum",5,"end/own3: sac; dmg face 2",S("pyroclast","sacrifice+tokens",["Hearth of Embers","Heart of the World","Sky Throne"])));
 
   /* ---- emberflock (20) ---- */
@@ -95,9 +97,9 @@ globalThis.ASH_CATALOG = [];
   setR("r");
   add(Cr("Ashen Charger",6,9,6,"airborne","attack: dmg face 1",S("emberflock","tokens+burn+airborne",["Ignis, the Undying","Avalanche Titan","Aerie Matriarch"])));
   add(Cr("Cinder Raider",6,9,6,"airborne","play: dmg all_e 2",S("emberflock","tokens+burn+airborne",["Flame Tyrant","Primordial Titan","Aerie Matriarch"])));
-  add(Sp("Smoke Torrent",4,"play: summon ashling 2",S("emberflock","tokens+burn",["Wildfire Blaze","Cataclysmic Quake","Aerial Bombardment"])));
-  add(Re("Kiln Guard",5,"play: summon ashling 1; buff tok 1 0 tmp",S("emberflock","tokens+burn",["Pyroclasm Reflex","Tremor Trap","Perfect Gale"])));
-  add(Au("Charred Field",4,"start: summon ashling 1",S("emberflock","tokens+burn",["Altar of Embers","Heart of the World","Eye of Eternity"])));
+  add(Sp("Smoke Torrent",4,"play: summon cinderling 2",S("emberflock","tokens+burn",["Wildfire Blaze","Cataclysmic Quake","Aerial Bombardment"])));
+  add(Re("Kiln Guard",5,"play: summon cinderling 1; buff tok 1 0 tmp",S("emberflock","tokens+burn",["Pyroclasm Reflex","Tremor Trap","Perfect Gale"])));
+  add(Au("Charred Field",4,"start: summon cinderling 1",S("emberflock","tokens+burn",["Altar of Embers","Heart of the World","Eye of Eternity"])));
 
   /* ---- ashenwall (20) ---- */
   setR("c");
@@ -116,10 +118,10 @@ globalThis.ASH_CATALOG = [];
   add(Cr("Kiln Titan",5,1,11,"wall","death: summon ashling 1",S("ashenwall","tokens+fortify+wall",["Volcanic Brute","Mountain Strider","Thunderhawk"])));
   add(Sp("Soot Rite",3,"play: fort own 1",S("ashenwall","tokens+fortify",["Fireball","Crystalline Growth","Tornado"])));
   add(Re("Ember Guard",3,"play: summon ashling 1; buff tok 1 0 tmp",S("ashenwall","tokens+fortify",["Backdraft","Earthen Ward","Sky Strike"])));
-  add(Au("Cinder Totem",3,"start: summon ashling 1",S("ashenwall","tokens+fortify",["Everburning Brazier","Crystal Resonance","Jet Stream"])));
+  add(Au("Cinder Totem",3,"start: summon cinderling 1",S("ashenwall","tokens+fortify",["Everburning Brazier","Crystal Resonance","Jet Stream"])));
   setR("r");
-  add(Cr("Smolder Guardian",6,5,11,"","death: summon ashling 3",S("ashenwall","tokens+fortify",["Flame Tyrant","Bedrock Leviathan","Cloud Titan"])));
-  add(Cr("Ashborn Bulwark",5,1,12,"wall","death: summon ashling 3",S("ashenwall","tokens+fortify+wall",["Magmaforge Golem","Emerald Wyrm","Thunderwing Roc"])));
+  add(Cr("Smolder Guardian",6,5,11,"","death: summon cinderling 3",S("ashenwall","tokens+fortify",["Flame Tyrant","Bedrock Leviathan","Cloud Titan"])));
+  add(Cr("Ashborn Bulwark",5,1,12,"wall","death: summon cinderling 3",S("ashenwall","tokens+fortify+wall",["Magmaforge Golem","Emerald Wyrm","Thunderwing Roc"])));
   add(Sp("Kiln Call",4,"play: fort own 1",S("ashenwall","tokens+fortify",["Firestorm Ritual","Seismic Devastation","Squall Line"])));
 
   /* ---- kiln (15) ---- */

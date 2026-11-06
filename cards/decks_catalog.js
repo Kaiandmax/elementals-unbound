@@ -86,10 +86,10 @@
       mirage_sp: { name:"Illusions", desc:"Phantasm.", themes:["phantasm"], rar:["r","u"] },
     },
     ash: {
-      ash_c: { name:"Cinderfall", desc:"Pyroclast.", themes:["pyroclast"], rar:["c"] },
+      ash_c: { name:"Cinderfall", desc:"Ashenwall and Kiln.", themes:["ashenwall","kiln"], rar:["c"] },
       ash_u: { name:"Ashen Winds", desc:"Ashenwall and Pyroclast.", themes:["ashenwall","pyroclast"], rar:["u","c"] },
-      ash_r: { name:"Pyroclastic Lords", desc:"Ashenwall and Pyroclast.", themes:["ashenwall","pyroclast"], rar:["r","u","c"] },
-      ash_sp: { name:"Cinders", desc:"Kiln and Pyroclast.", themes:["kiln","pyroclast"], rar:["r","u"] },
+      ash_r: { name:"Pyroclastic Lords", desc:"Cinders and Kiln.", themes:["cinders","kiln"], rar:["r","u","c"] },
+      ash_sp: { name:"Cinders", desc:"Ashenwall and Cinders.", themes:["ashenwall","cinders"], rar:["r","u"] },
     },
     forge: {
       forge_c: { name:"Sparkworks", desc:"Bellows and Crucible.", themes:["bellows","crucible"], rar:["c"] },
