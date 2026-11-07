@@ -7,7 +7,7 @@
     steam: {
       // Balance (2026-11-04): theme picks set by L3 sims against the tier below (PR #62). Names follow the themes; Story may rename.
       steam_c:  { name:"Pressure Cooker", desc:"A full hand that turns into burn, with ambushers in the fog.", themes:["pressure","fog"], rar:["c"] },
-      steam_u:  { name:"Geyser Cycle",    desc:"Freeze them, then replay creatures that boil on arrival.", themes:["boil"],     rar:["u","c"] },
+      steam_u:  { name:"Geyser Cycle",    desc:"Freeze their best creatures, then scald the frozen ones.", themes:["boil"],     rar:["u","c"] },
       steam_r:  { name:"Boiling Point",   desc:"Freeze them, then boil them.",                             themes:["boil","vent"],     rar:["r","u","c"] },
       steam_sp: { name:"Fog Lords",       desc:"Freeze them, then strike from the mist.",                  themes:["boil","fog"],      rar:["r","u"] },
     },
